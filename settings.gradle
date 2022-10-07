@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "LoomisAssignment"
+rootProject.name = "LoomisBroadcastReceiverComponent"
 include ':app'

@@ -1,4 +1,4 @@
-package net.csplab.adroid.kotlin.loomisassignment
+package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent
 
 import org.junit.Test
 
