@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 //import net.csplab.adroid.kotlin.loomisassignment.R
 //import net.csplab.adroid.kotlin.loomisassignment.R
 
@@ -26,15 +27,16 @@ import receivers.ConsumePartyPayProviderBroadcastReciver
 
 class MainActivity : AppCompatActivity() {
     // NOTES HERE
+    private var TAG = MainActivity::class.java.simpleName
     lateinit var tstBroadcaster: ConsumePartyPayProviderBroadcastReciver
+    private var intentFilterActions = IntentFilter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // Get The Views from the layouts
-
-
+        Log.i(TAG, "onCreate:")
         //Send Broadcast
         //sendBroadcast(Intent.)
         //val intentSet = Intent()
@@ -42,15 +44,7 @@ class MainActivity : AppCompatActivity() {
         //val intentBundle = Intent().extras
         //sendBroadcast(intentSet)
 
-        tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
-        // Is this a problem that this is not in the resume part,
-        // Do we only need the register in resume
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-
+        // =============================================
         //val inf = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
 
         // Different Filter adders
@@ -67,24 +61,64 @@ class MainActivity : AppCompatActivity() {
 //            /tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
         }
 
+        // Utility Class: Move to
+        val pack = packageName
+        collectActionsForProvider1(pack)
+        //collectActionsForProvider2()
         // Register ACTIONS for special PayProvider BroadcastReceiver
-        val inf = IntentFilter().apply {
+        intentFilterActions = IntentFilter().apply {
             addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
             addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
-            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_INIT") // Init
-            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_START") // start
-            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_STEP1")
-            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_STEP2")
-            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_STEP3")
+            //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
+            addAction(packageName + "ACTION_PAYID1_START") // start
+            addAction(packageName + "ACTION_PAYID1_STEP1")
+            addAction(packageName + "ACTION_PAYID1_STEP2")
+            addAction(packageName + "ACTION_PAYID1_STEP3")
             //Arbitrary number of action steps ... Ho do we put them in
-            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_END") // End of ACTION EVENT
+            addAction(packageName + "ACTION_PAYID1_END") // End of ACTION EVENT
 
         }
-        registerReceiver(tstBroadcaster, inf)
+
+        //========================================================
+        tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
+        // Is this a problem that this is not in the resume part,
+        // Do we only need the register in resume
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(tstBroadcaster, intentFilterActions)
+    }
+
+    // In utility ss, maybe as static array
+    private fun collectActionsForProvider1(pack: String): List<String> {
+        //action_init: String = ctx.getPackage // ACTION_PAY_INIT") // Init
+        val s1 = packageName + "ACTION_PAYID1_START" // start
+        val s2 = packageName + "ACTION_PAYID1_STEP1"
+        val s3 = packageName + "ACTION_PAYID1_STEP2"
+        val s4 = packageName + "ACTION_PAYID1_STEP3"
+        //Arbitrary number of action steps ... How to add them, dynamically or set per specialisation
+        val s5 = packageName + "ACTION_PAYID1_END" // End of ACTION EVENT
+        Log.d(TAG, "Print Package Name $packageName : Action names $s1 $s2 $s3 $s4 $s5")
+        val customActions = listOf(s1,s2,s3,s4,s5)
+        return customActions
+    }
+    private fun collectActionsForProvider2(pack: String): List<String> {
+        // Chk@ : Put int list, maybe use size for that?
+        //action_init: String = ctx.getPackage // ACTION_PAY_INIT") // Init
+        val s1 = packageName + "ACTION_PAYID1_START" // start
+        val s2 = packageName + "ACTION_PAYID1_STEP1"
+        val s3 = packageName + "ACTION_PAYID1_STEP2"
+        val s4 = packageName + "ACTION_PAYID1_END" // End of ACTION EVENT
+        Log.d(TAG, "Print Package Name $packageName : Action names $s1 $s2 $s3 $s4")
+        val customActions = listOf(s1,s2,s3,s4)
+        return customActions
     }
 
     override fun onPause() {
         super.onPause()
         unregisterReceiver(tstBroadcaster)
     }
+
 }
