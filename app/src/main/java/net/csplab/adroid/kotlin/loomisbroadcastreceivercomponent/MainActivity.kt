@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityMainBinding
 //import net.csplab.adroid.kotlin.loomisassignment.R
 //import net.csplab.adroid.kotlin.loomisassignment.R
 
@@ -28,15 +29,30 @@ import receivers.ConsumePartyPayProviderBroadcastReciver
 class MainActivity : AppCompatActivity() {
     // NOTES HERE
     private var TAG = MainActivity::class.java.simpleName
+
+    private lateinit var bind: ActivityMainBinding
+
     lateinit var tstBroadcaster: ConsumePartyPayProviderBroadcastReciver
     private var intentFilterActions = IntentFilter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        bind = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(bind.root)
+
+        // Get Views
+        val tvHeader = bind.tvHeaderPay
+        val editTextNumber =bind.editTextNumber
+        val tvChoosePayProvider = bind.tvChoosePayProvider
+        val btStartPay = bind.btStartPay
+
+        // Comment: System : We do not have a particular order of actions, ordered broadcast is for
+        // listeners not for actions
+        // Chk@: We could do with a timer and a sendBroadcast, also put action in list so we can
+        // reference inot an array of action first and last is Start and end.
 
         // Get The Views from the layouts
-        Log.i(TAG, "onCreate:")
+        Log.i(TAG, "onCreate: $packageName")
         //Send Broadcast
         //sendBroadcast(Intent.)
         //val intentSet = Intent()
@@ -62,8 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Utility Class: Move to
-        val pack = packageName
-        collectActionsForProvider1(pack)
+        collectActionsForProvider1("pack")
         //collectActionsForProvider2()
         // Register ACTIONS for special PayProvider BroadcastReceiver
         intentFilterActions = IntentFilter().apply {

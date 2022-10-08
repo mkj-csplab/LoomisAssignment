@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/tvChoicePayProvider"
+        android:id="@+id/tvChoosePayProvider"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:text="Choose Pay Provider"
