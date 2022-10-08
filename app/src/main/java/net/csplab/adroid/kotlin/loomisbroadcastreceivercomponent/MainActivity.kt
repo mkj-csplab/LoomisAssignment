@@ -41,17 +41,16 @@ class MainActivity : AppCompatActivity() {
         //intentSet.action
         //val intentBundle = Intent().extras
         //sendBroadcast(intentSet)
+
+        tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
+        // Is this a problem that this is not in the resume part,
+        // Do we only need the register in resume
     }
 
-    override fun onPause() {
-        super.onPause()
-        unregisterReceiver(tstBroadcaster)
-    }
 
     override fun onResume() {
         super.onResume()
 
-        tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
         //val inf = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
 
         // Different Filter adders
@@ -62,15 +61,30 @@ class MainActivity : AppCompatActivity() {
 //        inf.addAction(Intent.ACTION_BATTERY_CHANGED)
 //        inf.addAction(Intent.ACTION_POWER_DISCONNECTED)
 
-        // Place this somewhere more
+        // Place this somewhere more "central"
+        var cardType = 1 // cardtype 1 and 2 corresponds to a specialiation of card type and pay provider
+        when(cardType){
+//            /tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
+        }
+
+        // Register ACTIONS for special PayProvider BroadcastReceiver
         val inf = IntentFilter().apply {
-            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_PAY_INIT") // Init
-            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_PAY_START") // start
-            addAction(Intent.ACTION_BATTERY_CHANGED)
-            addAction(Intent.ACTION_POWER_DISCONNECTED)
-            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_PAY_END")
+            addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
+            addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
+            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_INIT") // Init
+            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_START") // start
+            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_STEP1")
+            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_STEP2")
+            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_STEP3")
+            //Arbitrary number of action steps ... Ho do we put them in
+            addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_END") // End of ACTION EVENT
+
         }
         registerReceiver(tstBroadcaster, inf)
     }
-    //registerReceiver(tstBroadcaster, inf)
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(tstBroadcaster)
+    }
 }
