@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Pay Provider Broadcasting</string>
-    <string name="start_pay">Start Pay</string>
+    <string name="check_data">Check</string>
+    <string name="start_pay1">Pay Provider 1</string>
+    <string name="start_pay2">Pay Provider 2</string>
     <string name="text_number">Number Value</string>
     <string name="the_pay_provider">The Pay Provider</string>
 </resources>

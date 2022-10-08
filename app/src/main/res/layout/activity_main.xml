@@ -15,23 +15,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="36dp"/>
+        android:textSize="36sp"/>
 
     <Button
-        android:id="@+id/btStartPay"
-        android:layout_width="wrap_content"
+        android:id="@+id/btStartPayProvider1"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:text="@string/start_pay"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/start_pay1"
+
+        app:layout_constraintEnd_toStartOf="@id/btStartPayProvider2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+        android:id="@+id/btStartPayProvider2"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/start_pay2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/btStartPayProvider1"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
         android:id="@+id/tvChoosePayProvider"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:text="Choose Pay Provider"
-        android:textSize="32dp"
+        android:textSize="32sp"
         app:layout_constraintBottom_toTopOf="@+id/editTextNumber"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -46,10 +61,11 @@
         android:hint="@string/text_number"
         android:inputType="number"
         android:minHeight="48dp"
-        android:textSize="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/btStartPay"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/btStartPayProvider1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvHeaderPay" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

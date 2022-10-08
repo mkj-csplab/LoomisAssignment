@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityMainBinding
-//import net.csplab.adroid.kotlin.loomisassignment.R
-//import net.csplab.adroid.kotlin.loomisassignment.R
+import utility.UtilityActions
 
 import receivers.ConsumePartyPayProviderBroadcastReciver
+import utility.UtilityActions.Util.collectActionsForProvider1
 
 // This is the test class View:
 // We start operation from here.
@@ -19,7 +19,6 @@ import receivers.ConsumePartyPayProviderBroadcastReciver
 // Taks description: make a component
 // Extensible BroadcastReciever
 
-//
 //Context c = getApplicationContext();// flag would be require Calling startActivity() from outside of an Activity  context requires the FLAG_ACTIVITY_NEW_TASK flag
 //Intent i = new Intent(action_string);
 //i.setPackage(context.getPackageName());//this did the trick actually
@@ -31,7 +30,6 @@ class MainActivity : AppCompatActivity() {
     private var TAG = MainActivity::class.java.simpleName
 
     private lateinit var bind: ActivityMainBinding
-
     lateinit var tstBroadcaster: ConsumePartyPayProviderBroadcastReciver
     private var intentFilterActions = IntentFilter()
 
@@ -42,9 +40,10 @@ class MainActivity : AppCompatActivity() {
 
         // Get Views
         val tvHeader = bind.tvHeaderPay
-        val editTextNumber =bind.editTextNumber
-        val tvChoosePayProvider = bind.tvChoosePayProvider
-        val btStartPay = bind.btStartPay
+        val editTextNumber = bind.editTextNumber
+        //val tvChoosePayProvider = bind.tvChoosePayProvider
+        val btStartPayProvider1 = bind.btStartPayProvider1
+        val btStartPayProvider2 = bind.btStartPayProvider2
 
         // Comment: System : We do not have a particular order of actions, ordered broadcast is for
         // listeners not for actions
@@ -72,27 +71,49 @@ class MainActivity : AppCompatActivity() {
 //        inf.addAction(Intent.ACTION_POWER_DISCONNECTED)
 
         // Place this somewhere more "central"
-        var cardType = 1 // cardtype 1 and 2 corresponds to a specialiation of card type and pay provider
+        var cardType = 1  // cardtype 1 and 2 corresponds to a specialiation of card type and pay provider
         when(cardType){
 //            /tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
+        } //else {
+        //}
+
+        btStartPayProvider1.setOnClickListener {
+
+            val sAction = collectActionsForProvider1("pack")
+            //collectActionsForProvider2()
+            // Register ACTIONS for special PayProvider BroadcastReceiver
+            intentFilterActions = IntentFilter().apply {
+                addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
+                addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
+                //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
+                addAction(packageName + ".ACTION_PAYID1_START") // start
+                addAction(packageName + ".ACTION_PAYID1_STEP1")
+                addAction(packageName + ".ACTION_PAYID1_STEP2")
+                addAction(packageName + ".ACTION_PAYID1_STEP3")
+                //Arbitrary number of action steps ... Ho do we put them in
+                addAction(packageName + ".ACTION_PAYID1_END") // End of ACTION EVENT
+            }
+
+        }
+
+        btStartPayProvider2.setOnClickListener {
+            val sAction = UtilityActions.collectActionsForProvider2("pack")
+            // Changed utility class with a companion object
+            //collectActionsForProvider2()
+            // Register ACTIONS for special PayProvider BroadcastReceiver
+            intentFilterActions = IntentFilter().apply {
+                //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
+                addAction(sAction.first()) // start
+                for (s in sAction) {
+                    addAction(s)
+                }
+                //Arbitrary number of action steps ... Ho do we put them in
+                addAction(sAction.last()) // End of ACTION EVENT
+            }
+
         }
 
         // Utility Class: Move to
-        collectActionsForProvider1("pack")
-        //collectActionsForProvider2()
-        // Register ACTIONS for special PayProvider BroadcastReceiver
-        intentFilterActions = IntentFilter().apply {
-            addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
-            addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
-            //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
-            addAction(packageName + "ACTION_PAYID1_START") // start
-            addAction(packageName + "ACTION_PAYID1_STEP1")
-            addAction(packageName + "ACTION_PAYID1_STEP2")
-            addAction(packageName + "ACTION_PAYID1_STEP3")
-            //Arbitrary number of action steps ... Ho do we put them in
-            addAction(packageName + "ACTION_PAYID1_END") // End of ACTION EVENT
-
-        }
 
         //========================================================
         tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
@@ -100,40 +121,14 @@ class MainActivity : AppCompatActivity() {
         // Do we only need the register in resume
     }
 
-
     override fun onResume() {
         super.onResume()
         registerReceiver(tstBroadcaster, intentFilterActions)
     }
 
-    // In utility ss, maybe as static array
-    private fun collectActionsForProvider1(pack: String): List<String> {
-        //action_init: String = ctx.getPackage // ACTION_PAY_INIT") // Init
-        val s1 = packageName + "ACTION_PAYID1_START" // start
-        val s2 = packageName + "ACTION_PAYID1_STEP1"
-        val s3 = packageName + "ACTION_PAYID1_STEP2"
-        val s4 = packageName + "ACTION_PAYID1_STEP3"
-        //Arbitrary number of action steps ... How to add them, dynamically or set per specialisation
-        val s5 = packageName + "ACTION_PAYID1_END" // End of ACTION EVENT
-        Log.d(TAG, "Print Package Name $packageName : Action names $s1 $s2 $s3 $s4 $s5")
-        val customActions = listOf(s1,s2,s3,s4,s5)
-        return customActions
-    }
-    private fun collectActionsForProvider2(pack: String): List<String> {
-        // Chk@ : Put int list, maybe use size for that?
-        //action_init: String = ctx.getPackage // ACTION_PAY_INIT") // Init
-        val s1 = packageName + "ACTION_PAYID1_START" // start
-        val s2 = packageName + "ACTION_PAYID1_STEP1"
-        val s3 = packageName + "ACTION_PAYID1_STEP2"
-        val s4 = packageName + "ACTION_PAYID1_END" // End of ACTION EVENT
-        Log.d(TAG, "Print Package Name $packageName : Action names $s1 $s2 $s3 $s4")
-        val customActions = listOf(s1,s2,s3,s4)
-        return customActions
-    }
 
     override fun onPause() {
         super.onPause()
         unregisterReceiver(tstBroadcaster)
     }
-
 }
