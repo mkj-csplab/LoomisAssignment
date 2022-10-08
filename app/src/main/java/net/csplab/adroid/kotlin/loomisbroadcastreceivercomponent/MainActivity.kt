@@ -80,20 +80,38 @@ class MainActivity : AppCompatActivity() {
         btStartPayProvider1.setOnClickListener {
 
             val sAction = collectActionsForProvider1("pack")
-            //collectActionsForProvider2()
+
             // Register ACTIONS for special PayProvider BroadcastReceiver
+            // Maybe move of of this place which should be fore packing data into
+            // the intent. Combining Action and Extras
             intentFilterActions = IntentFilter().apply {
                 addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
                 addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
-                //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
-                addAction(packageName + ".ACTION_PAYID1_START") // start
-                addAction(packageName + ".ACTION_PAYID1_STEP1")
-                addAction(packageName + ".ACTION_PAYID1_STEP2")
-                addAction(packageName + ".ACTION_PAYID1_STEP3")
-                //Arbitrary number of action steps ... Ho do we put them in
-                addAction(packageName + ".ACTION_PAYID1_END") // End of ACTION EVENT
-            }
 
+                addAction(sAction.first()) // start
+                for (s in sAction.subList(1,sAction.size-1)) {
+                    Log.d(TAG, "p1: Action Strings Read: $s")
+                    addAction(s)
+                }
+                //Arbitrary number of action steps ... Ho do we put them in
+                addAction(sAction.last()) // End of ACTION EVENT
+                intent.action = sAction[0]
+                intent.putExtra("KEY_NAME", "Kylie Minogue")
+                //intent.setComponent(net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity::class.java.simpleName)
+                intent.setClassName("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent", "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity")
+            //val i2 = Intent(this, ReceiverTestActivity.class)
+                startActivity(intent)
+                //sendBroadcast(intent)
+
+            //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
+
+//                addAction(packageName + ".ACTION_PAYID1_START") // start
+//                addAction(packageName + ".ACTION_PAYID1_STEP1")
+//                addAction(packageName + ".ACTION_PAYID1_STEP2")
+//                addAction(packageName + ".ACTION_PAYID1_STEP3")
+//                //Arbitrary number of action steps ... Ho do we put them in
+//                addAction(packageName + ".ACTION_PAYID1_END") // End of ACTION EVENT
+            }
         }
 
         btStartPayProvider2.setOnClickListener {
@@ -104,17 +122,15 @@ class MainActivity : AppCompatActivity() {
             intentFilterActions = IntentFilter().apply {
                 //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
                 addAction(sAction.first()) // start
-                for (s in sAction) {
+                for (s in sAction.subList(1,sAction.size-1)) {
+                    Log.d(TAG, "p2: Action Strings Read: $s")
                     addAction(s)
                 }
                 //Arbitrary number of action steps ... Ho do we put them in
                 addAction(sAction.last()) // End of ACTION EVENT
             }
-
         }
-
         // Utility Class: Move to
-
         //========================================================
         tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
         // Is this a problem that this is not in the resume part,
@@ -125,7 +141,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         registerReceiver(tstBroadcaster, intentFilterActions)
     }
-
 
     override fun onPause() {
         super.onPause()
