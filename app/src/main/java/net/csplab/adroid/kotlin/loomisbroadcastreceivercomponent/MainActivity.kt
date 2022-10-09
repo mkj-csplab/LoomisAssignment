@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         //val tvChoosePayProvider = bind.tvChoosePayProvider
         val btStartPayProvider1 = bind.btStartPayProvider1
         val btStartPayProvider2 = bind.btStartPayProvider2
+        val btStartPayTestReceiverActivity = bind.btStartPayTestReceiverActivity
 
         // Comment: System : We do not have a particular order of actions, ordered broadcast is for
         // listeners not for actions
@@ -71,13 +72,14 @@ class MainActivity : AppCompatActivity() {
 //        inf.addAction(Intent.ACTION_POWER_DISCONNECTED)
 
         // Place this somewhere more "central"
-        var cardType = 1  // cardtype 1 and 2 corresponds to a specialiation of card type and pay provider
-        when(cardType){
+        var cardType =
+            1  // cardtype 1 and 2 corresponds to a specialiation of card type and pay provider
+        when (cardType) {
 //            /tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
         } //else {
         //}
 
-        btStartPayProvider1.setOnClickListener {
+        btStartPayTestReceiverActivity.setOnClickListener {
 
             val sAction = collectActionsForProvider1("pack")
 
@@ -89,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
 
                 addAction(sAction.first()) // start
-                for (s in sAction.subList(1,sAction.size-1)) {
+                for (s in sAction.subList(1, sAction.size - 1)) {
                     Log.d(TAG, "p1: Action Strings Read: $s")
                     addAction(s)
                 }
@@ -98,12 +100,17 @@ class MainActivity : AppCompatActivity() {
                 intent.action = sAction[0]
                 intent.putExtra("KEY_NAME", "Kylie Minogue")
                 //intent.setComponent(net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity::class.java.simpleName)
-                intent.setClassName("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent", "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity")
-            //val i2 = Intent(this, ReceiverTestActivity.class)
-                startActivity(intent)
-                //sendBroadcast(intent)
+                sendBroadcast(intent) // Chk@ in BroadcastReceiver
+                intent.setClassName(
+                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
+                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity"
+                )
+                //val i2 = Intent(this, ReceiverTestActivity.class)
 
-            //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
+
+                startActivity(intent)
+
+                //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
 
 //                addAction(packageName + ".ACTION_PAYID1_START") // start
 //                addAction(packageName + ".ACTION_PAYID1_STEP1")
@@ -114,6 +121,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        btStartPayProvider1.setOnClickListener {
+            val sAction = UtilityActions.collectActionsForProvider2("pack")
+            // Changed utility class with a companion object
+            //collectActionsForProvider2()
+            // Register ACTIONS for special PayProvider BroadcastReceiver
+            intentFilterActions = IntentFilter().apply {
+                //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
+                addAction(sAction.first()) // start
+                for (s in sAction.subList(1, sAction.size - 1)) {
+                    Log.d(TAG, "p2: Action Strings Read: $s")
+                    addAction(s)
+                }
+                //Arbitrary number of action steps ... Ho do we put them in
+                addAction(sAction.last()) // End of ACTION EVENT
+            }
+        }
         btStartPayProvider2.setOnClickListener {
             val sAction = UtilityActions.collectActionsForProvider2("pack")
             // Changed utility class with a companion object
@@ -122,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             intentFilterActions = IntentFilter().apply {
                 //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
                 addAction(sAction.first()) // start
-                for (s in sAction.subList(1,sAction.size-1)) {
+                for (s in sAction.subList(1, sAction.size - 1)) {
                     Log.d(TAG, "p2: Action Strings Read: $s")
                     addAction(s)
                 }

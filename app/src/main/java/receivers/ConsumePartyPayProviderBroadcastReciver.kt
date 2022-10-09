@@ -21,6 +21,8 @@ class ConsumePartyPayProviderBroadcastReciver : PayProviderBroadcastReceiver() {
             Toast.makeText(ctx, "Power CONNECTED:connected", Toast.LENGTH_LONG).show()
         }
 
+        //if (iAction == "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ACTION_PAYID1_START") {// Is action correct, look in intent.ACTIONS
+
         //switch (intentAction){
         //    case :
         //    break;

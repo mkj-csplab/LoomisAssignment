@@ -24,6 +24,9 @@ class ReceiverTestActivity : AppCompatActivity() {
             tvShowReceivedData.text = "Notice!"
         }
 
+        val extraInfo = intent.getStringExtra("KEY_NAME")
+        tvShowReceivedData.text = "KeyName: " + extraInfo
+
         Log.d(TAG, "onCreate: ")
 
     }

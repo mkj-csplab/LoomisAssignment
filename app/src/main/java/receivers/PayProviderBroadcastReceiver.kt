@@ -17,7 +17,7 @@ abstract class PayProviderBroadcastReceiver : BroadcastReceiver() {
             append("Action: ${intent.action}\n")
             append("URI: ${intent.toUri(Intent.URI_INTENT_SCHEME)}\n")
             toString().also { log ->
-                Log.d(TAG, log)
+                Log.d(TAG, "onReceive: PayProvider: " + log)
                 Toast.makeText(ctx, log, Toast.LENGTH_LONG).show()
             }
         }

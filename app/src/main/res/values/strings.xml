@@ -5,4 +5,7 @@
     <string name="start_pay2">Pay Provider 2</string>
     <string name="text_number">Number Value</string>
     <string name="the_pay_provider">The Pay Provider</string>
+    <string name="java_check">Java Check</string>
+    <string name="java_text">Java Text</string>
+    <string name="text_check">Check</string>
 </resources>
