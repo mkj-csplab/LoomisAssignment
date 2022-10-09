@@ -8,7 +8,7 @@ import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.MainActivity
 
 class ConsumePartyPayProviderBroadcastReciver(
     override var actionIDS: List<String>,
-    override val actionsNum: Int
+
     //override var actionsCompleted: List<Boolean>
 ) : PayProviderBroadcastReceiver() {
     private var TAG = ConsumePartyPayProviderBroadcastReciver::class.java.simpleName
@@ -23,15 +23,19 @@ class ConsumePartyPayProviderBroadcastReciver(
         Log.d(TAG, "onReceive:iAction: $actionReceived   ; ${actionIDS}")
         //Log.d(TAG, "iAction: ${intentExtras?.keySet()}")
 
+        //
+        var extraKeySet = intentExtras?.keySet()
+        Log.d(TAG, "ConsumerBR:Onrecieve: keyset ${extraKeySet}")
+
+        for (k in extraKeySet!!) {
+            Log.d(TAG, "Keys: $k")
+        }
+
         if (actionReceived == actionIDS[0]){
             var key1val = intent.getStringExtra("KEY1")
             Log.d(TAG, "key1val: $key1val")
         } else if (actionReceived == actionIDS[1]){
-            var extraKeySet = intentExtras?.keySet()
-            Log.d(TAG, "ConsumerBR:Onrecieve: keyset $extraKeySet")
-            for (k in extraKeySet!!) {
-                Log.d(TAG, "Keys: $k")
-            }
+
         } else if (actionReceived == actionIDS[2]) {
 
         }
@@ -47,15 +51,6 @@ class ConsumePartyPayProviderBroadcastReciver(
 //            }
 //        }
 
-//        for(i in 0..sAction.size - 1) {
-//            intent.action = sAction[i]
-//            Log.d(TAG, "Intent => $intent.action :: $sAction[i]")
-//            val ia = intent.action
-//            Log.d(TAG, "$ia")
-//            if (intent.action == sAction[0]){
-//                intent.putExtra("KEY1", "ID4325")
-//            } else if (intent.action == sAction[1]){
-//
 //                intent.putExtra("KEY2_2", "Amount")
 //                intent.putExtra("KEY2_2", "Balance")
 //                intent.putExtra("KEY2_3", "Idnum")
@@ -65,31 +60,8 @@ class ConsumePartyPayProviderBroadcastReciver(
 //            else if (intent.action == sAction[2]){
 //                intent.putExtra("KEY4", "BYE!")
 //            }
-//        }// FOR
-
 //        //        if (iAction == "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ACTION_PAYID1_START") {// Is action correct, look in intent.ACTIONS
 // =====
-//
-//        for(i in 0..sAction.size - 1) {
-//            intent.action = sAction[i]
-//
-//            if (intent.action == sAction[0]){
-//                intent.putExtra("KEY1", "ID4325")
-//            } else if (intent.action == sAction[1]){
-//
-//                intent.putExtra("KEY2_2", "Amount")
-//                intent.putExtra("KEY2_2", "Balance")
-//                intent.putExtra("KEY2_3", "Idnum")
-//                intent.putExtra("KEY2_3", "SWIFT")
-//                intent.putExtra("KEY2_3", "IBAN")
-//            }
-//            else if (intent.action == sAction[2]){
-//                intent.putExtra("KEY4", "BYE!")
-//            }
-//        }// FOR
-
-        // =====
-
         //switch (intentAction){
         //    case :
         //    break;

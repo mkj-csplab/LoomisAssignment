@@ -11,7 +11,7 @@ abstract class PayProviderBroadcastReceiver : BroadcastReceiver() {
     private val TAG = PayProviderBroadcastReceiver::class.java.simpleName
 
     abstract var actionIDS: List<String> // The list of Ids
-    abstract val actionsNum: Int
+    //abstract val actionsNum: Int
 
     private lateinit var actionBrTimer: CountDownTimer
     //abstract var actionsCompleted: List<Boolean> // getNumberOf Extras

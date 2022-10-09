@@ -13,18 +13,11 @@ import receivers.BankOfBankBroadcastReceiver
 import receivers.ConsumePartyPayProviderBroadcastReciver
 import receivers.PayProviderBroadcastReceiver
 import utility.UtilityActions
-import utility.UtilityActions.Util.collectActionsForProvider1
 
 // This is the test class View:
 // We start operation from here.
 // Tasks description: make a component
 // Extensible BroadcastReciever
-
-//Context c = getApplicationContext();// flag would be require Calling startActivity() from outside of an Activity  context requires the FLAG_ACTIVITY_NEW_TASK flag
-//Intent i = new Intent(action_string);
-//i.setPackage(context.getPackageName());//this did the trick actually
-//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//context.startActivity(i);
 
 class MainActivity : AppCompatActivity() {
     private var readyToBroadCast: Boolean = false
@@ -33,9 +26,9 @@ class MainActivity : AppCompatActivity() {
     private var TAG = MainActivity::class.java.simpleName
 
     private lateinit var bind: ActivityMainBinding
-    lateinit var tstBroadcaster: PayProviderBroadcastReceiver
-    private var intentFilterActions = IntentFilter()
-    private lateinit var sAction: List<String>
+    lateinit var mTstBroadcaster: PayProviderBroadcastReceiver
+    private var mIntentFilterActions = IntentFilter()
+    private lateinit var mStrAction: List<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,30 +57,11 @@ class MainActivity : AppCompatActivity() {
 
         // Get The Views from the layouts
         Log.i(TAG, "onCreate: $packageName")
-        //Send Broadcast
-        //sendBroadcast(Intent.)
-        //val intentSet = Intent()
-        //intentSet.action
-        //val intentBundle = Intent().extras
-        //sendBroadcast(intentSet)
 
-        // =============================================
-
-        // Different Filter adders
-        // Make Intent ready with extras!
-        //Intent().setComponent()
-//        val inf = IntentFilter()
-//        inf.addAction(packageName + "PAYPROVIDER_NAME" + "ACTION_PAY_PAY_INIT")
-//        inf.addAction(Intent.ACTION_BATTERY_CHANGED)
-//        inf.addAction(Intent.ACTION_POWER_DISCONNECTED)
-
-        // Place this somewhere more "central"
-        var cardType =
-            1  // cardtype 1 and 2 corresponds to a specialiation of card type and pay provider
-        when (cardType) {
+//        var cardType = 1  // cardtype 1 and 2 corresponds to a specialiation of card type and pay provider
+//        when (cardType) {
 //            /tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
-        } //else {
-        //}
+//            } //else { //}
 
 //        btStartPayTestReceiverActivity.setOnClickListener {
 //
@@ -117,7 +91,6 @@ class MainActivity : AppCompatActivity() {
 ////
 ////                    if (actionStepNum == 0) {
 ////                        intent.putExtra("KEY_NAME", "Kylie Minogue")
-////
 ////                    }
 ////                    else if (actionStepNum == 1)
 ////                        intent.putExtra("KEY_NAME", "Id")
@@ -127,8 +100,7 @@ class MainActivity : AppCompatActivity() {
 //                    //intent.setComponent(net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity::class.java.simpleName)
 //                    //sendBroadcast(intent) // Chk@ in BroadcastReceiver
 ////                }
-//
-//                // ---
+//                // ------------
 //                    intent.setClassName(
 //                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
 //                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity" )
@@ -149,11 +121,9 @@ class MainActivity : AppCompatActivity() {
         // ConsumerPartyPayProviderBroadcastReceiver
         btStartPayProvider1.setOnClickListener {
             val sAction = UtilityActions.collectActionsForProvider2("pack")
-            // Changed utility class with a companion object
-            //collectActionsForProvider2()
 
             // Register ACTIONS for special PayProvider BroadcastReceiver
-            intentFilterActions = IntentFilter().apply {
+            mIntentFilterActions = IntentFilter().apply {
                 //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
                 addAction(sAction.first()) // start
                 for (s in sAction.subList(1, sAction.size - 1)) {
@@ -166,73 +136,74 @@ class MainActivity : AppCompatActivity() {
             //intentFilterActions.addAction("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START")
 
             readyToBroadCast = true
-            tstBroadcaster = ConsumePartyPayProviderBroadcastReciver(sAction,sAction.size)
+            mTstBroadcaster = ConsumePartyPayProviderBroadcastReciver(sAction)
 
-            registerReceiver(tstBroadcaster, intentFilterActions)
+            registerReceiver(mTstBroadcaster, mIntentFilterActions)
 
             intent = Intent()
             for(i in 0..sAction.size - 1) {
                 intent.action = sAction[i]
-                Log.d(TAG, "Intent => $intent.action :: $sAction[i]")
+                Log.d(TAG, "Intent => $intent.action :: $sAction[i] :: Action.size: $sAction.size ")
                 val ia = intent.action
                 Log.d(TAG, "$ia")
-                if (intent.action == sAction[0]){
+                if (intent.action == sAction[0]) {
                     intent.putExtra("KEY1", "ID4325")
-                } else if (intent.action == sAction[1]){
+                } else if (intent.action == sAction[1]) {
 
-                    intent.putExtra("KEY2_2", "Amount")
+                    intent.putExtra("KEY2_1", "Amount")
                     intent.putExtra("KEY2_2", "Balance")
                     intent.putExtra("KEY2_3", "Idnum")
-                    intent.putExtra("KEY2_3", "SWIFT")
-                    intent.putExtra("KEY2_3", "IBAN")
+                    intent.putExtra("KEY2_4", "SWIFT")
+                    intent.putExtra("KEY2_5", "IBAN")
+                } else if (intent.action == sAction[2]) {
+                    intent.putExtra("KEY3", "BYE!")
                 }
-                else if (intent.action == sAction[2]){
-                    intent.putExtra("KEY4", "BYE!")
-                }
-            }// FOR
+                sendBroadcast(intent) // send intent to ConsumerPartyProvider, Timing
+            }
             //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
-            sendBroadcast(intent) // send intent to ConsumerPartyProvider
+
         }
 
         // BankOfBankBroadcastReceiver
         btStartPayProvider2.setOnClickListener {
-            sAction = UtilityActions.collectActionsForProvider2("pack")
-            // Changed utility class with a companion object
-            //collectActionsForProvider2()
+            mStrAction = UtilityActions.collectActionsForProvider2("pack")
+
             // Register ACTIONS for special PayProvider BroadcastReceiver
-            intentFilterActions = IntentFilter().apply {
+            mIntentFilterActions = IntentFilter().apply {
                 // Init: Should be the user pressing Pay on MainActivity@
-                addAction(sAction.first()) // start
-                for (s in sAction.subList(1, sAction.size - 1)) {
-                    Log.d(TAG, "p2: Action Strings Read: $s Sizelist ${sAction.size}")
+                addAction(mStrAction.first()) // start
+                for (s in mStrAction.subList(1, mStrAction.size - 1)) {
+                    Log.d(TAG, "p2: Action Strings Read: $s Sizelist ${mStrAction.size}")
                     addAction(s)
                 }
                 //Arbitrary number of action steps ... Ho do we put them in
-                addAction(sAction.last()) // End of ACTION EVENT
+                addAction(mStrAction.last()) // End of ACTION EVENT
                 //addAction("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START")
             }
             readyToBroadCast = true
-            tstBroadcaster = BankOfBankBroadcastReceiver(sAction,sAction.size)
+            mTstBroadcaster = BankOfBankBroadcastReceiver(mStrAction)
 
-            registerReceiver(tstBroadcaster, intentFilterActions)
+            registerReceiver(mTstBroadcaster, mIntentFilterActions)
 
             intent = Intent()
-            for(i in 0..sAction.size - 1) {
+            //  Run trough all possible ACTIONS and ready them
+            for(i in 0..mStrAction.size - 1) {
                 Log.d(TAG, "sAction")
-                Log.d(TAG, "")
-                intent.action = sAction[i]
+                intent.action = mStrAction[i]
 
-                if (intent.action == sAction[0]){
+                // The Intent is for one broadcast, so we have to add the appropiate Extras for each Action:
+                // Then -> Ready next intent with action and extras to broadcast
+                if (intent.action == mStrAction[0]){
                     intent.putExtra("KEY1", "ID4325")
-                } else if (intent.action == sAction[1]){
+                } else if (intent.action == mStrAction[1]){
                     intent.putExtra("KEY2_2", "Amount")
                     intent.putExtra("KEY2_2", "Balance")
                     intent.putExtra("KEY2_3", "Idnum")
                     intent.putExtra("KEY2_3", "SWIFT")
                     intent.putExtra("KEY2_3", "IBAN")
-                } else if (intent.action == sAction[2]){
+                } else if (intent.action == mStrAction[2]){
                     intent.putExtra("KEY3", "5000")
-                }else if (intent.action == sAction[3]){
+                }else if (intent.action == mStrAction[3]){
                     intent.putExtra("KEY4", "BYE!")
                 }
             }// FOR
@@ -251,14 +222,14 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         if (readyToBroadCast) {
-            registerReceiver(tstBroadcaster, intentFilterActions)
+            registerReceiver(mTstBroadcaster, mIntentFilterActions)
         }
     }
 
     override fun onPause() {
         super.onPause()
         if (readyToBroadCast) {
-            unregisterReceiver(tstBroadcaster)
+            unregisterReceiver(mTstBroadcaster)
         }
     }
 }
