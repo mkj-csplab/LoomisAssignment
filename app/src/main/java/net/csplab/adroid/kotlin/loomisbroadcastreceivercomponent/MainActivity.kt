@@ -206,9 +206,9 @@ class MainActivity : AppCompatActivity() {
                 }else if (intent.action == mStrAction[3]){
                     intent.putExtra("KEY4", "BYE!")
                 }
-            }// FOR
+                sendBroadcast(intent)
+            }
             //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
-            sendBroadcast(intent)
         }
         // Utility Class: Move to
         //========================================================
