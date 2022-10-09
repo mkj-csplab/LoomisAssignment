@@ -14,45 +14,81 @@ class ConsumePartyPayProviderBroadcastReciver(
     private var TAG = ConsumePartyPayProviderBroadcastReciver::class.java.simpleName
 
     override fun onReceive(ctx: Context, intent: Intent) {
-
         super.onReceive(ctx, intent)
+        Toast.makeText(ctx, "CONSUMERPARTY", Toast.LENGTH_LONG).show()
 
-        StringBuilder().apply {
-            append("Action: ${intent.action}\n")
-            append("URI: ${intent.toUri(Intent.URI_INTENT_SCHEME)}\n")
-            toString().also { log ->
-                //Log.d(TAG, "onReceive: PayProvider: " + log)
-                Toast.makeText(ctx, log, Toast.LENGTH_LONG).show()
+        val actionReceived = intent.action
+        var intentExtras = intent.extras
+
+        Log.d(TAG, "onReceive:iAction: $actionReceived   ; ${actionIDS}")
+        //Log.d(TAG, "iAction: ${intentExtras?.keySet()}")
+
+        if (actionReceived == actionIDS[0]){
+            var key1val = intent.getStringExtra("KEY1")
+            Log.d(TAG, "key1val: $key1val")
+        } else if (actionReceived == actionIDS[1]){
+            var extraKeySet = intentExtras?.keySet()
+            Log.d(TAG, "ConsumerBR:Onrecieve: keyset $extraKeySet")
+            for (k in extraKeySet!!) {
+                Log.d(TAG, "Keys: $k")
             }
-        }
+        } else if (actionReceived == actionIDS[2]) {
 
-        val iAction = intent?.action
-//        if (iAction == Intent.ACTION_POWER_DISCONNECTED) {
-//            //doSomething()
-//            // Also update UI
-//            // How to update ui interface
-//            Log.d("Consumer", "ACTION_POWER_DISCONNECTED")
-//            Toast.makeText(ctx, "Power Disconnected", Toast.LENGTH_LONG).show()
-//
-//        } else if (iAction == Intent.ACTION_POWER_CONNECTED) {
-//            Log.d("Consumer", "ACTION_POWER_CONNECTED")
-//            Toast.makeText(ctx, "Power CONNECTED:connected", Toast.LENGTH_LONG).show()
+        }
+    }
+}
+
+//StringBuilder().apply {
+//            append("Action: ${intent.action}\n")
+//            append("URI: ${intent.toUri(Intent.URI_INTENT_SCHEME)}\n")
+//            toString().also { log ->
+//                Log.d(TAG, "onReceive: PayProvider: " + log)
+//                Toast.makeText(ctx, log, Toast.LENGTH_LONG).show()
+//            }
 //        }
 
-        // Loop over i actions
-        if (iAction == "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ACTION_PAYID1_START") {// Is action correct, look in intent.ACTIONS
-            Log.d(TAG, "ACTION_PAYID1_START")
-        }else if (iAction == "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ACTION_PAYID1_STEP1"){
-            Log.d(TAG, "ACTION_PAYID1_STEP1")
-        }
+//        for(i in 0..sAction.size - 1) {
+//            intent.action = sAction[i]
+//            Log.d(TAG, "Intent => $intent.action :: $sAction[i]")
+//            val ia = intent.action
+//            Log.d(TAG, "$ia")
+//            if (intent.action == sAction[0]){
+//                intent.putExtra("KEY1", "ID4325")
+//            } else if (intent.action == sAction[1]){
+//
+//                intent.putExtra("KEY2_2", "Amount")
+//                intent.putExtra("KEY2_2", "Balance")
+//                intent.putExtra("KEY2_3", "Idnum")
+//                intent.putExtra("KEY2_3", "SWIFT")
+//                intent.putExtra("KEY2_3", "IBAN")
+//            }
+//            else if (intent.action == sAction[2]){
+//                intent.putExtra("KEY4", "BYE!")
+//            }
+//        }// FOR
 
-        Log.d(TAG, "actions $iAction :: $actionIDS[0]  $actionIDS[1] ")
-        //for (i in )
-        if (iAction == actionIDS[0]){
+//        //        if (iAction == "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ACTION_PAYID1_START") {// Is action correct, look in intent.ACTIONS
+// =====
+//
+//        for(i in 0..sAction.size - 1) {
+//            intent.action = sAction[i]
+//
+//            if (intent.action == sAction[0]){
+//                intent.putExtra("KEY1", "ID4325")
+//            } else if (intent.action == sAction[1]){
+//
+//                intent.putExtra("KEY2_2", "Amount")
+//                intent.putExtra("KEY2_2", "Balance")
+//                intent.putExtra("KEY2_3", "Idnum")
+//                intent.putExtra("KEY2_3", "SWIFT")
+//                intent.putExtra("KEY2_3", "IBAN")
+//            }
+//            else if (intent.action == sAction[2]){
+//                intent.putExtra("KEY4", "BYE!")
+//            }
+//        }// FOR
 
-        }else if (iAction == actionIDS[1]) {
-
-        }
+        // =====
 
         //switch (intentAction){
         //    case :
@@ -63,8 +99,8 @@ class ConsumePartyPayProviderBroadcastReciver(
         //when (iAction) {
         //     ActionString -> {}
         //    Intent.ACTION_POWER_DISCONNECTED -> {}
-        }
-    }
+        //}
+
         // ===============================================
         // Action Walkthrough
         /*

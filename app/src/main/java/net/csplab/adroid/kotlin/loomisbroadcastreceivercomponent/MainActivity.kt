@@ -89,88 +89,119 @@ class MainActivity : AppCompatActivity() {
         } //else {
         //}
 
-        btStartPayTestReceiverActivity.setOnClickListener {
-
-            val sAction = collectActionsForProvider1("pack")
-
-            // Register ACTIONS for special PayProvider BroadcastReceiver
-            // Maybe move of of this place which should be fore packing data into
-            // the intent. Combining Action and Extras
-            intentFilterActions = IntentFilter().apply {
-                addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
-                addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
-
-                addAction(sAction.first()) // start
-                for (s in sAction.subList(1, sAction.size - 1)) {
-                    Log.d(TAG, "p1: Action Strings Read: $s")
-                    addAction(s)
-                }
-                //Arbitrary number of action steps ... Ho do we put them in
-                addAction(sAction.last()) // End of ACTION EVENT
-
-                // Walktrough Actions and pack them, control by click button, maybe move this somewhere
-                // Else, maybe to a new button
-                var actionStepNum = 0
-                for (i in 0..sAction.size) {
-                    intent.action = sAction[actionStepNum]
-
-                    if (actionStepNum == 0) {
-                        intent.putExtra("KEY_NAME", "Kylie Minogue")
-
-                    }
-                    else if (actionStepNum == 1)
-                        intent.putExtra("KEY_NAME", "Id")
-                        intent.putExtra("KEY_NAME", "460967")
-                    // Function to add variable amount of extra
-                    // Set Component to explixitly communicate within App / Package
-                    //intent.setComponent(net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity::class.java.simpleName)
-                    sendBroadcast(intent) // Chk@ in BroadcastReceiver
-                }
-                    //intent.setClassName(
-                    //"net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
-                    //"net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity" )
-
-                startActivity(intent)
-
-                //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
-
-//                addAction(packageName + ".ACTION_PAYID1_START") // start
-//                addAction(packageName + ".ACTION_PAYID1_STEP1")
-//                addAction(packageName + ".ACTION_PAYID1_STEP2")
-//                addAction(packageName + ".ACTION_PAYID1_STEP3")
+//        btStartPayTestReceiverActivity.setOnClickListener {
+//
+//            val sAction = collectActionsForProvider1("pack")
+//
+//            // Register ACTIONS for special PayProvider BroadcastReceiver
+//            // Maybe move of of this place which should be fore packing data into
+//            // the intent. Combining Action and Extras
+//            intentFilterActions = IntentFilter().apply {
+//                addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
+//                addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
+//
+//                addAction(sAction.first()) // start
+//                for (s in sAction.subList(1, sAction.size - 1)) {
+//                    Log.d(TAG, "p1: Action Strings Read: $s")
+//                    addAction(s)
+//                }
 //                //Arbitrary number of action steps ... Ho do we put them in
-//                addAction(packageName + ".ACTION_PAYID1_END") // End of ACTION EVENT
-            }
-        }
-
+//                addAction(sAction.last()) // End of ACTION EVENT
+//
+//                intent.action = sAction[0]
+//                // Walktrough Actions and pack them, control by click button, maybe move this somewhere
+//                // Else, maybe to a new button
+////                var actionStepNum = 0
+////                for (i in 0..sAction.size) {
+////                    intent.action = sAction[actionStepNum]
+////
+////                    if (actionStepNum == 0) {
+////                        intent.putExtra("KEY_NAME", "Kylie Minogue")
+////
+////                    }
+////                    else if (actionStepNum == 1)
+////                        intent.putExtra("KEY_NAME", "Id")
+////                        intent.putExtra("KEY_NAME", "460967")
+////                    // Function to add variable amount of extra
+////                    // Set Component to explixitly communicate within App / Package
+//                    //intent.setComponent(net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity::class.java.simpleName)
+//                    //sendBroadcast(intent) // Chk@ in BroadcastReceiver
+////                }
+//
+//                // ---
+//                    intent.setClassName(
+//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
+//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity" )
+//                startActivity(intent)
+//                // ---
+//
+//                //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
+//
+////                addAction(packageName + ".ACTION_PAYID1_START") // start
+////                addAction(packageName + ".ACTION_PAYID1_STEP1")
+////                addAction(packageName + ".ACTION_PAYID1_STEP2")
+////                addAction(packageName + ".ACTION_PAYID1_STEP3")
+////                //Arbitrary number of action steps ... Ho do we put them in
+////                addAction(packageName + ".ACTION_PAYID1_END") // End of ACTION EVENT
+//            }
+//        }
+//
+        // ConsumerPartyPayProviderBroadcastReceiver
         btStartPayProvider1.setOnClickListener {
             val sAction = UtilityActions.collectActionsForProvider2("pack")
             // Changed utility class with a companion object
             //collectActionsForProvider2()
 
-
             // Register ACTIONS for special PayProvider BroadcastReceiver
             intentFilterActions = IntentFilter().apply {
                 //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
                 addAction(sAction.first()) // start
                 for (s in sAction.subList(1, sAction.size - 1)) {
-                    Log.d(TAG, "p2: Action Strings Read: $s Sizelist ${sAction.size}\"")
+                    Log.d(TAG, "p2: Action Strings Read: $s Sizelist ${sAction.size} \n")
                     addAction(s)
                 }
                 //Arbitrary number of action steps ... Ho do we put them in
                 addAction(sAction.last()) // End of ACTION EVENT
             }
+            //intentFilterActions.addAction("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START")
+
             readyToBroadCast = true
             tstBroadcaster = ConsumePartyPayProviderBroadcastReciver(sAction,sAction.size)
+
+            registerReceiver(tstBroadcaster, intentFilterActions)
+
+            intent = Intent()
+            for(i in 0..sAction.size - 1) {
+                intent.action = sAction[i]
+                Log.d(TAG, "Intent => $intent.action :: $sAction[i]")
+                val ia = intent.action
+                Log.d(TAG, "$ia")
+                if (intent.action == sAction[0]){
+                    intent.putExtra("KEY1", "ID4325")
+                } else if (intent.action == sAction[1]){
+
+                    intent.putExtra("KEY2_2", "Amount")
+                    intent.putExtra("KEY2_2", "Balance")
+                    intent.putExtra("KEY2_3", "Idnum")
+                    intent.putExtra("KEY2_3", "SWIFT")
+                    intent.putExtra("KEY2_3", "IBAN")
+                }
+                else if (intent.action == sAction[2]){
+                    intent.putExtra("KEY4", "BYE!")
+                }
+            }// FOR
+            //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
+            sendBroadcast(intent) // send intent to ConsumerPartyProvider
         }
 
+        // BankOfBankBroadcastReceiver
         btStartPayProvider2.setOnClickListener {
             sAction = UtilityActions.collectActionsForProvider2("pack")
             // Changed utility class with a companion object
             //collectActionsForProvider2()
             // Register ACTIONS for special PayProvider BroadcastReceiver
             intentFilterActions = IntentFilter().apply {
-                //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
+                // Init: Should be the user pressing Pay on MainActivity@
                 addAction(sAction.first()) // start
                 for (s in sAction.subList(1, sAction.size - 1)) {
                     Log.d(TAG, "p2: Action Strings Read: $s Sizelist ${sAction.size}")
@@ -178,9 +209,35 @@ class MainActivity : AppCompatActivity() {
                 }
                 //Arbitrary number of action steps ... Ho do we put them in
                 addAction(sAction.last()) // End of ACTION EVENT
+                //addAction("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START")
             }
             readyToBroadCast = true
             tstBroadcaster = BankOfBankBroadcastReceiver(sAction,sAction.size)
+
+            registerReceiver(tstBroadcaster, intentFilterActions)
+
+            intent = Intent()
+            for(i in 0..sAction.size - 1) {
+                Log.d(TAG, "sAction")
+                Log.d(TAG, "")
+                intent.action = sAction[i]
+
+                if (intent.action == sAction[0]){
+                    intent.putExtra("KEY1", "ID4325")
+                } else if (intent.action == sAction[1]){
+                    intent.putExtra("KEY2_2", "Amount")
+                    intent.putExtra("KEY2_2", "Balance")
+                    intent.putExtra("KEY2_3", "Idnum")
+                    intent.putExtra("KEY2_3", "SWIFT")
+                    intent.putExtra("KEY2_3", "IBAN")
+                } else if (intent.action == sAction[2]){
+                    intent.putExtra("KEY3", "5000")
+                }else if (intent.action == sAction[3]){
+                    intent.putExtra("KEY4", "BYE!")
+                }
+            }// FOR
+            //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
+            sendBroadcast(intent)
         }
         // Utility Class: Move to
         //========================================================

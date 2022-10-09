@@ -35,6 +35,5 @@ class ReceiverTestActivity : AppCompatActivity() {
         tvShowReceivedData.text = "KeyName: " + extraInfo
 
         Log.d(TAG, "onCreate: ")
-
     }
 }

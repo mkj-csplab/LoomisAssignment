@@ -13,9 +13,7 @@ abstract class PayProviderBroadcastReceiver : BroadcastReceiver() {
     abstract var actionIDS: List<String> // The list of Ids
     abstract val actionsNum: Int
 
-
     private lateinit var actionBrTimer: CountDownTimer
-
     //abstract var actionsCompleted: List<Boolean> // getNumberOf Extras
 
     override fun onReceive(ctx: Context, intent: Intent) {
