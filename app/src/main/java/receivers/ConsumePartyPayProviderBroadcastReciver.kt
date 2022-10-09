@@ -4,10 +4,24 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.MainActivity
 
 class ConsumePartyPayProviderBroadcastReciver : PayProviderBroadcastReceiver() {
+    //private var TAG = ConsumePartyPayProviderBroadcastReciver::class.java.simpleName
+
     override fun onReceive(ctx: Context, intent: Intent) {
+
         super.onReceive(ctx, intent)
+
+        StringBuilder().apply {
+            append("Action: ${intent.action}\n")
+            append("URI: ${intent.toUri(Intent.URI_INTENT_SCHEME)}\n")
+            toString().also { log ->
+                //Log.d(TAG, "onReceive: PayProvider: " + log)
+                Toast.makeText(ctx, log, Toast.LENGTH_LONG).show()
+            }
+        }
+
         val iAction = intent?.action
         if (iAction == Intent.ACTION_POWER_DISCONNECTED) {
             //doSomething()

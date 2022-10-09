@@ -1,16 +1,16 @@
 package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent
 
 //import android.os.Build.VERSION_CODES.R
-import android.content.BroadcastReceiver
+
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityMainBinding
-import utility.UtilityActions
-
 import receivers.ConsumePartyPayProviderBroadcastReciver
+import utility.UtilityActions
 import utility.UtilityActions.Util.collectActionsForProvider1
 
 // This is the test class View:
@@ -37,6 +37,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
+
+        val actionBar: ActionBar? = supportActionBar
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(false) // Disable the button
+            actionBar.setDisplayHomeAsUpEnabled(true) // Remove the left caret
+            actionBar.setDisplayShowHomeEnabled(true) // Remove the icon
+        }
 
         // Get Views
         val tvHeader = bind.tvHeaderPay

@@ -13,15 +13,6 @@ abstract class PayProviderBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(ctx: Context, intent: Intent) {
         val rec = Intent.ACTION_ANSWER
 
-        StringBuilder().apply {
-            append("Action: ${intent.action}\n")
-            append("URI: ${intent.toUri(Intent.URI_INTENT_SCHEME)}\n")
-            toString().also { log ->
-                Log.d(TAG, "onReceive: PayProvider: " + log)
-                Toast.makeText(ctx, log, Toast.LENGTH_LONG).show()
-            }
-        }
-
         val action: String? = intent?.getAction()
 
         //inf.addAction(Intent.ACTION_BATTERY_CHANGED)
