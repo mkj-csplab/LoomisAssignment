@@ -6,8 +6,12 @@ import android.util.Log
 import android.widget.Toast
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.MainActivity
 
-class ConsumePartyPayProviderBroadcastReciver : PayProviderBroadcastReceiver() {
-    //private var TAG = ConsumePartyPayProviderBroadcastReciver::class.java.simpleName
+class ConsumePartyPayProviderBroadcastReciver(
+    override var actionIDS: List<String>,
+    override val actionsNum: Int
+    //override var actionsCompleted: List<Boolean>
+) : PayProviderBroadcastReceiver() {
+    private var TAG = ConsumePartyPayProviderBroadcastReciver::class.java.simpleName
 
     override fun onReceive(ctx: Context, intent: Intent) {
 
@@ -23,19 +27,32 @@ class ConsumePartyPayProviderBroadcastReciver : PayProviderBroadcastReceiver() {
         }
 
         val iAction = intent?.action
-        if (iAction == Intent.ACTION_POWER_DISCONNECTED) {
-            //doSomething()
-            // Also update UI
-            // How to update ui interface
-            Log.d("Consumer", "ACTION_POWER_DISCONNECTED")
-            Toast.makeText(ctx, "Power Disconnected", Toast.LENGTH_LONG).show()
+//        if (iAction == Intent.ACTION_POWER_DISCONNECTED) {
+//            //doSomething()
+//            // Also update UI
+//            // How to update ui interface
+//            Log.d("Consumer", "ACTION_POWER_DISCONNECTED")
+//            Toast.makeText(ctx, "Power Disconnected", Toast.LENGTH_LONG).show()
+//
+//        } else if (iAction == Intent.ACTION_POWER_CONNECTED) {
+//            Log.d("Consumer", "ACTION_POWER_CONNECTED")
+//            Toast.makeText(ctx, "Power CONNECTED:connected", Toast.LENGTH_LONG).show()
+//        }
 
-        } else if (iAction == Intent.ACTION_POWER_CONNECTED) {
-            Log.d("Consumer", "ACTION_POWER_CONNECTED")
-            Toast.makeText(ctx, "Power CONNECTED:connected", Toast.LENGTH_LONG).show()
+        // Loop over i actions
+        if (iAction == "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ACTION_PAYID1_START") {// Is action correct, look in intent.ACTIONS
+            Log.d(TAG, "ACTION_PAYID1_START")
+        }else if (iAction == "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ACTION_PAYID1_STEP1"){
+            Log.d(TAG, "ACTION_PAYID1_STEP1")
         }
 
-        //if (iAction == "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ACTION_PAYID1_START") {// Is action correct, look in intent.ACTIONS
+        Log.d(TAG, "actions $iAction :: $actionIDS[0]  $actionIDS[1] ")
+        //for (i in )
+        if (iAction == actionIDS[0]){
+
+        }else if (iAction == actionIDS[1]) {
+
+        }
 
         //switch (intentAction){
         //    case :
