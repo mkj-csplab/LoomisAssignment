@@ -19,10 +19,10 @@ class ConsumePartyPayProviderBroadcastReciver(
 
         val actionReceived = intent.action
         var intentExtras = intent.extras
+        var mNumberActionsRegistered = actionIDS.size
 
-        Log.d(TAG, "onReceive:iAction: $actionReceived   ; ${actionIDS}")
+        Log.d(TAG, "onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${actionIDS}")
         //Log.d(TAG, "iAction: ${intentExtras?.keySet()}")
-
         //
         var extraKeySet = intentExtras?.keySet()
         Log.d(TAG, "ConsumerBR:Onrecieve: keyset ${extraKeySet}")
