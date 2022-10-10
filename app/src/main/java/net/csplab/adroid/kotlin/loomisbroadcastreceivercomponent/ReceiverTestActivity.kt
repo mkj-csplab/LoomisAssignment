@@ -8,7 +8,6 @@ import androidx.appcompat.app.ActionBar
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityReceiverTestBinding
 
 class ReceiverTestActivity : AppCompatActivity() {
-
     private var TAG = ReceiverTestActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {

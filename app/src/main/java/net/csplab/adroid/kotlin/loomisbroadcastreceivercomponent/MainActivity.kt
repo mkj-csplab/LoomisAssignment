@@ -9,10 +9,11 @@ import android.util.Log
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityMainBinding
-import receivers.BankOfBankBroadcastReceiver
-import receivers.ConsumePartyPayProviderBroadcastReciver
-import receivers.PayProviderBroadcastReceiver
+import receivers.BankOfBankReceiver
+import receivers.ConsumePartyPayProviderReciver
+import receivers.PayProviderReceiver
 import utility.UtilityActions
+import java.util.*
 
 // This is the test class View:
 // We start operation from here.
@@ -20,29 +21,31 @@ import utility.UtilityActions
 // Extensible BroadcastReciever
 
 class MainActivity : AppCompatActivity() {
+    private var TAG = MainActivity::class.java.simpleName
     private var readyToBroadCast: Boolean = false
 
-    // NOTES HERE
-    private var TAG = MainActivity::class.java.simpleName
-
     private lateinit var bind: ActivityMainBinding
-    lateinit var mTstBroadcaster: PayProviderBroadcastReceiver
+    lateinit var mTstBroadcaster: PayProviderReceiver
     private var mIntentFilterActions = IntentFilter()
     private lateinit var mStrAction: List<String>
+
+    lateinit var mTimeOut: Timer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bind = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
+        // Nav Back [ <- ]
         val actionBar: ActionBar? = supportActionBar
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(false) // Disable the button
-            actionBar.setDisplayHomeAsUpEnabled(true) // Remove the left caret
-            actionBar.setDisplayShowHomeEnabled(true) // Remove the icon
+            actionBar.setDisplayHomeAsUpEnabled(true) // add left caret
+            actionBar.setDisplayShowHomeEnabled(true) // enable icon
         }
 
-        // Get Views
+
+        // Get The Views from the layouts
         val tvHeader = bind.tvHeaderPay
         val editTextNumber = bind.editTextNumber
         //val tvChoosePayProvider = bind.tvChoosePayProvider
@@ -50,96 +53,87 @@ class MainActivity : AppCompatActivity() {
         val btStartPayProvider2 = bind.btStartPayProvider2
         val btStartPayTestReceiverActivity = bind.btStartPayTestReceiverActivity
 
+//        // Timer from MainActivity
+//        mTimeOut.schedule(object: TimerTask() {
+//            override fun run() {
+//                this@MainActivity.runOnUiThread(
+//                    Runnable {
+//                        tvHeader.text = "Timer: " + Date().time
+//                    }
+//
+//                )
+//            }
+//        },1000)
+
         // Comment: System : We do not have a particular order of actions, ordered broadcast is for
         // listeners not for actions
         // Chk@: We could do with a timer and a sendBroadcast, also put action in list so we can
-        // reference inot an array of action first and last is Start and end.
+        // reference an array.
 
-        // Get The Views from the layouts
+        val actionStart = UtilityActions.Util.PayProvider2.ACTION_PAYID2_START.toString()
         Log.i(TAG, "onCreate: $packageName")
+        Log.i(TAG, "onCreate: actionStart: $actionStart")
 
-//        var cardType = 1  // cardtype 1 and 2 corresponds to a specialiation of card type and pay provider
-//        when (cardType) {
-//            /tstBroadcaster = ConsumePartyPayProviderBroadcastReciver()
-//            } //else { //}
-
-//        btStartPayTestReceiverActivity.setOnClickListener {
-//
-//            val sAction = collectActionsForProvider1("pack")
-//
-//            // Register ACTIONS for special PayProvider BroadcastReceiver
-//            // Maybe move of of this place which should be fore packing data into
-//            // the intent. Combining Action and Extras
-//            intentFilterActions = IntentFilter().apply {
-//                addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
-//                addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
-//
-//                addAction(sAction.first()) // start
-//                for (s in sAction.subList(1, sAction.size - 1)) {
-//                    Log.d(TAG, "p1: Action Strings Read: $s")
-//                    addAction(s)
-//                }
-//                //Arbitrary number of action steps ... Ho do we put them in
-//                addAction(sAction.last()) // End of ACTION EVENT
-//
-//                intent.action = sAction[0]
-//                // Walktrough Actions and pack them, control by click button, maybe move this somewhere
-//                // Else, maybe to a new button
-////                var actionStepNum = 0
-////                for (i in 0..sAction.size) {
-////                    intent.action = sAction[actionStepNum]
-////
-////                    if (actionStepNum == 0) {
-////                        intent.putExtra("KEY_NAME", "Kylie Minogue")
-////                    }
-////                    else if (actionStepNum == 1)
-////                        intent.putExtra("KEY_NAME", "Id")
-////                        intent.putExtra("KEY_NAME", "460967")
-////                    // Function to add variable amount of extra
-////                    // Set Component to explixitly communicate within App / Package
-//                    //intent.setComponent(net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity::class.java.simpleName)
-//                    //sendBroadcast(intent) // Chk@ in BroadcastReceiver
-////                }
-//                // ------------
-//                    intent.setClassName(
-//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
-//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity" )
-//                startActivity(intent)
-//                // ---
-//
-//                //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
-//
-////                addAction(packageName + ".ACTION_PAYID1_START") // start
-////                addAction(packageName + ".ACTION_PAYID1_STEP1")
-////                addAction(packageName + ".ACTION_PAYID1_STEP2")
-////                addAction(packageName + ".ACTION_PAYID1_STEP3")
-////                //Arbitrary number of action steps ... Ho do we put them in
-////                addAction(packageName + ".ACTION_PAYID1_END") // End of ACTION EVENT
-//            }
-//        }
-//
-        // ConsumerPartyPayProviderBroadcastReceiver
-        btStartPayProvider1.setOnClickListener {
-            val sAction = UtilityActions.collectActionsForProvider2("pack")
+        btStartPayTestReceiverActivity.setOnClickListener {
+            val sAction = UtilityActions.collectActionsForProviderConsumerPartyPay("pack")
 
             // Register ACTIONS for special PayProvider BroadcastReceiver
-            mIntentFilterActions = IntentFilter().apply {
-                //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
+            // Maybe move of of this place which should be fore packing data into
+            // the intent. Combining Action and Extras
+            val intentFilter = IntentFilter().apply {
                 addAction(sAction.first()) // start
                 for (s in sAction.subList(1, sAction.size - 1)) {
-                    Log.d(TAG, "p2: Action Strings Read: $s Sizelist ${sAction.size} \n")
+                    Log.d(TAG, "p1: Action Strings Read: $s")
                     addAction(s)
                 }
                 //Arbitrary number of action steps ... Ho do we put them in
                 addAction(sAction.last()) // End of ACTION EVENT
             }
-            //intentFilterActions.addAction("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START")
+
+                intent.action = sAction[0]
+                // Walk through Actions and pack them, control by click button, maybe move this somewhere
+                // Else, maybe to a new button
+                var actionStepNum = 0
+                for (i in 0..sAction.size) {
+                    intent.action = sAction[actionStepNum]
+
+                    if (actionStepNum == 0) {
+                        intent.putExtra("KEY_NAME", "Kylie Minogue")
+                    }
+                    else if (actionStepNum == 1)
+                        intent.putExtra("KEY_NAME", "Id")
+                        intent.putExtra("KEY_NAME", "460967")
+                    // Function to add variable amount of extra
+                    // Set Component to explicitly communicate within App / Package
+                    //intent.setComponent(net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity::class.java.simpleName)
+                    //sendBroadcast(intent) // Chk@ in BroadcastReceiver
+                }
+                // ---------------------------------------------------------------
+                    intent.setClassName(
+                      "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
+                      "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity" )
+                startActivity(intent)
+      }
+
+        // ConsumerPartyPayProviderBroadcastReceiver
+        btStartPayProvider1.setOnClickListener {
+            val sAction = UtilityActions.collectActionsForProviderBankOfBank("pack")
+
+            ////Arbitrary number of action steps ... Ho do we put them in
+            // Register ACTIONS for special PayProvider BroadcastReceiver
+            mIntentFilterActions = IntentFilter().apply {
+                // intentFilterActions.addAction("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START")
+                // Example of ACTION string
+                for (s in sAction) {
+                    Log.d(TAG, "p2: Action Strings Read: $s Sizelist ${sAction.size} \n")
+                    addAction(s)
+                }
+            }
 
             readyToBroadCast = true
-            mTstBroadcaster = ConsumePartyPayProviderBroadcastReciver(sAction)
+            mTstBroadcaster = ConsumePartyPayProviderReciver(sAction)
 
             registerReceiver(mTstBroadcaster, mIntentFilterActions)
-
             intent = Intent()
             for(i in 0..sAction.size - 1) {
                 intent.action = sAction[i]
@@ -165,7 +159,7 @@ class MainActivity : AppCompatActivity() {
 
         // BankOfBankBroadcastReceiver
         btStartPayProvider2.setOnClickListener {
-            mStrAction = UtilityActions.collectActionsForProvider2("pack")
+            mStrAction = UtilityActions.collectActionsForProviderBankOfBank("pack")
 
             // Register ACTIONS for special PayProvider BroadcastReceiver
             mIntentFilterActions = IntentFilter().apply {
@@ -180,7 +174,7 @@ class MainActivity : AppCompatActivity() {
                 //addAction("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START")
             }
             readyToBroadCast = true
-            mTstBroadcaster = BankOfBankBroadcastReceiver(mStrAction)
+            mTstBroadcaster = BankOfBankReceiver(mStrAction)
 
             registerReceiver(mTstBroadcaster, mIntentFilterActions)
 

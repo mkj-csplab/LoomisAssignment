@@ -1,8 +1,5 @@
 package utility
 
-import android.content.Intent.ACTION_AIRPLANE_MODE_CHANGED
-import android.util.Log
-
 const val PACKAGENAME: String = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent"
 
 public open class UtilityActions {
@@ -10,42 +7,57 @@ public open class UtilityActions {
 
         // Set these in each broadcast implementation
         companion object Util { //PAYBROADCAST
-            //const val ACTION_AIRPLANE_MODE_CHANGED = "android.intent.action.AIRPLANE_MODE"
-            // @Chk: Action IN STRING PART SHOULD BE left out!
-            const val ACTION_PAYID1_START = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
-            const val ACTION_PAYID1_STEP1 = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_STEP1"
-            const val ACTION_PAYID1_END = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_END"
 
-            const val ACTION_PAYID2_START = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_START"
-            const val ACTION_PAYID2_STEP1 = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_STEP1"
-            const val ACTION_PAYID2_STEP2 = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_STEP2"
-            const val ACTION_PAYID2_END = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_END"
+            //
+            enum class PayProvider1(action: String) {
+                ACTION_PAYID1_START(
+                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"),
+                ACTION_PAYID1_STEP1("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_STEP1"),
+                ACTION_PAYID1_END(
+                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_END");
+                companion object {
+                    fun getAction() = values(   )
+                }
+            }
+
+            enum class PayProvider2(action: String) {
+                ACTION_PAYID2_START("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_START"),
+                ACTION_PAYID2_STEP1(
+                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_STEP1"),
+                ACTION_PAYID2_STEP2(
+                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_STEP2"),
+                ACTION_PAYID2_END(
+                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_END");
+                companion object {
+                    fun getAction() = values()
+                }
+            }
 
             final val TAG = UtilityActions::class.java.simpleName
 
             // Chk@ Needs to be updated with new utility class names
             // ConsumerPartyPayProvider Receiver
-            fun collectActionsForProvider1(pack: String): List<String> {
+            fun collectActionsForProviderConsumerPartyPay(pack: String): List<String> {
                 //action_init: String = ctx.getPackage // ACTION_PAY_INIT") // Init
-                val s1 = PACKAGENAME + ".PAYID1_START" // start
-                val s2 = PACKAGENAME + ".PAYID1_STEP1"
-                val s3 = PACKAGENAME + ".PAYID1_STEP2"
+                val customActionList = mutableListOf<String>(
+                PACKAGENAME + ".PAYID1_START", // start
+                PACKAGENAME + ".PAYID1_STEP1",
+                PACKAGENAME + ".PAYID1_STEP2",
                 //Arbitrary number of action steps ... How to add them, dynamically or set per specialisation
-                val s4 = PACKAGENAME + ".PAYID1_END" // End of ACTION EVENT
+                PACKAGENAME + ".PAYID1_END") // End of ACTION EVENT
                 //Log.d(TAG, "Print Package Name $PACKAGENAME : Action names $s1 $s2 $s3 $s4")
-                val customActions = listOf(s1, s2, s3, s4)
-                return customActions
+                return customActionList
             }
 
             // BankOfBank Receiver
-            fun collectActionsForProvider2(pack: String): List<String> {
+            fun collectActionsForProviderBankOfBank(pack: String): List<String> {
                 // Chk@ : Put int list, maybe use size for that?
-                val s1 = PACKAGENAME + ".ACTION_PAYID2_START" // start
-                val s2 = PACKAGENAME + ".ACTION_PAYID2_STEP1"
-                val s3 = PACKAGENAME + ".ACTION_PAYID2_END" // End of ACTION EVENT
-                Log.d(TAG, "Print Package Name $PACKAGENAME : Action names $s1 $s2 $s3")
-                val customActions = listOf(s1, s2, s3)
-                return customActions
+                val customActionList = mutableListOf<String>(
+                PACKAGENAME + ".ACTION_PAYID2_START",
+                PACKAGENAME + ".ACTION_PAYID2_STEP1",
+                PACKAGENAME + ".ACTION_PAYID2_END" )// End of ACTION EVENT
+                //Log.d(TAG, "Print Package Name $PACKAGENAME)
+                return customActionList
             }
         }
 

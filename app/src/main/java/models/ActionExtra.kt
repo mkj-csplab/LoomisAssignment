@@ -2,6 +2,7 @@ package models
 
 import android.os.Bundle
 
+//! @NOTE Deprecated!
 data class ActionsExtra(
         val action: String,
         //val data: String, // Data is the intent data  that specifies the specific object to operate on

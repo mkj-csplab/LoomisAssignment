@@ -1,0 +1,52 @@
+package receivers
+
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.os.SystemClock
+
+abstract class PayProviderReceiver : BroadcastReceiver() {
+    private val TAG = PayProviderReceiver::class.java.simpleName
+
+    abstract var mActionIDS: List<String> // The list of Ids
+    //abstract val actionsNum: Int
+
+    ///private lateinit var actionBrTimer: CountDownTimer
+    //abstract var actionsCompleted: List<Boolean> // getNumberOf Extras
+
+    protected var alarmMgr: AlarmManager? = null
+    protected lateinit var alarmIntent: PendingIntent
+
+    // Set Timer Here
+    // Set &  Build Notifications
+
+    override fun onReceive(ctx: Context, intent: Intent) {
+    }
+
+    // ::Setup protocol per pay provider, specific logic for provider goes here :
+    // Actions Extras and processing Logic
+    abstract fun protocolSetup(ctx: Context, intent: Intent)
+
+    // Add the ACTIONS that this specific pay provider has
+    abstract fun setActionsForReceiver(actionList: List<String>)
+
+
+    abstract fun setActionsForReceiver2(actionList: List<String>)
+
+    fun timerAlertSetup(ctx: Context){
+        alarmMgr = ctx.getSystemService(android.content.Context.ALARM_SERVICE) as AlarmManager
+        alarmIntent = Intent(ctx, PayProviderReceiver::class.java).let { intent ->
+            intent.putExtra("TIMEOUT_ALARM", "TIMEOUT")
+            PendingIntent.getBroadcast(ctx, 13, intent, 0)
+        }
+    }
+
+    fun setTimer(seconds: Int){
+        alarmMgr?.setExact(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + seconds * 1000,
+            alarmIntent)
+    }
+}

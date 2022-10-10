@@ -1,24 +1,21 @@
 package receivers
 
 import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.CountDownTimer
-import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
 import utility.UtilityActions
 
 //import kotlin.collections.EmptyMap.keys
 
-class BankOfBankBroadcastReceiver(
-    override var actionIDS: List<String>
+class BankOfBankReceiver(
+    override var mActionIDS: List<String>
 
-) : PayProviderBroadcastReceiver() {
-    private var TAG = BankOfBankBroadcastReceiver::class.java.simpleName
+) : PayProviderReceiver() {
+    private var TAG = BankOfBankReceiver::class.java.simpleName
     //protected lateinit var mActionBrTimer: CountDownTimer
-    private val counter = 0
+    private val mCounter = 0
 
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
@@ -41,30 +38,34 @@ class BankOfBankBroadcastReceiver(
         Log.d(TAG, "Bank:actionReceived: $actionReceived")
         Toast.makeText(ctx, "BANKOFBANK", Toast.LENGTH_LONG).show()
 
-
-        //alarmMgr?.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, 5000, alarmIntent)
+        alarmMgr?.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, 5000, alarmIntent)
 
         // Chk@: Divide action sets so we can go UA.ActionProvider$Name.ACTION_ANACTION
-        //Timer("Setting up", false).schedule(200){}//TIMER
-
-
         Log.d(TAG, ":KeysetSize: $keySetSize :: Extrakeys: $extraKeys")
-
         Log.d(TAG, "OnReceive:ActionReceived: $actionReceived")
-        if (actionReceived == UtilityActions.ACTION_PAYID2_START) {
+
+        if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_START.toString()) {
             Log.d(TAG, "OnReceive:START")
             Log.d(TAG, "OnReceive:Keys are printed $keySetSize, $actionReceived")
 
-        } else if (actionReceived == UtilityActions.ACTION_PAYID2_STEP1) {
+        } else if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_STEP1.toString()) {
             Log.d(TAG, "OnReceive:STEP1")
-        } else if (actionReceived == UtilityActions.ACTION_PAYID2_STEP2) {
+        } else if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_STEP2.toString()) {
             Log.d(TAG, "OnReceive:STEP2")
-        }else if (actionReceived == UtilityActions.ACTION_PAYID2_END){
+        }else if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_END.toString()){
             Log.d(TAG, "OnReceive:END")
         }
     }
 
     override fun protocolSetup(ctx: Context, intent: Intent) {
+        //TODO("Not yet implemented")
+    }
+
+    override fun setActionsForReceiver(actionList: List<String>) {
+        //TODO("Not yet implemented")
+    }
+
+    override fun setActionsForReceiver2(actionList: List<String>) {
         TODO("Not yet implemented")
     }
 

@@ -2,17 +2,15 @@ package receivers
 
 import android.content.Context
 import android.content.Intent
-import android.os.CountDownTimer
 import android.util.Log
 import android.widget.Toast
-import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.MainActivity
 
-class ConsumePartyPayProviderBroadcastReciver(
-    override var actionIDS: List<String>,
+class ConsumePartyPayProviderReciver(
+    override var mActionIDS: List<String>,
 
     //override var actionsCompleted: List<Boolean>
-) : PayProviderBroadcastReceiver() {
-    private var TAG = ConsumePartyPayProviderBroadcastReciver::class.java.simpleName
+) : PayProviderReceiver() {
+    private var TAG = ConsumePartyPayProviderReciver::class.java.simpleName
 
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
@@ -20,9 +18,9 @@ class ConsumePartyPayProviderBroadcastReciver(
 
         val actionReceived = intent.action
         var intentExtras = intent.extras
-        var mNumberActionsRegistered = actionIDS.size
+        var mNumberActionsRegistered = mActionIDS.size
 
-        Log.d(TAG, "onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${actionIDS}")
+        Log.d(TAG, "onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${mActionIDS}")
         //Log.d(TAG, "iAction: ${intentExtras?.keySet()}")
 
 //        mActionBrTimer = object : CountDownTimer(10000, 1000) {
@@ -48,21 +46,31 @@ class ConsumePartyPayProviderBroadcastReciver(
 
         Log.d(TAG, "Values: $valuesSize")
         // Set Function for dealing with busines/ protocol logic that must be specialised
-        val numActionRegistered = actionIDS.size //
+        val numActionRegistered = mActionIDS.size //
 
-        if (actionReceived == actionIDS[0]){
+        if (actionReceived == mActionIDS[0]){
             var key1val = intent.getStringExtra("KEY1")
             // --
-        } else if (actionReceived == actionIDS[1]){
+        } else if (actionReceived == mActionIDS[1]){
 
-        } else if (actionReceived == actionIDS[2]) {
+        } else if (actionReceived == mActionIDS[2]) {
 
         }
     }
 
     override fun protocolSetup(ctx: Context, intent: Intent) {
-        TODO("Not yet implemented")
+        //! Write logic for specialized code for a provider here
     }
+
+    override fun setActionsForReceiver(actionList: List<String>) {
+        //! Add ACTIONS for that receivce
+    }
+
+    override fun setActionsForReceiver2(actionList: List<String>) {
+        //TODO("Not yet implemented")
+    }
+
+
 }
 
 //StringBuilder().apply {
