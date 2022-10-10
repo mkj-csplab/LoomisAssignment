@@ -2,6 +2,7 @@ package receivers
 
 import android.content.Context
 import android.content.Intent
+import android.os.CountDownTimer
 import android.util.Log
 import android.widget.Toast
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.MainActivity
@@ -23,22 +24,44 @@ class ConsumePartyPayProviderBroadcastReciver(
 
         Log.d(TAG, "onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${actionIDS}")
         //Log.d(TAG, "iAction: ${intentExtras?.keySet()}")
-        //
+
+//        mActionBrTimer = object : CountDownTimer(10000, 1000) {
+//            override fun onTick(t0: Long) {
+//
+//            }
+//            override fun onFinish() {
+//                //abortBroadcast()  // Question
+//            }
+//        }
+//        mActionBrTimer.start()
+
         var extraKeySet = intentExtras?.keySet()
         Log.d(TAG, "ConsumerBR:Onrecieve: keyset ${extraKeySet}")
 
+        val values = mutableListOf<String>()
+
         for (k in extraKeySet!!) {
             Log.d(TAG, "Keys: $k")
+            values.add(intentExtras?.get(k).toString())
         }
+        var valuesSize = values.size
+
+        Log.d(TAG, "Values: $valuesSize")
+        // Set Function for dealing with busines/ protocol logic that must be specialised
+        val numActionRegistered = actionIDS.size //
 
         if (actionReceived == actionIDS[0]){
             var key1val = intent.getStringExtra("KEY1")
-            Log.d(TAG, "key1val: $key1val")
+            // --
         } else if (actionReceived == actionIDS[1]){
 
         } else if (actionReceived == actionIDS[2]) {
 
         }
+    }
+
+    override fun protocolSetup(ctx: Context, intent: Intent) {
+        TODO("Not yet implemented")
     }
 }
 

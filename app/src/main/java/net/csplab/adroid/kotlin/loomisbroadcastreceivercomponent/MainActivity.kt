@@ -149,7 +149,6 @@ class MainActivity : AppCompatActivity() {
                 if (intent.action == sAction[0]) {
                     intent.putExtra("KEY1", "ID4325")
                 } else if (intent.action == sAction[1]) {
-
                     intent.putExtra("KEY2_1", "Amount")
                     intent.putExtra("KEY2_2", "Balance")
                     intent.putExtra("KEY2_3", "Idnum")

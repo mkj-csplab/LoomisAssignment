@@ -1,9 +1,12 @@
 package receivers
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.CountDownTimer
+import android.os.SystemClock
 import android.util.Log
 import android.widget.Toast
 
@@ -13,13 +16,35 @@ abstract class PayProviderBroadcastReceiver : BroadcastReceiver() {
     abstract var actionIDS: List<String> // The list of Ids
     //abstract val actionsNum: Int
 
-    private lateinit var actionBrTimer: CountDownTimer
+    ///private lateinit var actionBrTimer: CountDownTimer
     //abstract var actionsCompleted: List<Boolean> // getNumberOf Extras
+
+    protected var alarmMgr: AlarmManager? = null
+    protected lateinit var alarmIntent: PendingIntent
+
 
     override fun onReceive(ctx: Context, intent: Intent) {
     }
 
+    // :::Setup protocol per pay provider, speficic logic for provider goes here :
+    // Actions Extras and proccessing Logic
+    abstract fun protocolSetup(ctx: Context, intent: Intent)
+
     fun setActions(actionList: List<String>) {
+    }
+
+    fun timerAlert(ctx: Context){
+        alarmMgr = ctx.getSystemService(android.content.Context.ALARM_SERVICE) as AlarmManager
+        alarmIntent = Intent(ctx, PayProviderBroadcastReceiver::class.java).let { intent ->
+            intent.putExtra("TIMEOUT_ALARM", "TIMEOUT")
+            PendingIntent.getBroadcast(ctx, 13, intent, 0)
+        }
+
+        alarmMgr?.setExact(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + 5 * 1000,
+            alarmIntent
+        )
     }
 
 }
