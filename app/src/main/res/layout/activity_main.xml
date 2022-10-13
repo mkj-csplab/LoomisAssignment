@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="#55AABBCC"
+    tools:context=".views.MainActivity">
 
     <TextView
         android:id="@+id/tvHeaderPay"
@@ -12,9 +13,23 @@
         android:layout_height="96dp"
         android:text="@string/the_pay_provider"
         android:background="#ff00AA00"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:textSize="36sp"/>
+
+    <TextView
+        android:id="@+id/tvWhatsTheTime"
+        android:layout_width="0dp"
+        android:layout_height="96dp"
+        android:text="Pay On Time"
+        android:background="@drawable/round_color_a"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvHeaderPay"
         android:textSize="36sp"/>
 
     <Button
@@ -22,14 +37,13 @@
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_margin="12dp"
-        android:layout_marginBottom="12dp"
-        android:text="Test On Receiver Activity"
         android:background="#AAFFAA44"
-        app:layout_constraintBottom_toTopOf="@id/btStartPayProvider1"
+        android:text="Test On Receiver Activity"
+        app:layout_constraintBottom_toTopOf="@+id/tvChoosePayProvider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvChoosePayProvider" />
+        app:layout_constraintTop_toBottomOf="@+id/tvWhatsTheTime" />
 
     <Button
         android:id="@+id/btStartPayProvider1"
@@ -61,15 +75,14 @@
         android:id="@+id/tvChoosePayProvider"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:text="Choose Pay Provider"
-        android:textSize="32sp"
         android:background="#ff4488ff"
+        android:text="Choose Pay Provider"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumber"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toTopOf="@+id/btStartPayProvider1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHeaderPay" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/editTextNumber"

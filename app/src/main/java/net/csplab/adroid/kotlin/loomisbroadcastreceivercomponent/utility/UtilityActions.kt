@@ -1,4 +1,4 @@
-package utility
+package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility
 
 const val PACKAGENAME: String = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent"
 
@@ -7,7 +7,6 @@ public open class UtilityActions {
 
         // Set these in each broadcast implementation
         companion object Util { //PAYBROADCAST
-
             //
             enum class PayProvider1(action: String) {
                 ACTION_PAYID1_START(
@@ -16,7 +15,7 @@ public open class UtilityActions {
                 ACTION_PAYID1_END(
                     "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_END");
                 companion object {
-                    fun getAction() = values(   )
+                    fun getAction() = values()
                 }
             }
 
@@ -33,11 +32,9 @@ public open class UtilityActions {
                 }
             }
 
-            final val TAG = UtilityActions::class.java.simpleName
-
             // Chk@ Needs to be updated with new utility class names
             // ConsumerPartyPayProvider Receiver
-            fun collectActionsForProviderConsumerPartyPay(pack: String): List<String> {
+            fun collectActionsForProviderPartyOne(): List<String> {
                 //action_init: String = ctx.getPackage // ACTION_PAY_INIT") // Init
                 val customActionList = mutableListOf<String>(
                 PACKAGENAME + ".PAYID1_START", // start
@@ -50,7 +47,7 @@ public open class UtilityActions {
             }
 
             // BankOfBank Receiver
-            fun collectActionsForProviderBankOfBank(pack: String): List<String> {
+            fun collectActionsForProviderBankOfBank(): List<String> {
                 // Chk@ : Put int list, maybe use size for that?
                 val customActionList = mutableListOf<String>(
                 PACKAGENAME + ".ACTION_PAYID2_START",

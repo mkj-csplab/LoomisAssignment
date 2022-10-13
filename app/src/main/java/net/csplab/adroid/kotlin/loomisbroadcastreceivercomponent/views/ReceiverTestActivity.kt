@@ -1,4 +1,4 @@
-package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent
+package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

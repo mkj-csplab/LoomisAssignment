@@ -1,24 +1,39 @@
-package receivers
+package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers
 
 import android.app.AlarmManager
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import utility.UtilityActions
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions
+import java.util.*
 
 //import kotlin.collections.EmptyMap.keys
 
 class BankOfBankReceiver(
-    override var mActionIDS: List<String>
+    override var mActionIDS: List<String>, override var providerName: String?,
 
-) : PayProviderReceiver() {
+    ) : PayProviderReceiver() {
     private var TAG = BankOfBankReceiver::class.java.simpleName
-    //protected lateinit var mActionBrTimer: CountDownTimer
+
+    private lateinit var mTimeoutListener: TimeoutListener
+
     private val mCounter = 0
 
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
+
+        //try {
+        mTimeoutListener = object: TimeoutListener {
+            override fun updateTimer(info: String) {
+
+            }
+        }
+
+            //updateTextInUIRegister(mTimeoutListener) // Null pointer
+        //}catch (e: Exception){
+            //.toString()
+        //}
 
         val actionReceived = intent.action
         val isItATimeout = intent.extras?.get("TIMEOUT_ALARM")
@@ -27,6 +42,8 @@ class BankOfBankReceiver(
         val extraKeys = extras?.keySet()
         val keySetSize = extraKeys?.size
 
+        // TODO: Chk@: Move to Function for timeout init and start etc.
+        val timeOutLength = 5000L
 
         if (isItATimeout != null && isItATimeout.equals("TIMEOUT")){
             Log.d(TAG, "TIMEOUT")
@@ -45,6 +62,7 @@ class BankOfBankReceiver(
         Log.d(TAG, "OnReceive:ActionReceived: $actionReceived")
 
         if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_START.toString()) {
+
             Log.d(TAG, "OnReceive:START")
             Log.d(TAG, "OnReceive:Keys are printed $keySetSize, $actionReceived")
 
@@ -65,9 +83,8 @@ class BankOfBankReceiver(
         //TODO("Not yet implemented")
     }
 
-    override fun setActionsForReceiver2(actionList: List<String>) {
-        TODO("Not yet implemented")
+    fun updateTextInUIRegister(callBack: TimeoutListener){
+        mTimeoutListener = callBack
+        mTimeoutListener.updateTimer("TIMEISHIGH!")
     }
-
-
 }

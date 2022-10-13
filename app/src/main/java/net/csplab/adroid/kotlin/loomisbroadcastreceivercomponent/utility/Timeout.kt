@@ -1,8 +1,8 @@
-import android.util.Log
-import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.MainActivity
+package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility
+
 import java.util.*
 
-class TimeOut {
+class Timeout {
     lateinit var mTimeOut: Timer
 
 //    myTimer = new Timer();
@@ -18,12 +18,14 @@ class TimeOut {
 //            }
 //        }, 1000, 1000); // initial delay 1 second, interval 1 second
 
-    fun timeout(){
+    fun timeout(timeout: Long){
         mTimeOut = Timer();
         Timer().schedule(object: TimerTask() {
             override fun run() {
                 //MainActivity.
             }
-        },1000)
+        },timeout)
     }
+
+
 }

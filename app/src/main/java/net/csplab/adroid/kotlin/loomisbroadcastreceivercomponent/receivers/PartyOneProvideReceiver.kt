@@ -1,16 +1,16 @@
-package receivers
+package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers
 
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 
-class ConsumePartyPayProviderReciver(
-    override var mActionIDS: List<String>,
+class PartyOneProvideReceiver(
+    override var mActionIDS: List<String>, override var providerName: String?,
 
     //override var actionsCompleted: List<Boolean>
 ) : PayProviderReceiver() {
-    private var TAG = ConsumePartyPayProviderReciver::class.java.simpleName
+    private var TAG = PartyOneProvideReceiver::class.java.simpleName
 
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
@@ -65,12 +65,6 @@ class ConsumePartyPayProviderReciver(
     override fun setActionsForReceiver(actionList: List<String>) {
         //! Add ACTIONS for that receivce
     }
-
-    override fun setActionsForReceiver2(actionList: List<String>) {
-        //TODO("Not yet implemented")
-    }
-
-
 }
 
 //StringBuilder().apply {
