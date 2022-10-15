@@ -4,23 +4,25 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import models.ActionsExtra
 
-class PartyOneProvideReceiver(
-    override var mActionIDS: List<String>, override var providerName: String?,
+class PartyOneProviderReceiver(
+    override var providerName: String?,
+    override var mActionExtras: List<ActionsExtra>,
 
     //override var actionsCompleted: List<Boolean>
 ) : PayProviderReceiver() {
-    private var TAG = PartyOneProvideReceiver::class.java.simpleName
+    private var TAG = PartyOneProviderReceiver::class.java.simpleName
 
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
-        Toast.makeText(ctx, "CONSUMERPARTY", Toast.LENGTH_LONG).show()
+        Toast.makeText(ctx, "ConsumerParty", Toast.LENGTH_LONG).show()
 
         val actionReceived = intent.action
         var intentExtras = intent.extras
-        var mNumberActionsRegistered = mActionIDS.size
+        var mNumberActionsRegistered = mActionExtras.size // CHK: REMOVE mActionIDS
 
-        Log.d(TAG, "onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${mActionIDS}")
+        Log.d(TAG, "onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${mActionExtras}")
         //Log.d(TAG, "iAction: ${intentExtras?.keySet()}")
 
 //        mActionBrTimer = object : CountDownTimer(10000, 1000) {
@@ -34,7 +36,7 @@ class PartyOneProvideReceiver(
 //        mActionBrTimer.start()
 
         var extraKeySet = intentExtras?.keySet()
-        Log.d(TAG, "ConsumerBR:Onrecieve: keyset ${extraKeySet}")
+        Log.d(TAG, "PartyOneProvider:Onrecieve: keyset ${extraKeySet}")
 
         val values = mutableListOf<String>()
 
@@ -45,15 +47,16 @@ class PartyOneProvideReceiver(
         var valuesSize = values.size
 
         Log.d(TAG, "Values: $valuesSize")
-        // Set Function for dealing with busines/ protocol logic that must be specialised
-        val numActionRegistered = mActionIDS.size //
 
-        if (actionReceived == mActionIDS[0]){
+        //! Set Function for dealing with busines/ protocol logic that must be specialised
+        val numActionRegistered = mActionExtras.size //
+
+        if (actionReceived == mActionExtras[0].action){
             var key1val = intent.getStringExtra("KEY1")
             // --
-        } else if (actionReceived == mActionIDS[1]){
+        } else if (actionReceived == mActionExtras[1].action){
 
-        } else if (actionReceived == mActionIDS[2]) {
+        } else if (actionReceived == mActionExtras[2].action) {
 
         }
     }

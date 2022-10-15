@@ -14,7 +14,7 @@
         android:theme="@style/Theme.LoomisAssignment"
         tools:targetApi="31">
         <activity
-            android:name=".views.MainActivityJava"
+            android:name=".views.PayTerminalJavaActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -23,13 +23,13 @@
         <activity
             android:name=".views.ReceiverTestActivity"
             android:exported="false"
-            android:parentActivityName=".views.MainActivity">
+            android:parentActivityName=".views.PayTerminalActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".views.MainActivity"
+            android:name=".views.PayTerminalActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

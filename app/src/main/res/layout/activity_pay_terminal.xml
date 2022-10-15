@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#55AABBCC"
-    tools:context=".views.MainActivity">
+    tools:context=".views.PayTerminalActivity">
 
     <TextView
         android:id="@+id/tvHeaderPay"
@@ -20,7 +20,7 @@
         android:textSize="36sp"/>
 
     <TextView
-        android:id="@+id/tvWhatsTheTime"
+        android:id="@+id/tvShowTime"
         android:layout_width="0dp"
         android:layout_height="96dp"
         android:text="Pay On Time"
@@ -40,10 +40,9 @@
         android:background="#AAFFAA44"
         android:text="Test On Receiver Activity"
         app:layout_constraintBottom_toTopOf="@+id/tvChoosePayProvider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/btJavaActivity"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvWhatsTheTime" />
+        app:layout_constraintTop_toBottomOf="@+id/tvShowTime" />
 
     <Button
         android:id="@+id/btStartPayProvider1"
@@ -88,16 +87,28 @@
         android:id="@+id/editTextNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:drawable/dialog_holo_light_frame"
+
         android:ems="10"
-        android:visibility="gone"
         android:hint="@string/text_number"
+        android:text="45027022"
         android:inputType="number"
         android:minHeight="48dp"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/btStartPayProvider1"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/tvChoosePayProvider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvHeaderPay" />
+        app:layout_constraintTop_toBottomOf="@+id/btStartPayTestReceiverActivity" />
+
+    <Button
+        android:id="@+id/btJavaActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/java_activity"
+        app:layout_constraintBottom_toTopOf="@+id/tvChoosePayProvider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvShowTime" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

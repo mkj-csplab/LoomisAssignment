@@ -9,8 +9,8 @@ import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityMainBinding
-import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.PartyOneProvideReceiver
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityPayTerminalBinding
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.PartyOneProviderReceiver
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.PayProviderReceiver
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.TimeoutListener
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions
@@ -22,23 +22,24 @@ import java.util.*
 // Tasks description: make a component
 // Extensible BroadcastReceiver
 
-class MainActivity : AppCompatActivity(), TimeoutListener {
-    private var TAG = MainActivity::class.java.simpleName
+class PayTerminalActivity : AppCompatActivity(), TimeoutListener {
+    private var TAG = PayTerminalActivity::class.java.simpleName
 
     private var mReadyToBroadCast: Boolean = false
-    private lateinit var bind: ActivityMainBinding
+    private lateinit var bind: ActivityPayTerminalBinding
 
     lateinit var mTstBroadcaster: PayProviderReceiver
     private var mIntentFilterActions = IntentFilter()
-    private lateinit var actions: List<String>
+    private lateinit var actionSet: List<String>
 
-    lateinit var tvWhatsTheTime: TextView
+    lateinit var tvShowTime: TextView
 
-    lateinit var mTimeOut: Timer
+    lateinit var mRepeatTimer: Timer
+    lateinit var mTimeout: Timer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bind = ActivityMainBinding.inflate(layoutInflater)
+        bind = ActivityPayTerminalBinding.inflate(layoutInflater)
         setContentView(bind.root)
 
         // Nav Back [ <- ]
@@ -50,79 +51,54 @@ class MainActivity : AppCompatActivity(), TimeoutListener {
         }
 
         // Get The Views from the layouts tvHeader = bind.tvHeaderPay
-        tvWhatsTheTime = bind.tvWhatsTheTime
+        tvShowTime = bind.tvShowTime
+        val btJavaActivity = bind.btJavaActivity
+
         val editTextNumber = bind.editTextNumber
         //val tvChoosePayProvider = bind.tvChoosePayProvider
         val btStartPayProvider1 = bind.btStartPayProvider1
         val btStartPayProvider2 = bind.btStartPayProvider2
         val btStartPayTestReceiverActivity = bind.btStartPayTestReceiverActivity
 
-        // Timer from MainActivity
-        mTimeOut = Timer()
-        mTimeOut.scheduleAtFixedRate(object : TimerTask() {
+        //! Timer from PayTerminalActivity
+        mRepeatTimer = Timer()
+
+        //: Check: move to tiemr method!
+        mRepeatTimer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
-                this@MainActivity.runOnUiThread(
+                this@PayTerminalActivity.runOnUiThread(
                     Runnable {
                         //val sdf: SimpleDateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
                         val sdf: SimpleDateFormat =
                             SimpleDateFormat("HH:mm:ss", Locale.getDefault())
                         val currentDateandTime = sdf.format(Date())
-                        tvWhatsTheTime.text = "Timer: $currentDateandTime"
+                        tvShowTime.text = "Timer: $currentDateandTime"
                     })
             }
-        }, 8000, 3000)
+        }, 6000, 3000)
 
+        btJavaActivity.setOnClickListener {
+            var i = Intent(this, PayTerminalJavaActivity::class.java)
+            startActivity(i)
+        }
+
+        // CHK: Move this comment to top place in class
         // Comment: System : We do not have a particular order of actions, ordered broadcast is for
         // listeners not for actions
         // Chk@: We could do with a timer and a sendBroadcast, also put action in list so we can
         // reference an array.
 
-        val actionStart = UtilityActions.Util.PayProvider2.ACTION_PAYID2_START.toString()
-        Log.i(TAG, "onCreate: $packageName")
-        Log.i(TAG, "onCreate: actionStart: $actionStart")
-
-        btStartPayTestReceiverActivity.setOnClickListener {
-
-            val sAction = UtilityActions.collectActionsForProviderPartyOne()
-
-            // Register ACTIONS for special PayProvider BroadcastReceiver
-            // Maybe move of of this place which should be fore packing data into
-            // the intent. Combining Action and Extras
-            val intentFilterActions = IntentFilter().apply {
-                addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
-                addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
-
-                addAction(sAction.first()) // start
-                for (s in sAction.subList(1, sAction.size - 1)) {
-                    Log.d(TAG, "p1: Action Strings Read: $s")
-                    addAction(s)
-                }
-                //Arbitrary number of action steps ... Ho do we put them in
-                addAction(sAction.last()) // End of ACTION EVENT
-                intent.action = sAction[0]
-                intent.putExtra("KEY_NAME", "Kylie Minogue")
-                //intent.setComponent(net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity::class.java.simpleName)
-                sendBroadcast(intent) // Chk@ in BroadcastReceiver
-                intent.setClassName(
-                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
-                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views.ReceiverTestActivity"
-                )
-                //val i2 = Intent(this, ReceiverTestActivity.class)
-
-                startActivity(intent)
-            }
-        }
-
-
-        //! Test Send with Intent to Receiver Activity
-        btStartPayTestReceiverActivity.setOnClickListener {
-            //! Load the Actions for Party One Provider 3.party.
-            val sAction = UtilityActions.collectActionsForProviderPartyOne()
+//        btStartPayTestReceiverActivity.setOnClickListener {
+//
+//            val sAction = UtilityActions.Util.setupActionsForProviderPartyOne()
 //
 //            // Register ACTIONS for special PayProvider BroadcastReceiver
 //            // Maybe move of of this place which should be fore packing data into
 //            // the intent. Combining Action and Extras
-//            val intentFilter = IntentFilter().apply {
+//            val intentFilterActions = IntentFilter().apply {
+//                addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
+//                addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
+//
 //                addAction(sAction.first()) // start
 //                for (s in sAction.subList(1, sAction.size - 1)) {
 //                    Log.d(TAG, "p1: Action Strings Read: $s")
@@ -130,59 +106,48 @@ class MainActivity : AppCompatActivity(), TimeoutListener {
 //                }
 //                //Arbitrary number of action steps ... Ho do we put them in
 //                addAction(sAction.last()) // End of ACTION EVENT
-//            }
+//                intent.action = sAction[0]
+//                intent.putExtra("KEY_NAME", "Kylie Minogue")
+//                //intent.setComponent(net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ReceiverTestActivity::class.java.simpleName)
+//                sendBroadcast(intent) // Chk@ in BroadcastReceiver
+//                intent.setClassName(
+//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
+//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views.ReceiverTestActivity"
+//                )
+//                //val i2 = Intent(this, ReceiverTestActivity.class)
 //
-//            intent.action = sAction[0]
-//            // Walk through Actions and pack them, control by click button, maybe move this somewhere
-//            // Else, maybe to a new button
-//            var actionStepNum = 0
-//            for (i in 0..sAction.size) {
-//                intent.action = sAction[actionStepNum]
-//
-//                if(actionStepNum == 0) {
-//                    intent.putExtra("KEY_NAME", "Kylie Minogue")
-//                }
-//                else if (actionStepNum == 1)
-//                    intent.putExtra("KEY_NAME_ID", "Id")
-//                    intent.putExtra("KEY_NAME_IDNUM", "460967")
-//                // Function to add variable amount of extra
-//                // Set Component to explicitly communicate within App / Package
-            ///intent.setComponent(ReceiverTestActivity::class)
-//                //sendBroadcast(intent) // Chk@ in BroadcastReceiver
+//                startActivity(intent)
 //            }
+//        }
 
-            intent.setClassName(
-                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
-                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views.ReceiverTestActivity"
-            )
-            startActivity(intent)
-        }
 
-        // ConsumerPartyPayProviderBroadcastReceiver
+        //! PartyOneProvider BroadcastReceiver
         btStartPayProvider1.setOnClickListener {
             //! Get ACTION Set for Provider
             // Register ACTIONS for special PayProvider BroadcastReceiver
-            // Chk@: movr preparation outside button click event!
+            // Chk@: move preparation outside button click event!
 
             val providerName = "PartyOneProvider"
-            val sActions = UtilityActions.collectActionsForProviderPartyOne()
-            prepareProvider(providerName, intent, sActions)
-            //mIntentFilterActions =
+
+            //: Get the ACTION String for provider
+            val sActions = UtilityActions.Util.setupActionsForProviderPartyOne()
+            //: Prepare Provider by packing ActionExtra Object with collection on actions and extra data
+            prepareProvider(providerName, intent, sActions) //! CHK: Timeoutlength L
 
             mReadyToBroadCast = true
             //! Set Broadcaster type with associated Actions
-            mTstBroadcaster = PartyOneProvideReceiver(sActions, providerName)
+            mTstBroadcaster = PartyOneProviderReceiver(providerName, UtilityActions.SET.actionsExtraPartyOne)
 
             registerReceiver(mTstBroadcaster, mIntentFilterActions)
 
             intent = Intent()
-            //! Load Each intent with action and "Extras" data
+
+            //! For each intent to send with broadcast -> Load each intent with action and "Extras" data
             for (i in 0..sActions.size - 1) {
                 intent.action = sActions[i]
-                Log.d(
-                    TAG,
-                    "Intent => $intent.action :: $sActions[i] :: Action.size: $sActions.size "
-                )
+                Log.d(TAG, "Intent => $intent.action :: $sActions[i] :: Action.size: $sActions.size ")
+
+                //!
                 val ia = intent.action
                 Log.d(TAG, "$ia")
                 if (intent.action == sActions[0]) {
@@ -246,7 +211,53 @@ class MainActivity : AppCompatActivity(), TimeoutListener {
 //        // Is this a problem that this is not in the resume part,
 //        // Do we only need the register in resume
 
-    }
+
+        //! Test Send with Intent to Receiver Activity
+        btStartPayTestReceiverActivity.setOnClickListener {
+            //! Load the Actions for Party One Provider 3.party.
+            val sAction = UtilityActions.Util.setupActionsForProviderPartyOne()
+//
+//            // Register ACTIONS for special PayProvider BroadcastReceiver
+//            // Maybe move of of this place which should be fore packing data into
+//            // the intent. Combining Action and Extras
+//            val intentFilter = IntentFilter().apply {
+//                addAction(sAction.first()) // start
+//                for (s in sAction.subList(1, sAction.size - 1)) {
+//                    Log.d(TAG, "p1: Action Strings Read: $s")
+//                    addAction(s)
+//                }
+//                //Arbitrary number of action steps ... Ho do we put them in
+//                addAction(sAction.last()) // End of ACTION EVENT
+//            }
+//
+//            intent.action = sAction[0]
+//            // Walk through Actions and pack them, control by click button, maybe move this somewhere
+//            // Else, maybe to a new button
+//            var actionStepNum = 0
+//            for (i in 0..sAction.size) {
+//                intent.action = sAction[actionStepNum]
+//
+//                if(actionStepNum == 0) {
+//                    intent.putExtra("KEY_NAME", "Kylie Minogue")
+//                }
+//                else if (actionStepNum == 1)
+//                    intent.putExtra("KEY_NAME_ID", "Id")
+//                    intent.putExtra("KEY_NAME_IDNUM", "460967")
+//                // Function to add variable amount of extra
+//                // Set Component to explicitly communicate within App / Package
+            ///intent.setComponent(ReceiverTestActivity::class)
+//                //sendBroadcast(intent) // Chk@ in BroadcastReceiver
+//            }
+
+            intent.setClassName(
+                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
+                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views.ReceiverTestActivity"
+            )
+            startActivity(intent)
+        }
+
+
+    }// onCreate
 
     override fun onResume() {
         super.onResume()
@@ -269,39 +280,45 @@ class MainActivity : AppCompatActivity(), TimeoutListener {
     //   addExtras to each action
     //      addAnExtra()
 
+    //! Preparing provider data and preparing Provider for Creation is two different things but still add new set while the broadcaster is running?
+    //! preparing ActionExxtra data for provider before provider is run(or instantiated)
+    //! Chk: Move this method to UtilityActions
     fun prepareProvider(providerName: String, intent: Intent, actionSet: List<String>) {
         // Register ACTIONS for special PayProvider BroadcastReceiver
-        addActionsForReceiver(actionSet)
-        addExtrasData(intent)
+        mIntentFilterActions = packActionsWithData(actionSet)
         // return provider?
     }
 
-    //! Descr: Add Extras data to intent For sending
-    private fun addExtrasData(intent: Intent) {
-        // ACTION
-        intent.putExtra("PUT_KEY", "4566")
-    }
 
-    //! Descr: addAction for specific receiver
-    private fun addActionsForReceiver(actions: List<String>): IntentFilter {
+    //! Descr:
+    private fun packActionsWithData(actionSet: List<String>) : IntentFilter{
 
+        //! This happens elsewhere se actions into ActionExtra in entry function(onCreate)
         var intentFilterActions = IntentFilter().apply {
             //addAction("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START")
             //! Preparation for protocol state walk, with start and end
-            addAction(actions.first()) // start
-            for (s in actions.subList(1, actions.size - 1)) {
-                Log.d(TAG, "Added Action for receiver: $s : Sizelist ${actions.size}")
+            addAction(actionSet.first()) // start
+            for (s in actionSet.subList(1, actionSet.size - 1)) {
+                Log.d(TAG, "Added Action for receiver: $s : Sizelist ${actionSet.size}")
                 addAction(s)
             }
             //Arbitrary number of action steps
-            addAction(actions.last()) // For End of ACTION event
+            addAction(actionSet.last()) // For End of ACTION event
         }
         return intentFilterActions
     }
 
+    //! Descr: addAction for specific receiver
+    private fun addActionsForReceiver(actions: List<String>): IntentFilter {
+        return IntentFilter("") // placeholder
+    }
 
     override fun updateTimer(info: String) {
         Log.d(TAG, "UpdateTimer: Callback")
-        tvWhatsTheTime.text = info
+        tvShowTime.text = info
     }
+
+    //! =========================================================
+    //! check-code
+
 }

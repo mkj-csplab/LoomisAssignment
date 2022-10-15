@@ -5,13 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import models.ActionsExtra
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions
 import java.util.*
 
 //import kotlin.collections.EmptyMap.keys
 
 class BankOfBankReceiver(
-    override var mActionIDS: List<String>, override var providerName: String?,
+    override var providerName: String?,
+    override var mActionExtras: List<ActionsExtra>,
 
     ) : PayProviderReceiver() {
     private var TAG = BankOfBankReceiver::class.java.simpleName
@@ -24,11 +26,12 @@ class BankOfBankReceiver(
         super.onReceive(ctx, intent)
 
         //try {
-        mTimeoutListener = object: TimeoutListener {
-            override fun updateTimer(info: String) {
-
-            }
-        }
+//        mTimeoutListener = object: TimeoutListener {
+//            override fun updateTimer(info: String) {
+//
+//            }
+//        }
+        //mTimeoutListener = TimeoutListener()
 
             //updateTextInUIRegister(mTimeoutListener) // Null pointer
         //}catch (e: Exception){
