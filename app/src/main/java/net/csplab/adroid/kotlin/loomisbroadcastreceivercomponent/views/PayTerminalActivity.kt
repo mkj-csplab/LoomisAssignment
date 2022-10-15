@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityPayTerminalBinding
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.BankOfBankReceiver
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.PartyOneProviderReceiver
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.PayProviderReceiver
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.TimeoutListener
@@ -123,12 +124,12 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutListener {
 
         //! PartyOneProvider BroadcastReceiver
         btStartPayProvider1.setOnClickListener {
+            val providerName = "PartyOneProvider"
+            // ! Intent () HERE_?
+
             //! Get ACTION Set for Provider
             // Register ACTIONS for special PayProvider BroadcastReceiver
             // Chk@: move preparation outside button click event!
-
-            val providerName = "PartyOneProvider"
-
             //: Get the ACTION String for provider
             val sActions = UtilityActions.Util.setupActionsForProviderPartyOne()
             //: Prepare Provider by packing ActionExtra Object with collection on actions and extra data
@@ -136,11 +137,11 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutListener {
 
             mReadyToBroadCast = true
             //! Set Broadcaster type with associated Actions
-            mTstBroadcaster = PartyOneProviderReceiver(providerName, UtilityActions.SET.actionsExtraPartyOne)
+            mTstBroadcaster = PartyOneProviderReceiver(providerName, UtilityActions.ActionSets.actionsExtraPartyOne)
 
-            registerReceiver(mTstBroadcaster, mIntentFilterActions)
+            registerReceiver(mTstBroadcaster, mIntentFilterActions) //! Chk@ mIntentFilterActions should be local to no induce bugsa
 
-            intent = Intent()
+            intent = Intent()  // chk:Move this to start of bt action.
 
             //! For each intent to send with broadcast -> Load each intent with action and "Extras" data
             for (i in 0..sActions.size - 1) {
@@ -168,48 +169,52 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutListener {
         }
 
         // BankOfBankBroadcastReceiver
-//        btStartPayProvider2.setOnClickListener {
-//            // Load Actions for number BankOfBank 3. party provider
-//            prepareProvider("BankOfBankProvider", intent, UtilityActions.collectActionsForProviderBankOfBank())
-//            //mStrAction =
-//
-//            mReadyToBroadCast = true
-//            mTstBroadcaster = BankOfBankReceiver(mStrAction)
-//
-//            registerReceiver(mTstBroadcaster, IntentFilterActions)
-//
-//            //!
-//            intent = Intent()
-//            //  Run trough all possible ACTIONS and ready them
-//            for(i in 0..mStrAction.size - 1) {
-//                Log.d(TAG, "sAction")
-//                intent.action = mStrAction[i]
-//
-//                // The Intent is for one broadcast, so we have to add the appropriate Extras for each Action:
-//                // Then -> Ready next intent with action and extras to broadcast
-//                if (intent.action == mStrAction[0]){
-//                    intent.putExtra("KEY1", "ID4325")
-//                } else if (intent.action == mStrAction[1]){
-//                    intent.putExtra("KEY2_2", tvWhatsTheTime.text.toString()) // Create message editfield prefill it for testsS
-//                    intent.putExtra("KEY2_2", "Balance")
-//                    intent.putExtra("KEY2_3", "Idnum")
-//                    intent.putExtra("KEY2_3", "SWIFT")
-//                    intent.putExtra("KEY2_3", "IBAN")
-//                } else if (intent.action == mStrAction[2]){
-//                    intent.putExtra("KEY3", "5000")
-//                }else if (intent.action == mStrAction[3]){
-//                    intent.putExtra("KEY4", "BYE!")
-//                }
-//                sendBroadcast(intent)
-//            }
-//            //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
-//        }
-//        // Utility Class: Move to
-//        //========================================================
-//
-//        //tstBroadcaster = ConsumePartyPayProviderBroadcastReciver(sAction,sAction.size)
-//        // Is this a problem that this is not in the resume part,
-//        // Do we only need the register in resume
+        btStartPayProvider2.setOnClickListener {
+            val providerName = "BankOfBankProvider"
+            // Load Actions for number BankOfBank 3. party provider
+
+            val actionStrings = UtilityActions.Util.setupActionsForProviderBankOfBank()
+
+            prepareProvider(providerName, intent, actionStrings)
+
+            mReadyToBroadCast = true
+            mTstBroadcaster = BankOfBankReceiver(providerName, UtilityActions.ActionSets.actionsExtraBankOfBank)
+
+            val intentFilterActions = IntentFilter() // TODO do nothing
+            registerReceiver(mTstBroadcaster, intentFilterActions)
+
+            //!
+            intent = Intent()
+            //  Run trough all possible ACTIONS and ready them
+            for(i in 0..actionStrings.size - 1) {
+                Log.d(TAG, "sAction")
+                intent.action = actionStrings[i]
+
+                // The Intent is for one broadcast, so we have to add the appropriate Extras for each Action:
+                // Then -> Ready next intent with action and extras to broadcast
+                if (intent.action == actionStrings[0]){
+                    intent.putExtra("KEY1", "ID4325")
+                } else if (intent.action == actionStrings[1]){
+                    intent.putExtra("KEY2_2", tvShowTime.text.toString()) // Create message editfield prefill it for testsS
+                    intent.putExtra("KEY2_2", "Balance")
+                    intent.putExtra("KEY2_3", "Idnum")
+                    intent.putExtra("KEY2_3", "SWIFT")
+                    intent.putExtra("KEY2_3", "IBAN")
+                } else if (intent.action == actionStrings[2]){
+                    intent.putExtra("KEY3", "5000")
+                }else if (intent.action == actionStrings[3]){
+                    intent.putExtra("KEY4", "BYE!")
+                }
+                sendBroadcast(intent)
+            }
+            //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
+        }
+        // Utility Class: Move to
+        //========================================================
+
+        //tstBroadcaster = ConsumePartyPayProviderBroadcastReciver(sAction,sAction.size)
+        // Is this a problem that this is not in the resume part,
+        // Do we only need the register in resume
 
 
         //! Test Send with Intent to Receiver Activity

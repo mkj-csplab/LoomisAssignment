@@ -7,55 +7,61 @@ const val PACKAGENAME: String = "net.csplab.adroid.kotlin.loomisbroadcastreceive
  open class UtilityActions {
     final val TAG = UtilityActions::class.java.simpleName
 
-    object SET {
-        var actionsExtraPartyOne: List<ActionsExtra> = mutableListOf<ActionsExtra>(
+    object ActionSets {
+        val actionStrings1 = setupActionsForProviderPartyOne()
+        var actionsExtraPartyOne: List<ActionsExtra> = listOf<ActionsExtra>(
             // Actions is locked and number of Extradata and KEYS are locked after Broadcast Provider instantiation
             // DO SET DATA value, ie set time
             ActionsExtra(
-                "ACTION_PAY_START",
-                mutableListOf<Pair<String, String>>(Pair("ACTION_PAY_START", "ID456789"))
+                actionStrings1[0],
+                //concatenatePkgName("ACTION_PAY_START"), // Call ActionString instead
+                mutableListOf<Pair<String, String>>(Pair("KEY1_ID", "ID456789"))
             ),
             ActionsExtra(
-                "ACTION_PAY1",
-                mutableListOf<Pair<String, String>>(Pair("KEY_PAY1", ""), Pair("", ""))
+                actionStrings1[1],
+                //"ACTION_PAY1",
+                mutableListOf<Pair<String, String>>(Pair("KEY1_PAY_DESCR", "Michael"), Pair("KEY2_PAY_DESCR", "Jensen")),
             ),
             ActionsExtra(
-                "ACTION_PAY2",
-                mutableListOf<Pair<String, String>>(Pair("KEY_PAY2", ""), Pair("", ""))
+                actionStrings1[2],
+                //"ACTION_PAY2",
+                mutableListOf<Pair<String, String>>(Pair("KEY_BALANCE", "OK"))
             ),
             ActionsExtra(
-                "ACTION_PAY_END",
-                mutableListOf<Pair<String, String>>(Pair("KEY_PAY_END", ""))
+                actionStrings1[3], // END Sentinel!
+                mutableListOf<Pair<String, String>>(Pair("KEY_PAY_END", "END")) // No Extras! @
             ),
-
             )
 
-
+        //! Chk@: ACTION => PACKAGENAME + . + ACTION_NAME
+        val actionStrings2 = setupActionsForProviderPartyOne()
         var actionsExtraBankOfBank: List<ActionsExtra> = mutableListOf<ActionsExtra>(
             // Actions is locked and number of Extradata and KEYS are locked after Broadcast Provider instantiation
             // DO SET DATA value, ie set time
             ActionsExtra(
-                "ACTION_PAY_START",
+                actionStrings2[0],
+                //"ACTION_PAY_START",
                 mutableListOf<Pair<String, String>>(Pair("ACTION_PAY_START", "ID456789"))
             ),
             ActionsExtra(
-                "ACTION_PAY1",
+                actionStrings2[1], //"ACTION_PAY1",
                 mutableListOf<Pair<String, String>>(Pair("KEY_PAY1", ""), Pair("", ""))
             ),
             ActionsExtra(
-                "ACTION_PAY2",
-                mutableListOf<Pair<String, String>>(Pair("KEY_PAY2", ""), Pair("", ""))
-            ),
-            ActionsExtra(
-                "ACTION_PAY_END",
+                actionStrings2[3], //"ACTION_PAY_END",
                 mutableListOf<Pair<String, String>>(Pair("KEY_PAY_END", ""))
             ),
 
             )
+
+        private fun concatenatePkgName(s: String): String {
+            val packageAction = PACKAGENAME + "." + s
+            return packageAction
+        }
     }
         // Set these in each broadcast implementation
        companion object Util { //PAYBROADCAST
-            //
+            //! Obsolete: Kept for reference
             enum class PayProvider1(action: String) {
                 ACTION_PAYID1_START(
                     "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"),
@@ -67,6 +73,7 @@ const val PACKAGENAME: String = "net.csplab.adroid.kotlin.loomisbroadcastreceive
                 }
             }
 
+            //! Obsolete: Kept for reference
             enum class PayProvider2(action: String) {
                 ACTION_PAYID2_START("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_START"),
                 ACTION_PAYID2_STEP1(
