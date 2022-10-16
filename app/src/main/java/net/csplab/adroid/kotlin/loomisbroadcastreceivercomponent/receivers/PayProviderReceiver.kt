@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import android.util.Log
-import android.widget.Toast
 import models.ActionsExtra
 import java.util.*
 
@@ -20,9 +19,9 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
 
     abstract var providerName:String? // 3. Party ProviderName
     abstract var mActionExtras: List<ActionsExtra>
+    abstract val mTimeoutLength: Long
     //abstract var actionsCompleted: List<Boolean> // Chk: getNumberOfCompleted @?
 
-    protected var mActionTimeout: Timer = Timer()
     private var mBrHeartBeat: Timer = Timer() //! heartbeat is just inbuild in baseclass
 
     protected var alarmMgr: AlarmManager? = null
@@ -32,22 +31,25 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     init {
         //! Test for liveness, whether app is in back or foreground
         runHeartBeat()
-        setTimeout(timeoutLength = 10000L) // 10000L -> 10 seconds
+        // Create Timer at Pay Initial Action:
+        //createTimeoutTimer(10000L) // 10000L Not with Abstract -> 10 seconds -> Should be in constructor
         Log.d(TAG, "PayProvider:init heartbeat")
         // Otherwise use a handler.
     }
 
     // Set Timer Here
-    // Set &  Build Notifications
+    // Set & Build Notifications
 
     // Chk@: Abstract or base implementation @?
-    override fun onReceive(ctx: Context, intent: Intent) {}
+    override fun onReceive(ctx: Context, intent: Intent) {
+    }
 
     //! HeartBeat for All PayProviders
     private fun runHeartBeat() {
         mBrHeartBeat = Timer()
         mBrHeartBeat.scheduleAtFixedRate(object: TimerTask() {
             override fun run() {
+                Log.d(TAG, "PayProvider:HeartBeat ")
             } },5000, 5000)
     }
 
@@ -60,26 +62,22 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     //abstract fun setActionsForReceiver2(actionList: List<String>)
 
     //! Descr: Setting timeout for receiver: Abstract@? method
-    protected fun setTimeout(timeoutLength: Long){
-        try {
-        if (mActionTimeout != null){
-            mActionTimeout.cancel()
+    protected fun createTimeoutTimer(timeoutLength: Long){
+        var actionTimeout: Timer = Timer()
 
-            mActionTimeout.schedule(object: TimerTask() {
-                override fun run() {
-                    Log.d(TAG, "PayProviderReceiver: utility.Timeout after $timeoutLength") // @Chk: @No timer in Utility
-                    //! Not on main thread, broadcaster run normally on main thread (UI Thread): Do Interface
-                    //Toast.makeText(ctx, "Timer: ${Date().hours}:${Date().minutes}:${Date().seconds}", Toast.LENGTH_LONG).show()
+        actionTimeout.schedule(object: TimerTask() {
+            override fun run() {
+                Log.d(TAG, "PayProviderReceiver:TimeoutNotify: after $timeoutLength") // @Chk: @No timer in Utility
+                //! Not on main thread, broadcaster run normally on main thread (UI Thread): Do Interface
+                //Toast.makeText(ctx, "Timer: ${Date().hours}:${Date().minutes}:${Date().seconds}", Toast.LENGTH_LONG).show()
 //                    this@PayTerminalActivity.runOnUiThread(
 //                    Runnable {
 //                          tvWhatsTheTime.text = "Timer: ${Date().hours}:${Date().minutes}:${Date().seconds}"
 //                     })
-                }}, timeoutLength)
-        }
-        }catch (e: Exception){
-            Log.d(TAG, "setTimeout exception: $e.message.toString()")
-        }
+            }}, timeoutLength)
+        Log.d(TAG, "PayProvider:Timeout Timer Created timeSet: $timeoutLength")
     }
+    //}
 
     fun timerAlertSetup(ctx: Context){
         alarmMgr = ctx.getSystemService(android.content.Context.ALARM_SERVICE) as AlarmManager

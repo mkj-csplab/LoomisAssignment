@@ -30,13 +30,13 @@
         android:layout_margin="8dp"
         android:background="@color/blued"
         android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/btStartPayProvider1"
+        app:layout_constraintBottom_toTopOf="@+id/bt_start_party_one_provider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvInfo1" />
 
     <Button
-        android:id="@+id/btStartPayProvider1"
+        android:id="@+id/bt_start_party_one_provider"
         android:layout_width="0dp"
         android:layout_height="72dp"
         android:layout_margin="12dp"

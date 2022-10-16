@@ -7,4 +7,9 @@ plugins {
 
 ext {
     jUnitVersion = "4.13.2"
+    androidXTestVersion = "1.4.0"
+    mockitoVersion = "4.8.0"
+    mockitoKotlinVersion = "4.0.0"
+    mockkVersion = "1.13.2"
+
 }

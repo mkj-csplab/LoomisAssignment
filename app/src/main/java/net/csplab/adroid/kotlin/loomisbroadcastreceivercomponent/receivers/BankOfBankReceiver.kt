@@ -14,17 +14,19 @@ import java.util.*
 class BankOfBankReceiver(
     override var providerName: String?,
     override var mActionExtras: List<ActionsExtra>,
+    override val mTimeoutLength: Long = 20000L, //! transfer this to super class timer o
 
     ) : PayProviderReceiver() {
-    private var TAG = BankOfBankReceiver::class.java.simpleName
+    private val TAG = BankOfBankReceiver::class.java.simpleName
 
-    private lateinit var mTimeoutListener: TimeoutListener
+    private lateinit var mTimeoutContainer: TimeoutContainer
 
     private val mCounter = 0
 
     override fun onReceive(ctx: Context, intent: Intent) {
-        super.onReceive(ctx, intent)
-
+        super.onReceive(ctx, intent)  //! Creates Timer, what about timeoutlength
+        Log.d(TAG, "BankOfBank:onReceive")
+        createTimeoutTimer(mTimeoutLength)
         //try {
 //        mTimeoutListener = object: TimeoutListener {
 //            override fun updateTimer(info: String) {
@@ -46,7 +48,6 @@ class BankOfBankReceiver(
         val keySetSize = extraKeys?.size
 
         // TODO: Chk@: Move to Function for timeout init and start etc.
-        val timeOutLength = 5000L
 
         if (isItATimeout != null && isItATimeout.equals("TIMEOUT")){
             Log.d(TAG, "TIMEOUT")
@@ -86,8 +87,8 @@ class BankOfBankReceiver(
         //TODO("Not yet implemented")
     }
 
-    fun updateTextInUIRegister(callBack: TimeoutListener){
-        mTimeoutListener = callBack
-        mTimeoutListener.updateTimer("TIMEISHIGH!")
+    fun updateTextInUIRegister(callBack: TimeoutContainer.TimeoutListener){
+        //mTimeoutListener = callBack
+        //mTimeoutListener.updateTimer("TIMEISHIGH!")
     }
 }

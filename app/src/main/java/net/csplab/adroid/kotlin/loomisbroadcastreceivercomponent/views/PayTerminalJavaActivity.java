@@ -12,8 +12,6 @@ import android.widget.TextView;
 import java.util.List;
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityPayTerminalJavaBinding;
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.BankOfBankReceiver;
-import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.PartyOneProviderReceiver;
-import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.PayProviderReceiver;
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions;
 
 public class PayTerminalJavaActivity extends AppCompatActivity {
@@ -25,7 +23,9 @@ public class PayTerminalJavaActivity extends AppCompatActivity {
     private boolean mReadyToBroadCast = true;
     // private PayProviderReceiver mTstBroadcaster = null;
 
-    private IntentFilter mIntentFilterActions = null;
+    private IntentFilter mIntentFilterActionsPartyOne = null;
+    private IntentFilter mIntentFilterActionsBankOfBank = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class PayTerminalJavaActivity extends AppCompatActivity {
 
         TextView tvInfo1 = bind.tvInfo1;
         TextView tvInfo2 = bind.tvInfo2;
-        Button btStartPayProvider1 = bind.btStartPayProvider1;
+        Button btStartPartyOneProvider = bind.btStartPartyOneProvider;
 
         //IntentFilter itFilter = new IntentFilter();
         //itFilter.addAction();
@@ -56,12 +56,12 @@ public class PayTerminalJavaActivity extends AppCompatActivity {
 
         // Arbitrary number of action steps ... Ho do we put them in
         // Register ACTIONS for special PayProvider BroadcastReceiver
-        mIntentFilterActions = new IntentFilter();
+        mIntentFilterActionsPartyOne = new IntentFilter();
 
         mReadyToBroadCast = true;
 
         //! Set Broadcaster type with associated Actions
-        registerReceiver(mPayReceiver, mIntentFilterActions);
+        registerReceiver(mPayReceiver, mIntentFilterActionsPartyOne);
 
         if (intent.getAction()== null) {
             Log.d(TAG, "PayTerminalJavaActivity:onCreate: Intent Action is null");

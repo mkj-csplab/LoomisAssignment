@@ -9,6 +9,7 @@ import models.ActionsExtra
 class PartyOneProviderReceiver(
     override var providerName: String?,
     override var mActionExtras: List<ActionsExtra>,
+    override val mTimeoutLength: Long = 15000L,
 
     //override var actionsCompleted: List<Boolean>
 ) : PayProviderReceiver() {
@@ -16,24 +17,17 @@ class PartyOneProviderReceiver(
 
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
-        Toast.makeText(ctx, "ConsumerParty", Toast.LENGTH_LONG).show()
+        Log.d(TAG, "BankOfBank:onReceive")
+
+        createTimeoutTimer(mTimeoutLength)
+        Toast.makeText(ctx, "PartyOneProvider:onReceive", Toast.LENGTH_LONG).show()
 
         val actionReceived = intent.action
         var intentExtras = intent.extras
-        var mNumberActionsRegistered = mActionExtras.size // CHK: REMOVE mActionIDS
+        var mNumberActionsRegistered = mActionExtras.size
 
         Log.d(TAG, "onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${mActionExtras}")
         //Log.d(TAG, "iAction: ${intentExtras?.keySet()}")
-
-//        mActionBrTimer = object : CountDownTimer(10000, 1000) {
-//            override fun onTick(t0: Long) {
-//
-//            }
-//            override fun onFinish() {
-//                //abortBroadcast()  // Question
-//            }
-//        }
-//        mActionBrTimer.start()
 
         var extraKeySet = intentExtras?.keySet()
         Log.d(TAG, "PartyOneProvider:Onrecieve: keyset ${extraKeySet}")
@@ -53,11 +47,11 @@ class PartyOneProviderReceiver(
 
         if (actionReceived == mActionExtras[0].action){
             var key1val = intent.getStringExtra("KEY1")
-            // --
+
         } else if (actionReceived == mActionExtras[1].action){
-
+            var key1val = intent.getStringExtra("KEY2")
         } else if (actionReceived == mActionExtras[2].action) {
-
+            var key1val = intent.getStringExtra("KEY3")
         }
     }
 
@@ -90,32 +84,6 @@ class PartyOneProviderReceiver(
 //            }
 //        //        if (iAction == "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.ACTION_PAYID1_START") {// Is action correct, look in intent.ACTIONS
 // =====
-        //switch (intentAction){
-        //    case :
-        //    break;
-        //    case Intent.ACTION_POWER_DISCONNECTED:
-        //    break;
-        //}
-        //when (iAction) {
-        //     ActionString -> {}
-        //    Intent.ACTION_POWER_DISCONNECTED -> {}
-        //}
-
-        // ===============================================
-        // Action Walkthrough
-        /*
-         addAction(Intent.ACTION_BATTERY_CHANGED)    // For test
-            addAction(Intent.ACTION_POWER_DISCONNECTED) // For test
-            //addAction(packageName + "ACTION_PAYID1_INIT") // Init: Should be the user pressing Pay on Mainactivity@
-            addAction(packageName + "ACTION_PAYID1_START") // start
-            addAction(packageName + "ACTION_PAYID1_STEP1")
-            addAction(packageName + "ACTION_PAYID1_STEP2")
-            addAction(packageName + "ACTION_PAYID1_STEP3")
-            //Arbitrary number of action steps ... Ho do we put them in
-            addAction(packageName + "ACTION_PAYID1_END") // End of ACTION EVENT
-        */
-        //if (iAction = is)
-        
 
 //    override fun onReceive(ctx: Context?, intent: Intent?) {
 //        val intt = intent?.action
