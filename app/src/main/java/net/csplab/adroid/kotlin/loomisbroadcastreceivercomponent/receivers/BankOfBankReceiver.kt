@@ -26,7 +26,7 @@ class BankOfBankReceiver(
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)  //! Creates Timer, what about timeoutlength
         Log.d(TAG, "BankOfBank:onReceive")
-        createTimeoutTimer(mTimeoutLength)
+        createTimeoutTimer(mTimeoutLength, ctx)
         //try {
 //        mTimeoutListener = object: TimeoutListener {
 //            override fun updateTimer(info: String) {

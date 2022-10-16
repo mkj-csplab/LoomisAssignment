@@ -17,43 +17,51 @@ class PartyOneProviderReceiver(
 
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
-        Log.d(TAG, "BankOfBank:onReceive")
+        Log.d(TAG, "PartyOneProvider:onReceive")
 
-        createTimeoutTimer(mTimeoutLength)
+        createTimeoutTimer(mTimeoutLength, ctx)
         Toast.makeText(ctx, "PartyOneProvider:onReceive", Toast.LENGTH_LONG).show()
 
         val actionReceived = intent.action
         var intentExtras = intent.extras
         var mNumberActionsRegistered = mActionExtras.size
 
-        Log.d(TAG, "onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${mActionExtras}")
+        Log.d(TAG, "PartyOneProvider:onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${mActionExtras}")
         //Log.d(TAG, "iAction: ${intentExtras?.keySet()}")
 
         var extraKeySet = intentExtras?.keySet()
-        Log.d(TAG, "PartyOneProvider:Onrecieve: keyset ${extraKeySet}")
+        Log.d(TAG, "PartyOneProvider:onRecieve: keyset ${extraKeySet}")
 
         val values = mutableListOf<String>()
 
         for (k in extraKeySet!!) {
-            Log.d(TAG, "Keys: $k")
+            Log.d(TAG, "PartyOneProvider:onRecieve:Keys: $k")
             values.add(intentExtras?.get(k).toString())
         }
         var valuesSize = values.size
 
-        Log.d(TAG, "Values: $valuesSize")
+        Log.d(TAG, "PartyOneProvider:Values: $valuesSize")
 
         //! Set Function for dealing with busines/ protocol logic that must be specialised
         val numActionRegistered = mActionExtras.size //
 
+        Log.d(TAG, "PartyOneProvider:onReceive:Actions: $mActionExtras")
         if (actionReceived == mActionExtras[0].action){
             var key1val = intent.getStringExtra("KEY1")
-
+            Log.d(TAG, "PartyOneProvider:onReceive:Action0: ${mActionExtras[0].action} : KeyVal: $key1val")
         } else if (actionReceived == mActionExtras[1].action){
             var key1val = intent.getStringExtra("KEY2")
+            Log.d(TAG, "PartyOneProvider:onReceive:KeyVal: $key1val")
         } else if (actionReceived == mActionExtras[2].action) {
             var key1val = intent.getStringExtra("KEY3")
+            Log.d(TAG, "PartyOneProvider:onReceive:KeyVal: $key1val")
+        } else if (actionReceived == mActionExtras[3].action) {
+            var key1val = intent.getStringExtra("KEY4")
+            Log.d(TAG, "PartyOneProvider:onReceive:KeyVal: $key1val")
         }
-    }
+
+
+    } // END onReceive
 
     override fun protocolSetup(ctx: Context, intent: Intent) {
         //! Write logic for specialized code for a provider here

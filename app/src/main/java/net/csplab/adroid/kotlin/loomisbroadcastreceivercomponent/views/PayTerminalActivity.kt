@@ -24,14 +24,14 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
     private var mReadyToBroadCast: Boolean = false
     private lateinit var bind: ActivityPayTerminalBinding
 
-    lateinit var mTstBroadcaster: PayProviderReceiver
-    lateinit var mPartyOneBroadcaster: PartyOneProviderReceiver
+    //lateinit var mTstBroadcaster: PayProviderReceiver
+    lateinit var mPartyOneReceiver: PartyOneProviderReceiver
     lateinit var mBankOfBankReceiver: BankOfBankReceiver
 
     // private PayProviderReceiver mTstBroadcaster = null;
     private lateinit var mIntentFilterActionsPartyOne: IntentFilter
     private lateinit var mIntentFilterActionsBankOfBank: IntentFilter
-    private lateinit var actionSet: List<String>
+    private lateinit var mActionSet: List<String>
 
     lateinit var tvShowTime: TextView
 
@@ -110,86 +110,88 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         //! PartyOneProvider BroadcastReceiver
         btStartPartyOneProvider.setOnClickListener {
             val providerName = "PartyOneProvider"
-            intent = Intent()  // chk:Move this to start of bt action.
-
+            intent = Intent()  //! Ready intent for Action & Extras Packing
             //! Get ACTION Set for Provider
             // Register ACTIONS for special PayProvider BroadcastReceiver
             // Chk@: move preparation outside button click event!
             //: Get the ACTION String for provider
             val sActions = UtilityActions.Util.setupActionsForProviderPartyOne()
+            //!! NOTE: In Sender End (Activity) KEEP sActions List of strings, do not use
+            //!! The List<ActionExtra> object from utility UtilityActions class,
+            //!! !DO use it in Receivers
             //: Prepare Provider by packing ActionExtra Object with collection on actions and extra data
             mIntentFilterActionsPartyOne = prepareProvider(providerName, intent, sActions) //! CHK: Timeoutlength L
 
             mReadyToBroadCast = true
             //! Set Broadcaster type with associated Actions
             //mTstBroadcaster = PartyOneProviderReceiver(providerName, UtilityActions.ActionSets.actionsExtraPartyOne, 15000L)
-            val partyOneBroadcaster = PartyOneProviderReceiver(providerName, UtilityActions.ActionSets.actionsExtraPartyOne, 15000L)
+            mPartyOneReceiver = PartyOneProviderReceiver(
+                providerName,
+                UtilityActions.ActionSets.actionsExtraPartyOne,
+                15000L)
 
-            registerReceiver(partyOneBroadcaster, mIntentFilterActionsPartyOne) //! Chk@ mIntentFilterActions should be local to no induce bugs
+            registerReceiver(mPartyOneReceiver, mIntentFilterActionsPartyOne) //! Chk@ mIntentFilterActions should be local to no induce bugs
 
+            //! CHK: NEXT-> sendProtocolDriver(sActions, intent)
             //! For each intent to send with broadcast -> Load each intent with action and "Extras" data
-            for (i in 0..sActions.size - 1) {
-                intent.action = sActions[i]
-                Log.d(TAG, "Intent => $intent.action :: $sActions[i] :: Action.size: $sActions.size ")
 
-                //! get current action
-                val ia = intent.action
-                Log.d(TAG, "$ia")
-                if (intent.action == sActions[0]) {
+            //chk@! val actionFromAction
+
+            protocolLogicSendPartyOne(sActions, intent)
+
+//            try {
+            //unregisterReceiver(mPartyOneReceiver)
+            //mReadyToBroadCast = false
+
+            //mPartyOneReceiver=null
+
+//                unregisterReceiver(partyOneBroadcaster)
+//
+//            }catch (e: Exception){
+//                e.printStackTrace().toString()
+//            }
+            //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
+        }
+        // BankOfBankBroadcastReceiver
+        btStartBankOfBankProvider.setOnClickListener {
+            val providerName = "BankOfBankProvider"
+            intent = Intent()
+
+            // Load Actions for number BankOfBank 3. party provider
+            val actionStrings = UtilityActions.Util.setupActionsForProviderBankOfBank()
+
+            mIntentFilterActionsBankOfBank  = prepareProvider(providerName, intent, actionStrings)
+
+            mReadyToBroadCast = true
+            mBankOfBankReceiver = BankOfBankReceiver(
+                providerName,
+                UtilityActions.ActionSets.actionsExtraBankOfBank)
+
+            registerReceiver(mBankOfBankReceiver, mIntentFilterActionsBankOfBank)
+
+            //  Run trough all possible ACTIONS and ready them
+            for(i in 0..actionStrings.size - 1) {
+                Log.d(TAG, "sAction")
+                intent.action = actionStrings[i]
+
+                // The Intent is for one broadcast, so we have to add the appropriate Extras for each Action:
+                // Then -> Ready next intent with action and extras to broadcast
+                if (intent.action == actionStrings[0]){
                     intent.putExtra("KEY1", "ID4325")
-                } else if (intent.action == sActions[1]) {
-                    intent.putExtra("KEY2_1", "Amount")
+                } else if (intent.action == actionStrings[1]){
+                    intent.putExtra("KEY2_2", tvShowTime.text.toString()) // Create message editfield prefill it for testsS
                     intent.putExtra("KEY2_2", "Balance")
                     intent.putExtra("KEY2_3", "Idnum")
-                    intent.putExtra("KEY2_4", "SWIFT")
-                    intent.putExtra("KEY2_5", "IBAN")
-                } else if (intent.action == sActions[2]) {
-                    intent.putExtra("KEY3", "BYE!")
+                    intent.putExtra("KEY2_3", "IBAN")
+                } else if (intent.action == actionStrings[2]){
+                    intent.putExtra("KEY3", "5000")
+                }else if (intent.action == actionStrings[3]){
+                    intent.putExtra("KEY4", "BYE!")
                 }
-                //! @Chk> Could wrap this in Tinmer. Schedule to test tiime limits
-                sendBroadcast(intent) // send intent to ConsumerPartyProvider, Timing
+                sendOrderedBroadcast(intent, null)
             }
             //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
         }
-
-//        // BankOfBankBroadcastReceiver
-//        btStartBankOfBankProvider.setOnClickListener {
-//            val providerName = "BankOfBankProvider"
-//            intent = Intent()
-//
-//            // Load Actions for number BankOfBank 3. party provider
-//            val actionStrings = UtilityActions.Util.setupActionsForProviderBankOfBank()
-//            val intentActionFilter  = prepareProvider(providerName, intent, actionStrings)
-//
-//            mReadyToBroadCast = true
-//            mTstBroadcaster = BankOfBankReceiver(providerName, UtilityActions.ActionSets.actionsExtraBankOfBank)
-//
-//            registerReceiver(mTstBroadcaster, intentActionFilter)
-//
-//            //  Run trough all possible ACTIONS and ready them
-//            for(i in 0..actionStrings.size - 1) {
-//                Log.d(TAG, "sAction")
-//                intent.action = actionStrings[i]
-//
-//                // The Intent is for one broadcast, so we have to add the appropriate Extras for each Action:
-//                // Then -> Ready next intent with action and extras to broadcast
-//                if (intent.action == actionStrings[0]){
-//                    intent.putExtra("KEY1", "ID4325")
-//                } else if (intent.action == actionStrings[1]){
-//                    intent.putExtra("KEY2_2", tvShowTime.text.toString()) // Create message editfield prefill it for testsS
-//                    intent.putExtra("KEY2_2", "Balance")
-//                    intent.putExtra("KEY2_3", "Idnum")
-//                    intent.putExtra("KEY2_3", "SWIFT")
-//                    intent.putExtra("KEY2_3", "IBAN")
-//                } else if (intent.action == actionStrings[2]){
-//                    intent.putExtra("KEY3", "5000")
-//                }else if (intent.action == actionStrings[3]){
-//                    intent.putExtra("KEY4", "BYE!")
-//                }
-//                sendBroadcast(intent)
-//            }
-//            //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
-//        }
 
         //tstBroadcaster = ConsumePartyPayProviderBroadcastReciver(sAction,sAction.size)
         // Is this a problem that this is not in the resume part,
@@ -241,19 +243,55 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 
     }// onCreate
 
+
+    private fun protocolLogicSendPartyOne(sActions: List<String>, intent: Intent) {
+        for (i in 0..sActions.size - 1) {
+            intent.action = sActions[i]
+            Log.d(TAG, "Intent => $intent.action :: $sActions[i] :: Action.size: $sActions.size ")
+
+            //! get current action
+            val ia = intent.action
+            Log.d(TAG, "$ia")
+            if (intent.action == sActions[0]) {
+                intent.putExtra("KEY1", "ID4325")
+            } else if (intent.action == sActions[1]) {
+                intent.putExtra("KEY2_1", "Amount")
+                intent.putExtra("KEY2_2", "Balance")
+                intent.putExtra("KEY2_3", "Idnum")
+                intent.putExtra("KEY2_4", "IBAN")
+            } else if (intent.action == sActions[2]) {
+                intent.putExtra("KEY3", "BYE!")
+            }
+            //! @Chk> Could wrap this in Timer. Schedule to test time limits
+            //sendBroadcast(intent) // send intent to PartyOneProvider, Timing
+            sendOrderedBroadcast(intent, null)
+
+        }
+    }
+
     override fun onResume() {
         super.onResume()
 
-        if (mReadyToBroadCast) {
-            registerReceiver(mTstBroadcaster, mIntentFilterActionsPartyOne)
+        if (mReadyToBroadCast) { //! CHK:Maybe need a ReadyToBroadcast per receiver
+            //! TODO Fix registerReceiver and unregister in onResume and onPause to match
+            //! Code update in button click test receiver
+          //  if (mPartyOneReceiver != null) { //! chk: IntentFilters test for null @?
+                registerReceiver(mPartyOneReceiver, mIntentFilterActionsPartyOne)
+            //}
+            //if (mBankOfBankReceiver != null){
+                registerReceiver(mBankOfBankReceiver, mIntentFilterActionsBankOfBank)
+            //}
         }
     }
 
     override fun onPause() {
         super.onPause()
-        if (mReadyToBroadCast) {
-            unregisterReceiver(mTstBroadcaster)
-        }
+        //! If App set on pause during broadcast - App going to background
+        //if (mReadyToBroadCast) {
+            unregisterReceiver(mPartyOneReceiver)
+            unregisterReceiver(mBankOfBankReceiver)
+          //  mReadyToBroadCast = false
+       // }
     }
 
     //! Partition in functions

@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
 import models.ActionsExtra
@@ -62,19 +64,21 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     //abstract fun setActionsForReceiver2(actionList: List<String>)
 
     //! Descr: Setting timeout for receiver: Abstract@? method
-    protected fun createTimeoutTimer(timeoutLength: Long){
+    protected fun createTimeoutTimer(timeoutLength: Long, ctx: Context){
         var actionTimeout: Timer = Timer()
 
         actionTimeout.schedule(object: TimerTask() {
             override fun run() {
                 Log.d(TAG, "PayProviderReceiver:TimeoutNotify: after $timeoutLength") // @Chk: @No timer in Utility
-                //! Not on main thread, broadcaster run normally on main thread (UI Thread): Do Interface
+                abortBroadcast()
+            //! Not on main thread, broadcaster run normally on main thread (UI Thread): Do Interface
                 //Toast.makeText(ctx, "Timer: ${Date().hours}:${Date().minutes}:${Date().seconds}", Toast.LENGTH_LONG).show()
-//                    this@PayTerminalActivity.runOnUiThread(
-//                    Runnable {
-//                          tvWhatsTheTime.text = "Timer: ${Date().hours}:${Date().minutes}:${Date().seconds}"
-//                     })
-            }}, timeoutLength)
+//                ctx.runOnUiThread(
+//                Runnable {
+//                      tvShowTime.text = "Timer: ${Date().hours}:${Date().minutes}:${Date().seconds}"
+//                 })
+        }}, timeoutLength)
+
         Log.d(TAG, "PayProvider:Timeout Timer Created timeSet: $timeoutLength")
     }
     //}
