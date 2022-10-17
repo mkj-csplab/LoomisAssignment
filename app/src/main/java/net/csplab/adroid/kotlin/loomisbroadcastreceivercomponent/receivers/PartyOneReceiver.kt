@@ -48,7 +48,7 @@ class PartyOneReceiver(
 //        //! Foreach action we receive do something with the data extracted extra,
 //        // !Compare the recorded Actions sets to the incoming data
 //        if (actionReceived == mActionExtras[0].action){
-//            //! CHK ALL THESE intents data keys etc move ouside the IF what tp do
+//            //! CHK ALL THESE intents data keys etc move outside the IF what to do
 //            //! 1. DO SPECIFIC STUFF FOR ACTION
 //            //! 2. THEN GET ALL INTENTS Extras per key
 //            //! 3. Chk that we got all actions and intents, ie count ACTIONS Received

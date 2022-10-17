@@ -141,37 +141,8 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             //chk@! val actionFromAction
 
             protocolLogicSendPartyOne(sActions, intent)
-//            for (i in 0..sActions.size - 1) {
-//                intent.action = sActions[i]
-//                Log.d(TAG, "Intent => $intent.action :: $sActions[i] :: Action.size: $sActions.size ")
-//
-//                //! get current action
-//                val ia = intent.action
-//                Log.d(TAG, "$ia")
-//                if (intent.action == sActions[0]) {
-//                    intent.putExtra("KEY1", "ID4325")
-//                } else if (intent.action == sActions[1]) {
-//                    intent.putExtra("KEY2_1", "Amount")
-//                    intent.putExtra("KEY2_2", "Balance")
-//                    intent.putExtra("KEY2_3", "Idnum")
-//                    intent.putExtra("KEY2_4", "IBAN")
-//                } else if (intent.action == sActions[2]) {
-//                    intent.putExtra("KEY3", "BYE!")
-//                }
-//                //! @Chk> Could wrap this in Timer. Schedule to test time limits
-//                //sendBroadcast(intent) // send intent to PartyOneProvider, Timing
-//                sendOrderedBroadcast(intent, null)
-//
-//            }
 
-//            try {
-//                unregisterReceiver(mPartyOneReceiver)
-//                mReadyToBroadCast = false
-//                //mPartyOneReceiver= null
-//            } catch (e: Exception) {
-//                e.printStackTrace().toString()
-//            }
-            //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"
+            //!! --->
         }
 
 //# ================================================================================================
@@ -353,7 +324,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         // return provider?
     }
 
-    //! Descr: Stub
+    //! Descr: USe This ?
     private fun packActionsWithData(actionSet: List<String>): IntentFilter {
         return IntentFilter()
     }
