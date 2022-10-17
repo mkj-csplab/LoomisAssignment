@@ -5,18 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import models.ActionsExtra
+import models.ActionExtra
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions
-import java.util.*
 
 //import kotlin.collections.EmptyMap.keys
 
 class BankOfBankReceiver(
     override var providerName: String?,
-    override var mActionExtras: List<ActionsExtra>,
-    override val mTimeoutLength: Long = 20000L, //! transfer this to super class timer o
-
-    ) : PayProviderReceiver() {
+    override var mActionExtras: List<ActionExtra>,
+    override val mTimeoutLength: Long = 20000L,
+) : PayProviderReceiver() {
     private val TAG = BankOfBankReceiver::class.java.simpleName
 
     private lateinit var mTimeoutContainer: TimeoutContainer
@@ -27,18 +25,6 @@ class BankOfBankReceiver(
         super.onReceive(ctx, intent)  //! Creates Timer, what about timeoutlength
         Log.d(TAG, "BankOfBank:onReceive")
         createTimeoutTimer(mTimeoutLength, ctx)
-        //try {
-//        mTimeoutListener = object: TimeoutListener {
-//            override fun updateTimer(info: String) {
-//
-//            }
-//        }
-        //mTimeoutListener = TimeoutListener()
-
-            //updateTextInUIRegister(mTimeoutListener) // Null pointer
-        //}catch (e: Exception){
-            //.toString()
-        //}
 
         val actionReceived = intent.action
         val isItATimeout = intent.extras?.get("TIMEOUT_ALARM")
@@ -77,7 +63,7 @@ class BankOfBankReceiver(
         }else if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_END.toString()){
             Log.d(TAG, "OnReceive:END")
         }
-    }
+    }//# onReceive
 
     override fun protocolSetup(ctx: Context, intent: Intent) {
         //TODO("Not yet implemented")

@@ -1,57 +1,60 @@
 package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility
 
-import models.ActionsExtra
+import android.os.Build.ID
+import models.ActionExtra
 
 const val PACKAGENAME: String = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent"
+const val ID_PROVIDER_PARTYONE = "PARTYONE_ID"
+const val ID_PROVIDER_BANKOFBANK = "BANKOFBANK_ID"
+//! Etc const val per
 
  open class UtilityActions {
     final val TAG = UtilityActions::class.java.simpleName
 
     object ActionSets {
         val actionStrings1 = setupActionsForProviderPartyOne()
-        var actionsExtraPartyOne: List<ActionsExtra> = listOf<ActionsExtra>(
+        var actionsExtraPartyOne: List<ActionExtra> = listOf<ActionExtra>(
             // Actions is locked and number of Extradata and KEYS are locked after Broadcast Provider instantiation
             // DO SET DATA value, ie set time
-            ActionsExtra(
+            ActionExtra(
                 actionStrings1[0],
                 //concatenatePkgName("ACTION_PAY_START"), // Call ActionString instead
                 mutableListOf<Pair<String, String>>(Pair("KEY1_ID", "ID456789"))
             ),
-            ActionsExtra(
+            ActionExtra(
                 actionStrings1[1],
                 //"ACTION_PAY1",
                 mutableListOf<Pair<String, String>>(Pair("KEY1_PAY_DESCR", "Michael"), Pair("KEY2_PAY_DESCR", "Jensen")),
             ),
-            ActionsExtra(
+            ActionExtra(
                 actionStrings1[2],
                 //"ACTION_PAY2",
                 mutableListOf<Pair<String, String>>(Pair("KEY_BALANCE", "OK"))
             ),
-            ActionsExtra(
+            ActionExtra(
                 actionStrings1[3], // END Sentinel!
                 mutableListOf<Pair<String, String>>(Pair("KEY_PAY_END", "END")) // No Extras! @
             ),
             )
 
         //! Chk@: ACTION => PACKAGENAME + . + ACTION_NAME
-        val actionStrings2 = setupActionsForProviderPartyOne()
-        var actionsExtraBankOfBank: List<ActionsExtra> = mutableListOf<ActionsExtra>(
+        val actionStrings2 = setupActionsForProviderBankOfBank()
+        var actionsExtraBankOfBank: List<ActionExtra> = mutableListOf<ActionExtra>(
             // Actions is locked and number of Extradata and KEYS are locked after Broadcast Provider instantiation
             // DO SET DATA value, ie set time
-            ActionsExtra(
+            ActionExtra(
                 actionStrings2[0],
                 //"ACTION_PAY_START",
                 mutableListOf<Pair<String, String>>(Pair("ACTION_PAY_START", "ID456789"))
             ),
-            ActionsExtra(
+            ActionExtra(
                 actionStrings2[1], //"ACTION_PAY1",
                 mutableListOf<Pair<String, String>>(Pair("KEY_PAY1", ""), Pair("", ""))
             ),
-            ActionsExtra(
-                actionStrings2[3], //"ACTION_PAY_END",
+            ActionExtra(
+                actionStrings2[2], //"ACTION_PAY_END",
                 mutableListOf<Pair<String, String>>(Pair("KEY_PAY_END", ""))
             ),
-
             )
 
         private fun concatenatePkgName(s: String): String {
@@ -92,22 +95,22 @@ const val PACKAGENAME: String = "net.csplab.adroid.kotlin.loomisbroadcastreceive
             fun setupActionsForProviderPartyOne(): List<String> {
                 //action_init: String = ctx.getPackage // ACTION_PAY_INIT") // Init
                 val customActionList = mutableListOf<String>(
-                PACKAGENAME + ".PAYID1_START", // start
-                PACKAGENAME + ".PAYID1_STEP1",
-                PACKAGENAME + ".PAYID1_STEP2",
+                PACKAGENAME + "." + ID_PROVIDER_PARTYONE + "_" + "ACTION_START", // start
+                PACKAGENAME + "." + ID_PROVIDER_PARTYONE + "_" + "ACTION_STEP1",
+                PACKAGENAME + "." + ID_PROVIDER_PARTYONE + "_" + "ACTION_STEP2",
                 //Arbitrary number of action steps ... How to add them, dynamically or set per specialisation
-                PACKAGENAME + ".PAYID1_END") // End of ACTION EVENT
+                PACKAGENAME + "." + ID_PROVIDER_PARTYONE + "_" + "ACTION_END") // End of ACTION EVENT
                 //Log.d(TAG, "Print Package Name $PACKAGENAME : Action names $s1 $s2 $s3 $s4")
                 return customActionList
             }
 
-            //! Provider BankOfBank: Information for  Receiver: Fill the provider wiht ACTION name strings
+            //! Provider BankOfBank: Information for  Receiver: Fill the provider with ACTION name strings
             fun setupActionsForProviderBankOfBank(): List<String> {
                 // Chk@ : Put int list, maybe use size for that?
                 val customActionList = mutableListOf<String>(
-                PACKAGENAME + ".ACTION_PAYID2_START",
-                PACKAGENAME + ".ACTION_PAYID2_STEP1",
-                PACKAGENAME + ".ACTION_PAYID2_END" )// End of ACTION EVENT
+                PACKAGENAME + "." + ID_PROVIDER_BANKOFBANK + "_" + "ACTION_START",
+                PACKAGENAME + "." + ID_PROVIDER_BANKOFBANK + "_" + "ACTION_STEP1",
+                PACKAGENAME + "." + ID_PROVIDER_BANKOFBANK + "_" + "ACTION_END" )// End of ACTION EVENT
                 //Log.d(TAG, "Print Package Name $PACKAGENAME)
                 return customActionList
             }

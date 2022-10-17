@@ -5,11 +5,9 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
-import models.ActionsExtra
+import models.ActionExtra
 import java.util.*
 
 
@@ -20,7 +18,7 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     private val TAG = PayProviderReceiver::class.java.simpleName
 
     abstract var providerName:String? // 3. Party ProviderName
-    abstract var mActionExtras: List<ActionsExtra>
+    abstract var mActionExtras: List<ActionExtra>
     abstract val mTimeoutLength: Long
     //abstract var actionsCompleted: List<Boolean> // Chk: getNumberOfCompleted @?
 
@@ -81,7 +79,6 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
 
         Log.d(TAG, "PayProvider:Timeout Timer Created timeSet: $timeoutLength")
     }
-    //}
 
     fun timerAlertSetup(ctx: Context){
         alarmMgr = ctx.getSystemService(android.content.Context.ALARM_SERVICE) as AlarmManager

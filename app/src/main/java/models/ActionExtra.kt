@@ -2,7 +2,7 @@ package models
 
 //! Action Extras class
 //! Descr: Each action has a set of STRING extra data.
-data class ActionsExtra(
+data class ActionExtra(
         val action: String,
         val extras: List<Pair<String,String>>,
         // Should we have key values in the Parceable mode
