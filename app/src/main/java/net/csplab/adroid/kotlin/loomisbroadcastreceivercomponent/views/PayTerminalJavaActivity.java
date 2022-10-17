@@ -36,7 +36,7 @@ public class PayTerminalJavaActivity extends AppCompatActivity {
         setContentView(bind.getRoot());
 
         String providerName = "";
-        List<String> actionStrings = UtilityActions.Util.setupActionsForProviderPartyOne();// UtilityActions.collectActionsForProvider..();
+        List<String> actionStrings = UtilityActions.setupActionsForProviderPartyOne();// UtilityActions.collectActionsForProvider..();
         Intent intent = new Intent();
         try {
             //How to set action string
@@ -107,7 +107,7 @@ public class PayTerminalJavaActivity extends AppCompatActivity {
 
     // Chk@:Add same function to MainActivity
     public void addActionsToFilter(IntentFilter iFilter) {
-        List<String> actionList = UtilityActions.Util.setupActionsForProviderPartyOne();
+        List<String> actionList = UtilityActions.setupActionsForProviderPartyOne();
         for (String s : actionList) {
             iFilter.addAction(s);
         }

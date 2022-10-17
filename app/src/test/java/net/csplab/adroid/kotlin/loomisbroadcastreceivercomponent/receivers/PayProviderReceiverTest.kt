@@ -1,6 +1,7 @@
 package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers
 
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 internal class PayProviderReceiverTest {
 
@@ -66,5 +67,13 @@ internal class PayProviderReceiverTest {
 
     @org.junit.jupiter.api.Test
     fun setTimer() {
+    }
+
+    @Test
+    fun getMTimeoutLength() {
+    }
+
+    @Test
+    fun createTimeoutTimer() {
     }
 }

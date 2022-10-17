@@ -56,7 +56,10 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
 
     //! Descr: Setup protocol per pay provider, specific logic for specialised provider goes here:
     //! Input: Actions, Extras and processing. :Functional Logic
-    abstract fun protocolSetup(ctx: Context, intent: Intent)
+    //abstract fun protocolSetup(ctx: Context, intent: Intent)
+
+    //! Descr: Specific protocol logic for processing under each Actions
+    abstract fun protocolReceivingData(actionReceived: String, intent: Intent, valuesMap: MutableMap<String, String>)
 
     //! Descr: Add the ACTIONS for the specialised pay provider
     abstract fun setActionsForReceiver(actionList: List<String>)
@@ -65,7 +68,6 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     //! Descr: Setting timeout for receiver: Abstract@? method
     //! Create timer into handling action
     protected fun createTimeoutTimer(timeoutLength: Long, ctx: Context){
-
         mActionTimeout.schedule(object: TimerTask() {
             override fun run() {
                 Log.d(TAG, "PayProviderReceiver:TimeoutNotify: after $timeoutLength") // @Chk: @No timer in Utility

@@ -94,6 +94,7 @@ const val ID_PROVIDER_BANKOFBANK = "BANKOFBANK_ID"
 
             // Chk@ Needs to be updated with new utility class names
             //! PartyOne Provider: Information for  Receiver: Fill the provider wiht ACTION name strings
+            @JvmStatic
             fun setupActionsForProviderPartyOne(): List<String> {
                 //action_init: String = ctx.getPackage // ACTION_PAY_INIT") // Init
                 val customActionList = mutableListOf<String>(
@@ -107,6 +108,7 @@ const val ID_PROVIDER_BANKOFBANK = "BANKOFBANK_ID"
             }
 
             //! Provider BankOfBank: Information for  Receiver: Fill the provider with ACTION name strings
+            @JvmStatic
             fun setupActionsForProviderBankOfBank(): List<String> {
                 // Chk@ : Put int list, maybe use size for that?
                 val customActionList = mutableListOf<String>(
