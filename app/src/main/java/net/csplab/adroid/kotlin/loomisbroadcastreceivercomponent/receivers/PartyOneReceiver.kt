@@ -9,7 +9,7 @@ class PartyOneReceiver(
     override var providerName: String?,
     override var mActionExtras: List<ActionExtra>,
     override val mTimeoutLength: Long = 15000L,
-    //override var actionsCompleted: List<Boolean>
+    //override //mActionTimeout.cancel()var actionsCompleted: List<Boolean>
 ) : PayProviderReceiver() {
     private var TAG = PartyOneReceiver::class.java.simpleName
 
@@ -39,19 +39,29 @@ class PartyOneReceiver(
 
         Log.d(TAG, "PartyOneProvider:Values: $valuesSize")
 
-        //! Set Function for dealing with busines/ protocol logic that must be specialised
+        //! Set Function for dealing with business/protocol logic that must be specialised
         //protocolReceivingData(ae)
         val numActionRegistered = mActionExtras.size //
 
         Log.d(TAG, "PartyOneProvider:onReceive:Actions: $mActionExtras")
+
+        // CHK: Foreach actionextra,
+        // Compaer the recorded Actions sets to the incoming data
         if (actionReceived == mActionExtras[0].action){
-            var apair = mActionExtras[0].extras.get(0)
-            var keyFromPair = apair.first
-            Log.d(TAG, "PartyOneProvider:onReceive: keyFromPair : $keyFromPair")
-            var key1val = intent.getStringExtra(keyFromPair)  // KEY1
-            Log.d(TAG, "PartyOneProvider:onReceive:Action0: ${mActionExtras[0].action} : KeyVal: $key1val")
+            //! CHK ALL THESE intents data keys etc move ouside the IF what tp do
+            //! 1. DO SPECIFIC STUFF FOR ACTION
+            //! 2. THEN GET ALL INTENTS Extras per key
+            //! 3. Chk that we got all actions and intents, ie count ACTIONS Received
+            //var extras = mActionExtras[0].extras  // chk: What do we need this for? Nothing
+            val ie = intentExtras // Extract data per key
+            //! @Dont need this, we get the data fomr the intent ; var keyFromPair = extras.get(0).first
+            Log.d(TAG, "PartyOneProvider:onReceive:intentExtras: ${intentExtras}")
+            // !!! var key1val = intent.getStringExtra(keyFromPair)  // KEY1
+           //! Log.d(TAG, "PartyOneProvider:onReceive:Action0: ${mActionExtras[0].action} : KeyVal: $key1val")
         } else if (actionReceived == mActionExtras[1].action){
             var key1val = intent.getStringExtra("KEY2")
+            var keys = intent.extras?.keySet()
+
             Log.d(TAG, "PartyOneProvider:onReceive:KeyVal: $key1val")
         } else if (actionReceived == mActionExtras[2].action) {
             var key1val = intent.getStringExtra("KEY3")
@@ -59,7 +69,11 @@ class PartyOneReceiver(
         } else if (actionReceived == mActionExtras[3].action) {
             var key1val = intent.getStringExtra("KEY4")
             Log.d(TAG, "PartyOneProvider:onReceive:KeyVal: $key1val")
+
         }
+        //! IF ALL ACTIONS and intents extras receieved and before timeout : NumActions = ActionsExtras.size
+        //! Cancel time out, reset ACTION COUNT
+        //! mActionTimeout.cancel() ; actionCount = 0
     } // END onReceive
 
     //! Descr:

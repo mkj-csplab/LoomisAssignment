@@ -23,9 +23,11 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     //abstract var actionsCompleted: List<Boolean> // Chk: getNumberOfCompleted @?
 
     private var mBrHeartBeat: Timer = Timer() //! heartbeat is just inbuild in baseclass
+    protected var mActionTimeout: Timer = Timer()
 
     protected var alarmMgr: AlarmManager? = null
     protected lateinit var alarmIntent: PendingIntent
+
 
     //! Init & Constructors
     init {
@@ -63,9 +65,7 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
 
     //! Descr: Setting timeout for receiver: Abstract@? method
     protected fun createTimeoutTimer(timeoutLength: Long, ctx: Context){
-        var actionTimeout: Timer = Timer()
-
-        actionTimeout.schedule(object: TimerTask() {
+        mActionTimeout.schedule(object: TimerTask() {
             override fun run() {
                 Log.d(TAG, "PayProviderReceiver:TimeoutNotify: after $timeoutLength") // @Chk: @No timer in Utility
                 abortBroadcast()
