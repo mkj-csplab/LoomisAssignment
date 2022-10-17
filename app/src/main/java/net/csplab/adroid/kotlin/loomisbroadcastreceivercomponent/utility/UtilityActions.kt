@@ -57,10 +57,12 @@ const val ID_PROVIDER_BANKOFBANK = "BANKOFBANK_ID"
             ),
             )
 
-        private fun concatenatePkgName(s: String): String {
-            val packageAction = PACKAGENAME + "." + s
-            return packageAction
-        }
+        //!
+        // TODO("Change to new ACTION string Creation format")
+//        private fun concatenatePkgName(s: String): String {
+//            val packageAction = PACKAGENAME + "." + s
+//            return packageAction
+//        }
     }
         // Set these in each broadcast implementation
        companion object Util { //PAYBROADCAST

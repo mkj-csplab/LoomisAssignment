@@ -47,26 +47,40 @@ class BankOfBankReceiver(
 
         alarmMgr?.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, 5000, alarmIntent)
 
+        var valuesFromIntentExtrasList = mutableListOf<String>()
         // Chk@: Divide action sets so we can go UA.ActionProvider$Name.ACTION_ANACTION
         Log.d(TAG, ":KeysetSize: $keySetSize :: Extrakeys: $extraKeys")
         Log.d(TAG, "OnReceive:ActionReceived: $actionReceived")
 
         if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_START.toString()) {
-
             Log.d(TAG, "OnReceive:START")
             Log.d(TAG, "OnReceive:Keys are printed $keySetSize, $actionReceived")
-
+            doSomethingAction1(valuesFromIntentExtrasList)
         } else if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_STEP1.toString()) {
             Log.d(TAG, "OnReceive:STEP1")
-        } else if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_STEP2.toString()) {
-            Log.d(TAG, "OnReceive:STEP2")
-        }else if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_END.toString()){
+            doSomethingAction2(valuesFromIntentExtrasList)
+        } else if (actionReceived == UtilityActions.Util.PayProvider2.ACTION_PAYID2_END.toString()) {
             Log.d(TAG, "OnReceive:END")
+            doSomethingAction3(valuesFromIntentExtrasList)
         }
+        //! IF not received all actions and intent extras at this time, make a count
+        mActionTimeout.cancel()
     }//# onReceive
 
     override fun protocolSetup(ctx: Context, intent: Intent) {
         //TODO("Not yet implemented")
+    }
+
+    private fun doSomethingAction1(values: MutableList<String>) {
+        //! TODO("Do some action")
+    }
+
+    private fun doSomethingAction2(values: MutableList<String>) {
+        //! TODO( "Do some with the gathered information accrding to ")
+    }
+
+    private fun doSomethingAction3(values: MutableList<String>) {
+        TODO("Not yet implemented")
     }
 
     override fun setActionsForReceiver(actionList: List<String>) {
@@ -78,3 +92,7 @@ class BankOfBankReceiver(
         //mTimeoutListener.updateTimer("TIMEISHIGH!")
     }
 }
+    private fun doSomethingAction1(valuesFromIntentExtrasList: MutableList<String>) {
+
+    }
+

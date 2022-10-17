@@ -28,7 +28,6 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     protected var alarmMgr: AlarmManager? = null
     protected lateinit var alarmIntent: PendingIntent
 
-
     //! Init & Constructors
     init {
         //! Test for liveness, whether app is in back or foreground
@@ -64,7 +63,9 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     //abstract fun setActionsForReceiver2(actionList: List<String>)
 
     //! Descr: Setting timeout for receiver: Abstract@? method
+    //! Create timer into handling action
     protected fun createTimeoutTimer(timeoutLength: Long, ctx: Context){
+
         mActionTimeout.schedule(object: TimerTask() {
             override fun run() {
                 Log.d(TAG, "PayProviderReceiver:TimeoutNotify: after $timeoutLength") // @Chk: @No timer in Utility
