@@ -16,12 +16,12 @@ class BankOfBankReceiver(
 ) : PayProviderReceiver() {
     private val TAG = BankOfBankReceiver::class.java.simpleName
     private lateinit var mTimeoutContainer: TimeoutContainer
-    private val mActionCounter = mActionExtras.size
+    //private val mActionCounter = mActionExtras.size
 
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)  //! Creates Timer, what about timeoutlength
         Log.d(TAG, "BankOfBank:onReceive")
-        createTimeoutTimer(mTimeoutLength, ctx)
+        createTimeoutTimer(mTimeoutLength, ctx) // chk: Move into first action before starting timer
 
         val actionReceived = intent?.action
         val isItATimeout = intent.extras?.get("TIMEOUT_ALARM")  //! CHK:CHECK That we registered "TIMEOUT_ALARM"
@@ -72,6 +72,7 @@ class BankOfBankReceiver(
         intent: Intent,
         valuesMap: MutableMap<String, String>
     ) {
+        var actionCount: Int = 0
         //! TOOO: NEXT -> Fix these to be the correct action strings!!! <== P2
         Log.d(TAG, "OnReceive:actionReceived: $actionReceived")
         if (actionReceived == mActionExtras[0].action) {
@@ -86,6 +87,12 @@ class BankOfBankReceiver(
         }
         //! IF not received all actions and intent extras at this time, make a count
         //mActionTimeout.cancel()
+        if (actionCount == mActionExtras.size)
+        {
+            mActionTimeout.cancel() ;
+            actionCount = 0 // Not necc
+        }
+
     }
 
     private fun doSomethingAction1(values: MutableMap<String, String>) {

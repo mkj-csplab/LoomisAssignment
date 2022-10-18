@@ -1,10 +1,16 @@
 package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.Assert.*
 
-import org.junit.jupiter.api.Test
+import org.junit.Before
+import org.junit.Test
 
-internal class PartyOneReceiverTest {
+class PartyOneReceiverTestTest {
+
+    @Before
+    fun setUp() {
+
+    }
 
     @Test
     fun getMActionCount() {

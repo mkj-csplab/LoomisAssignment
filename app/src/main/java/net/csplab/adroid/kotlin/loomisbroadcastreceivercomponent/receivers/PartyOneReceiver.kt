@@ -44,31 +44,6 @@ class PartyOneReceiver(
         if (actionReceived != null) {
             protocolReceivingData(actionReceived, intent, valuesMap)
         }
-
-//        //! Foreach action we receive do something with the data extracted extra,
-//        // !Compare the recorded Actions sets to the incoming data
-//        if (actionReceived == mActionExtras[0].action){
-//            //! CHK ALL THESE intents data keys etc move outside the IF what to do
-//            //! 1. DO SPECIFIC STUFF FOR ACTION
-//            //! 2. THEN GET ALL INTENTS Extras per key
-//            //! 3. Chk that we got all actions and intents, ie count ACTIONS Received
-//            //var extras = mActionExtras[0].extras  // chk: What do we need this for? Nothing
-//            doSomethingAction1(valuesMap)
-//            // !!! var key1val = intent.getStringExtra(keyFromPair)  // KEY1
-//           // ! Log.d(TAG, "PartyOneProvider:onReceive:Action0: ${mActionExtras[0].action} : KeyVal: $key1val")
-//        } else if (actionReceived == mActionExtras[1].action){
-//            //var key1val = intent.getStringExtra("KEY2")
-//            for (key in extraKeySet){
-//                Log.d(TAG, "PartyOneProvider:onReceive:KeyVal: $key")
-//            }
-//            doSomethingAction2(valuesMap)
-//        } else if (actionReceived == mActionExtras[2].action) {
-//            //var key1val = intent.getStringExtra("KEY3")
-//            doSomethingAction3(valuesMap)
-//        } else if (actionReceived == mActionExtras[3].action) {
-//            //var key1val = intent.getStringExtra("KEY4")
-//            doSomethingAction4(valuesMap)
-//        }
 //        //! IF ALL ACTIONS and intents extras receieved and before timeout : NumActions = ActionsExtras.size
 //        //! Cancel time out, reset ACTION COUNT
 //        //! mActionTimeout.cancel() ; actionCount = 0
@@ -76,23 +51,25 @@ class PartyOneReceiver(
     } // END onReceive
 
     private fun doSomethingAction1(values: MutableMap<String, String>) {
-        //! TODO("Do some action")
+        //! TODO( "Do some with the gathered information according to the specific ACTION")
+        mActionCounter
     }
 
     private fun doSomethingAction2(values: MutableMap<String, String>) {
-        //! TODO( "Do some with the gathered information according to the specific ACTION")
+        //! TODO("Do some action")
     }
 
     private fun doSomethingAction3(values: MutableMap<String, String>) {
-        //TODO("Not yet implemented")
+        //! TODO("Do some action")
     }
 
     private fun doSomethingAction4(values: MutableMap<String, String>) {
-        //! TODO
+        //! TODO("Do some action")
     }
 
     //! Descr: Specific protocol logic for processing under each Actions
     override fun protocolReceivingData(actionReceived: String, intent: Intent, valuesMap: MutableMap<String, String>) {
+        var actionCount: Int = 0
         //! Foreach action we receive do something with the data extracted extra,
         // !Compare the recorded Actions sets to the incoming data
         if (actionReceived == mActionExtras[0].action){
@@ -101,25 +78,35 @@ class PartyOneReceiver(
             //! 2. THEN GET ALL INTENTS Extras per key
             //! 3. Chk that we got all actions and intents, ie count ACTIONS Received
             //var extras = mActionExtras[0].extras  // chk: What do we need this for? Nothing
+
             doSomethingAction1(valuesMap)
             // !!! var key1val = intent.getStringExtra(keyFromPair)  // KEY1
             // ! Log.d(TAG, "PartyOneProvider:onReceive:Action0: ${mActionExtras[0].action} : KeyVal: $key1val")
+            actionCount++
         } else if (actionReceived == mActionExtras[1].action){
             val extraKeySet = intent.extras?.keySet()
             //for (key in extraKeySet){
             //    Log.d(TAG, "PartyOneProvider:onReceive:KeyVal: $key")
             //}
             doSomethingAction2(valuesMap)
+            actionCount++
         } else if (actionReceived == mActionExtras[2].action) {
             //var key1val = intent.getStringExtra("KEY3")
             doSomethingAction3(valuesMap)
+            actionCount++
         } else if (actionReceived == mActionExtras[3].action) {
             //var key1val = intent.getStringExtra("KEY4")
             doSomethingAction4(valuesMap)
+            actionCount++
         }
         //! IF ALL ACTIONS and intents extras receieved and before timeout : NumActions = ActionsExtras.size
         //! Cancel time out, reset ACTION COUNT
-        //! mActionTimeout.cancel() ; actionCount = 0
+        if (actionCount == mActionExtras.size)
+        {
+            mActionTimeout.cancel() ;
+            actionCount = 0 // Not necc
+        }
+
 
     }
 
