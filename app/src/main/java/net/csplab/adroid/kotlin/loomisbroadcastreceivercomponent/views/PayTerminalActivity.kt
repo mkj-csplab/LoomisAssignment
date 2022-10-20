@@ -9,7 +9,11 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityPayTerminalBinding
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.*
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.ID_PROVIDER_PARTYONE
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions.ActionSets.actionsExtraPartyOne
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions.Util.prepareAddCustomAction
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions.Util.prepareAddIntentExtraToAction
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -114,7 +118,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             // Register ACTIONS for special PayProvider BroadcastReceiver
             // Chk@: move preparation outside button click event!
             //: Get the ACTION String for provider
-            val sActions = UtilityActions.Util.setupActionsForProviderPartyOne()
+            val sActions = UtilityActions.setupActionsForProviderPartyOne()
             //!! NOTE: In Sender End (Activity) KEEP sActions List of strings, do not use
             //!! The List<ActionExtra> object from utility UtilityActions class,
             //!! !DO use it in Receivers
@@ -122,12 +126,25 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             mIntentFilterActionsPartyOne =
                 prepareProvider(providerName, intent, sActions) //! CHK: Timeoutlength L
 
+            //! DO: recreate list from list to mutableList + add action + create new list initialized with mutableList
+            Log.d(TAG, "actionsExtraPartyOne:before:actionName ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].action}")
+            var actionsExtraPartyOne = UtilityActions.ActionSets.actionsExtraPartyOne
+            Log.d(TAG, "actionsExtraPartyOne:before:size ${actionsExtraPartyOne.size}")
+            prepareAddCustomAction(actionsExtraPartyOne, "TRANSACTION_VALIDATE", ID_PROVIDER_PARTYONE)
+            Log.d(TAG, "actionsExtraPartyOne:after:size ${actionsExtraPartyOne.size}")
+            Log.d(TAG, "actionsExtraPartyOne:before:actionName ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].action}")
+            Log.d(TAG, "actionsExtraPartyOne:before:extrasize ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].extras?.size}")
+            prepareAddIntentExtraToAction(actionsExtraPartyOne[actionsExtraPartyOne.size-2], 0, "DATA_X", "XVAL")
+            prepareAddIntentExtraToAction(actionsExtraPartyOne[actionsExtraPartyOne.size-2], 0, "DATA_Y", "YVAL")
+            Log.d(TAG, "actionsExtraPartyOne:before:extrasize ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].extras?.size}")
+
             mReadyToBroadCast = true
             //! Set Broadcaster type with associated Actions
             //mTstBroadcaster = PartyOneProviderReceiver(providerName, UtilityActions.ActionSets.actionsExtraPartyOne, 15000L)
             mPartyOneReceiver = PartyOneReceiver(
                 providerName,
-                UtilityActions.ActionSets.actionsExtraPartyOne,
+                actionsExtraPartyOne,
+                //UtilityActions.ActionSets.actionsExtraPartyOne,
                 15000L
             )
 
@@ -157,6 +174,10 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             mIntentFilterActionsBankOfBank = prepareProvider(providerName, intent, actionStrings)
 
             mReadyToBroadCast = true
+
+            val actionsExtraBankOfBank = UtilityActions.ActionSets.actionsExtraBankOfBank
+            //actionsExtraBankOfBank
+            //UtilityActions
             mBankOfBankReceiver = BankOfBankReceiver(
                 providerName,
                 UtilityActions.ActionSets.actionsExtraBankOfBank, 15000L

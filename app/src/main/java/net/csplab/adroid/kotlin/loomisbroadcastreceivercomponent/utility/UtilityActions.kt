@@ -1,6 +1,7 @@
 package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility
 
 import android.os.Build.ID
+import android.util.Log
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 
 const val PACKAGENAME: String = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent"
@@ -14,7 +15,7 @@ open class UtilityActions {
 
     object ActionSets {
         val actionStrings1 = setupActionsForProviderPartyOne()
-        var actionsExtraPartyOne: List<ActionExtra> = listOf<ActionExtra>(
+        val actionsExtraPartyOne: MutableList<ActionExtra> = mutableListOf<ActionExtra>(
             // Actions is locked and number of Extradata and KEYS are locked after Broadcast Provider instantiation
             // DO SET DATA value, ie set time
             ActionExtra(
@@ -30,18 +31,18 @@ open class UtilityActions {
             ActionExtra(
                 actionStrings1[2],
                 //"ACTION_PAY2",
-                mutableListOf<Pair<String, String>>(Pair("KEY3_BALANCE_SUFFICIENTS", "OK"))
+                mutableListOf<Pair<String, String>>(Pair("KEY3_BALANCE_SUFFICIENT", "OK"))
             ),
             ActionExtra(
                 actionStrings1[3], // END Sentinel!
-                mutableListOf<Pair<String, String>>(Pair("KEY4_PAY_END", "BYE1")) // No Extras! @
+                mutableListOf<Pair<String, String>>(Pair("KEY4_PAY_END", "BYE!")) // No Extras! @
             ),
             )
 
         //! Chk@: ACTION => PACKAGENAME + . + ACTION_NAME
         val actionStrings2 = setupActionsForProviderBankOfBank()
         var actionsExtraBankOfBank: List<ActionExtra> = mutableListOf<ActionExtra>(
-            // Actions is locked and number of Extradata and KEYS are locked after Broadcast Provider instantiation
+            // Actions is locked and number of ExtraData and KEYS are locked after Broadcast Provider instantiation
             // DO SET DATA value, ie set time
             ActionExtra(
                 actionStrings2[0],
@@ -59,11 +60,7 @@ open class UtilityActions {
             )
 
         //!
-        // TODO("Change to new ACTION string Creation format")
-//        private fun concatenatePkgName(s: String): String {
-//            val packageAction = PACKAGENAME + "." + s
-//            return packageAction
-//        }
+
     }
 //        // Set these in each broadcast implementation
 
@@ -121,14 +118,38 @@ open class UtilityActions {
                 //Log.d(TAG, "Print Package Name $PACKAGENAME)
                 return customActionList
             }
+
+           //! Seems to belong to ActionExtra class/instance, or para: AE
+           fun prepareAddCustomAction(actionsExtrasList: MutableList<ActionExtra>, action: String, provider: String) {
+           //actionIndex: Int = 0){
+           //!! UtilityCall -> AE.addCustomActions()
+           //! we only handle adding to nest to end for now, transaction always start with START and end with END keys
+             // if (index == 0) { // Insert at the next to end of the list
+               val aelLast =  actionsExtrasList.removeLast()
+               val newPkgActionName = concatenatePkgNameToActionProvider(action , provider)
+               val ae = ActionExtra(newPkgActionName, mutableListOf<Pair<String, String>>() )//mutableListOf<Pair<String, String>>(Pair("", ""))
+
+               //Log.d("TAG", "Hallo" )
+               //val ae = ActionExtra(action, null)
+               actionsExtrasList.add(ae)
+               actionsExtrasList.add(aelLast)
+                //}else {
+                    // Insert at index and move around accordingly...
+                //}
+           }
+
+           fun prepareAddIntentExtraToAction(actionExtra: ActionExtra, index: Int, key: String, value: String){
+               //!! UtilityCall -> AE.addExtraToAction()
+               actionExtra.extras?.add(Pair(key, value))
+           //! Do we Need to return it?
+           }
+
+           // TODO("Change to new ACTION string Creation format")
+           private fun concatenatePkgNameToActionProvider(s: String, provider: String): String {
+               //provider: ID_PROVIDER_PARTYONE, ID_PROVIDER_BANKOFBANK
+               val packageAction = PACKAGENAME + "." + provider + "_" + "ACTION_" + s
+               Log.d("UtilityActions.Util: ", packageAction)
+               return packageAction
+           }
         }
-
-    //! Seems to belong to ActionExtra class/instance, or para: AE
-     fun prepareAddCustomAction(action: String, actionIndex: Int){
-         //!! UtilityCall -> AE.addCustomActions()
-     }
-
-     fun prepareAddIntentExtraToAction(actionIndex: Int, extrasKeyIndex: Int,  key: String, value: String){
-         //!! UtilityCall -> AE.addExtraToAction()
-     }
 }
