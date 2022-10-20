@@ -25,16 +25,16 @@ open class UtilityActions {
             ActionExtra(
                 actionStrings1[1],
                 //"ACTION_PAY1",
-                mutableListOf<Pair<String, String>>(Pair("KEY1_PAY_DESCR", "Michael"), Pair("KEY2_PAY_DESCR", "Jensen")),
+                mutableListOf<Pair<String, String>>(Pair("KEY2_PAY_DESCR", "Michael"), Pair("KEY2_PAY_DESCR", "Jensen")),
             ),
             ActionExtra(
                 actionStrings1[2],
                 //"ACTION_PAY2",
-                mutableListOf<Pair<String, String>>(Pair("KEY_BALANCE", "OK"))
+                mutableListOf<Pair<String, String>>(Pair("KEY3_BALANCE_SUFFICIENTS", "OK"))
             ),
             ActionExtra(
                 actionStrings1[3], // END Sentinel!
-                mutableListOf<Pair<String, String>>(Pair("KEY_PAY_END", "END")) // No Extras! @
+                mutableListOf<Pair<String, String>>(Pair("KEY4_PAY_END", "BYE1")) // No Extras! @
             ),
             )
 
@@ -46,15 +46,15 @@ open class UtilityActions {
             ActionExtra(
                 actionStrings2[0],
                 //"ACTION_PAY_START",
-                mutableListOf<Pair<String, String>>(Pair("ACTION_PAY_START", "ID456789"))
+                mutableListOf<Pair<String, String>>(Pair("KEY1_PAY_START", "ID456789"))
             ),
             ActionExtra(
                 actionStrings2[1], //"ACTION_PAY1",
-                mutableListOf<Pair<String, String>>(Pair("KEY_PAY1", ""), Pair("", ""))
+                mutableListOf<Pair<String, String>>(Pair("KEY2_PAY1", ""), Pair("KEY2_PAY2", ""))
             ),
             ActionExtra(
                 actionStrings2[2], //"ACTION_PAY_END",
-                mutableListOf<Pair<String, String>>(Pair("KEY_PAY_END", ""))
+                mutableListOf<Pair<String, String>>(Pair("KEY3_PAY_END", "BYE!"))
             ),
             )
 
@@ -101,12 +101,13 @@ open class UtilityActions {
                 //action_init: String = ctx.getPackage // ACTION_PAY_INIT") // Init
                 val customActionList = mutableListOf<String>(
                 PACKAGENAME + "." + ID_PROVIDER_PARTYONE + "_" + "ACTION_START", // start
-                PACKAGENAME + "." + ID_PROVIDER_PARTYONE + "_" + "ACTION_STEP1",
-                PACKAGENAME + "." + ID_PROVIDER_PARTYONE + "_" + "ACTION_STEP2",
+                PACKAGENAME + "." + ID_PROVIDER_PARTYONE + "_" + "ACTION_STEP_S",
+                PACKAGENAME + "." + ID_PROVIDER_PARTYONE + "_" + "ACTION_STEP_T",
                 //Arbitrary number of action steps ... How to add them, dynamically or set per specialisation
                 PACKAGENAME + "." + ID_PROVIDER_PARTYONE + "_" + "ACTION_END") // End of ACTION EVENT
                 //Log.d(TAG, "Print Package Name $PACKAGENAME : Action names $s1 $s2 $s3 $s4")
                 return customActionList
+                // ADD-STEP
             }
 
             //! Provider BankOfBank: Information for  Receiver: Fill the provider with ACTION name strings
@@ -115,18 +116,19 @@ open class UtilityActions {
                 // Chk@ : Put int list, maybe use size for that?
                 val customActionList = mutableListOf<String>(
                 PACKAGENAME + "." + ID_PROVIDER_BANKOFBANK + "_" + "ACTION_START",
-                PACKAGENAME + "." + ID_PROVIDER_BANKOFBANK + "_" + "ACTION_STEP1",
+                PACKAGENAME + "." + ID_PROVIDER_BANKOFBANK + "_" + "ACTION_STEP_X",
                 PACKAGENAME + "." + ID_PROVIDER_BANKOFBANK + "_" + "ACTION_END" )// End of ACTION EVENT
                 //Log.d(TAG, "Print Package Name $PACKAGENAME)
                 return customActionList
             }
         }
 
-     fun prepareAddActions(action: String){
-
+    //! Seems to belong to ActionExtra class/instance, or para: AE
+     fun prepareAddCustomAction(action: String, actionIndex: Int){
+         //!! UtilityCall -> AE.addCustomActions()
      }
 
-     fun prepareAddIntentExtras(key: String, value: String){
-
+     fun prepareAddIntentExtraToAction(actionIndex: Int, extrasKeyIndex: Int,  key: String, value: String){
+         //!! UtilityCall -> AE.addExtraToAction()
      }
 }
