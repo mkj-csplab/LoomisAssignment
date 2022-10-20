@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import android.util.Log
-import models.ActionExtra
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 import java.util.*
 
 
@@ -17,7 +17,7 @@ import java.util.*
 abstract class PayProviderReceiver : BroadcastReceiver() {
     private val TAG = PayProviderReceiver::class.java.simpleName
 
-    abstract var providerName:String? // 3. Party ProviderName
+    abstract val providerName:String? // 3. Party ProviderName
     abstract var mActionExtras: List<ActionExtra>
     abstract val mTimeoutLength: Long
     //abstract var actionsCompleted: List<Boolean> // Chk: getNumberOfCompleted @?
@@ -67,7 +67,7 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
 
     //! Descr: Setting timeout for receiver: Abstract@? method
     //! Create timer into handling action
-    protected fun createTimeoutTimer(timeoutLength: Long, ctx: Context){
+    protected fun createTimeoutTimer(timeoutLength: Long){
         mActionTimeout.schedule(object: TimerTask() {
             override fun run() {
                 Log.d(TAG, "PayProviderReceiver:TimeoutNotify: after $timeoutLength") // @Chk: @No timer in Utility

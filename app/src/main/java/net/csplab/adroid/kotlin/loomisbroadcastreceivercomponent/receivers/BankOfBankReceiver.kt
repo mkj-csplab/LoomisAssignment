@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import models.ActionExtra
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 
 //import kotlin.collections.EmptyMap.keys
 
@@ -21,7 +21,7 @@ class BankOfBankReceiver(
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)  //! Creates Timer, what about timeoutlength
         Log.d(TAG, "BankOfBank:onReceive")
-        createTimeoutTimer(mTimeoutLength, ctx) // chk: Move into first action before starting timer
+        createTimeoutTimer(mTimeoutLength)//, ctx) // chk: Move into first action before starting timer
 
         val actionReceived = intent?.action
         val isItATimeout = intent.extras?.get("TIMEOUT_ALARM")  //! CHK:CHECK That we registered "TIMEOUT_ALARM"

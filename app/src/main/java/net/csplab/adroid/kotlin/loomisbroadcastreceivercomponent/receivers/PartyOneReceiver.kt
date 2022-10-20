@@ -3,20 +3,23 @@ package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import models.ActionExtra
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 
 class PartyOneReceiver(
-    override var providerName: String?,
+    override val providerName: String?,
     override var mActionExtras: List<ActionExtra>,
     override val mTimeoutLength: Long = 15000L,
     //override //mActionTimeout.cancel()var actionsCompleted: List<Boolean>
 ) : PayProviderReceiver() {
-    private var TAG = PartyOneReceiver::class.java.simpleName
+
+//}
+
+private var TAG = PartyOneReceiver::class.java.simpleName
     private val mActionCounter = mActionExtras.size // Counting action to be completed/received
 
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
-        createTimeoutTimer(mTimeoutLength, ctx)
+        createTimeoutTimer(mTimeoutLength)//), ctx)
         Log.d(TAG, "PartyOneProvider:onReceive")
         //Toast.makeText(ctx, "PartyOneProvider:onReceive", Toast.LENGTH_LONG).show()
 
@@ -119,6 +122,7 @@ class PartyOneReceiver(
         //! Add ACTIONS for that receive
     }
 }
+
 
 //StringBuilder().apply {
 //            append("Action: ${intent.action}\n")

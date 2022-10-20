@@ -1,4 +1,4 @@
-package models
+package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models
 
 //! Action Extras class
 //! Descr: Each action has a set of STRING extra data.

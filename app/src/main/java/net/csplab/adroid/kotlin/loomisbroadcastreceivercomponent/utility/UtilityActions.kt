@@ -1,14 +1,15 @@
 package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility
 
 import android.os.Build.ID
-import models.ActionExtra
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 
 const val PACKAGENAME: String = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent"
 const val ID_PROVIDER_PARTYONE = "PARTYONE_ID"
 const val ID_PROVIDER_BANKOFBANK = "BANKOFBANK_ID"
 //! Etc const val per
 
- open class UtilityActions {
+// ! CHK: check INSTANCE access
+open class UtilityActions {
     final val TAG = UtilityActions::class.java.simpleName
 
     object ActionSets {
@@ -64,33 +65,34 @@ const val ID_PROVIDER_BANKOFBANK = "BANKOFBANK_ID"
 //            return packageAction
 //        }
     }
-        // Set these in each broadcast implementation
-       companion object Util { //PAYBROADCAST
-            //! Obsolete: Kept for reference
-            enum class PayProvider1(action: String) {
-                ACTION_PAYID1_START(
-                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"),
-                ACTION_PAYID1_STEP1("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_STEP1"),
-                ACTION_PAYID1_END(
-                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_END");
-                companion object {
-                    fun getAction() = values()
-                }
-            }
+//        // Set these in each broadcast implementation
 
-            //! Obsolete: Kept for reference
-            enum class PayProvider2(action: String) {
-                ACTION_PAYID2_START("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_START"),
-                ACTION_PAYID2_STEP1(
-                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_STEP1"),
-                ACTION_PAYID2_STEP2(
-                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_STEP2"),
-                ACTION_PAYID2_END(
-                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_END");
-                companion object {
-                    fun getAction() = values()
-                }
-            }
+       companion object Util { //PAYBROADCAST
+//            //! Obsolete: Kept for reference
+//            enum class PayProvider1(action: String) {
+//                ACTION_PAYID1_START(
+//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"),
+//                ACTION_PAYID1_STEP1("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_STEP1"),
+//                ACTION_PAYID1_END(
+//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_END");
+//                companion object {
+//                    fun getAction() = values()
+//                }
+//            }
+//
+//            //! Obsolete: Kept for reference
+//            enum class PayProvider2(action: String) {
+//                ACTION_PAYID2_START("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_START"),
+//                ACTION_PAYID2_STEP1(
+//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_STEP1"),
+//                ACTION_PAYID2_STEP2(
+//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_STEP2"),
+//                ACTION_PAYID2_END(
+//                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID2_END");
+//                companion object {
+//                    fun getAction() = values()
+//                }
+//            }
 
             // Chk@ Needs to be updated with new utility class names
             //! PartyOne Provider: Information for  Receiver: Fill the provider wiht ACTION name strings
@@ -119,4 +121,12 @@ const val ID_PROVIDER_BANKOFBANK = "BANKOFBANK_ID"
                 return customActionList
             }
         }
+
+     fun prepareAddActions(action: String){
+
+     }
+
+     fun prepareAddIntentExtras(key: String, value: String){
+
+     }
 }
