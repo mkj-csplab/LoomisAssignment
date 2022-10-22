@@ -1,18 +1,17 @@
 package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers
 
 import org.junit.Assert.*
-import org.junit.Before
 
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
-class PartyOneReceiverTest {
+class BankOfBankReceiverTest {
 
     @Before
-    fun setup(){
-
+    fun setUp() {
     }
 
     @Test
@@ -28,7 +27,19 @@ class PartyOneReceiverTest {
     }
 
     @Test
+    fun updateTextInUIRegister() {
+    }
+
+    @Test
+    fun timeoutAlarmCheck0() {
+    }
+
+    @Test
     fun getProviderName() {
+    }
+
+    @Test
+    fun setProviderName() {
     }
 
     @Test
@@ -41,10 +52,10 @@ class PartyOneReceiverTest {
 
     @Test
     fun getMTimeoutLength() {
+
     }
 
-    //! ===========
-
+    //=================================
     //! Receiver Test
     fun checkUnpackElements(){}
 

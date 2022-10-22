@@ -261,7 +261,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
     }
 
     private fun protocolLogicSendBankOfBank(actionStrings: List<String>, intent: Intent) {
-        //  Run trough all possible ACTIONS and ready them
+        //!  Run trough all possible ACTIONS and make ready for broadcast
         for (i in 0..actionStrings.size - 1) {
             Log.d(TAG, "sAction")
             intent.action = actionStrings[i]
@@ -283,6 +283,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             } else if (intent.action == actionStrings[3]) {
                 intent.putExtra("KEY4", "BYE!")
             }
+            //! Broadcast is Async
             sendOrderedBroadcast(intent, null)
         }
         //intent.action = "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.PAYID1_START"

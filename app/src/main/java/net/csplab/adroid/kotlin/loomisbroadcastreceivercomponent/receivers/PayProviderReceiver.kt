@@ -10,7 +10,6 @@ import android.util.Log
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 import java.util.*
 
-
 //! Descr: Number of actions and number of extra-data per action is considered to be unchanging
 //! after the instation, only the value content of the extras changes, adding new action or more data
 //! to an action requires a reinstantiation of the specific Broadcast provider component
@@ -32,8 +31,6 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     init {
         //! Test for liveness, whether app is in back or foreground
         runHeartBeat()
-        // Create Timer at Pay Initial Action:
-        //createTimeoutTimer(10000L) // 10000L Not with Abstract -> 10 seconds -> Should be in constructor
         Log.d(TAG, "PayProvider:init heartbeat")
         // Otherwise use a handler.
     }
@@ -55,15 +52,12 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     }
 
     //! Descr: Setup protocol per pay provider, specific logic for specialised provider goes here:
-    //! Input: Actions, Extras and processing. :Functional Logic
-    //abstract fun protocolSetup(ctx: Context, intent: Intent)
-
     //! Descr: Specific protocol logic for processing under each Actions
+    //! Input: Actions, Extras and processing. :Functional Logic
     abstract fun protocolReceivingData(actionReceived: String, intent: Intent, valuesMap: MutableMap<String, String>)
 
     //! Descr: Add the ACTIONS for the specialised pay provider
     abstract fun setActionsForReceiver(actionList: List<String>)
-    //abstract fun setActionsForReceiver2(actionList: List<String>)
 
     //! Descr: Setting timeout for receiver: Abstract@? method
     //! Create timer into handling action
@@ -83,6 +77,8 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
         Log.d(TAG, "PayProvider:Timeout Timer Created timeSet: $timeoutLength")
     }
 
+    //! Deprecated
+    //! setting Alarm for Receiver
     fun timerAlertSetup(ctx: Context){
         alarmMgr = ctx.getSystemService(android.content.Context.ALARM_SERVICE) as AlarmManager
         alarmIntent = Intent(ctx, PayProviderReceiver::class.java).let { intent ->
@@ -91,11 +87,10 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
         }
     }
 
-    fun setTimer(seconds: Int){
+    fun setAlarmTimer(seconds: Int){
         alarmMgr?.setExact(
             AlarmManager.ELAPSED_REALTIME_WAKEUP,
             SystemClock.elapsedRealtime() + seconds * 1000,
             alarmIntent)
     }
-
 }
