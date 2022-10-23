@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityPayTerminalBinding
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.*
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.ID_PROVIDER_PARTYONE
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions
@@ -72,6 +73,10 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 
         setRepeatingTimer(4000L, 1000L)
 
+        initPartyOneReceiver()
+        // =======================================================
+
+        // =======================================================
         // CHK: Move this comment to top place in class
         // Comment: System : We do not have a particular order of actions, ordered broadcast is for
         // listeners not for actions
@@ -104,7 +109,6 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 //                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
 //                    "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views.ReceiverTestActivity"
 //                )
-//                //val i2 = Intent(this, ReceiverTestActivity.class)
 //
 //                startActivity(intent)
 //            }
@@ -114,17 +118,6 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         btStartPartyOneProvider.setOnClickListener {
             val providerName = "PartyOneProvider"
             intent = Intent()  //! Ready intent for Action & Extras Packing
-            //! Get ACTION Set for Provider
-            // Register ACTIONS for special PayProvider BroadcastReceiver
-            // Chk@: move preparation outside button click event!
-            //: Get the ACTION String for provider
-            val sActions = UtilityActions.setupActionsForProviderPartyOne()
-            //!! NOTE: In Sender End (Activity) KEEP sActions List of strings, do not use
-            //!! The List<ActionExtra> object from utility UtilityActions class,
-            //!! !DO use it in Receivers
-            //: Prepare Provider by packing ActionExtra Object with collection on actions and extra data
-            mIntentFilterActionsPartyOne =
-                prepareProvider(providerName, intent, sActions) //! CHK: Timeoutlength L
 
             //! DO: recreate list from list to mutableList + add action + create new list initialized with mutableList
             Log.d(TAG, "actionsExtraPartyOne:before:actionName ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].action}")
@@ -139,27 +132,28 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             Log.d(TAG, "actionsExtraPartyOne:before:extrasize ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].extras?.size}")
 
             mReadyToBroadCast = true
-            //! Set Broadcaster type with associated Actions
-            //mTstBroadcaster = PartyOneProviderReceiver(providerName, UtilityActions.ActionSets.actionsExtraPartyOne, 15000L)
             mPartyOneReceiver = PartyOneReceiver(
                 providerName,
                 actionsExtraPartyOne,
                 //UtilityActions.ActionSets.actionsExtraPartyOne,
                 15000L
             )
-
             registerReceiver(
                 mPartyOneReceiver,
                 mIntentFilterActionsPartyOne
-            ) //! Chk@ mIntentFilterActions should be local to no induce bugs
+            ) //! Chk@ mIntentFilterActions should be local to not induce bugs
 
-            //! CHK: NEXT-> sendProtocolDriver(sActions, intent)
+            //! CHK: NEXT-> sendProtocolDriver(actionsExtras, intent)
             //! For each intent to send with broadcast -> Load each intent with action and "Extras" data
             //chk@! val actionFromAction
 
-            protocolLogicSendPartyOne(sActions, intent)
-
-            //!! --->
+            //protocolLogicSendPartyOne(actionsExtras, intent)//
+            var actionListX = mutableListOf<String>()
+            for (elem in actionsExtraPartyOne){
+                actionListX.add(elem.action)
+            }
+            protocolLogicSendPartyOneAE(actionsExtraPartyOne, intent)
+            //protocolLogicSendPartyOne(actionListX, intent)
         }
 
 //# ================================================================================================
@@ -171,7 +165,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             // Load Actions for number BankOfBank 3. party provider
             val actionStrings = UtilityActions.Util.setupActionsForProviderBankOfBank()
 
-            mIntentFilterActionsBankOfBank = prepareProvider(providerName, intent, actionStrings)
+            mIntentFilterActionsBankOfBank = prepareProvider(actionStrings)
 
             mReadyToBroadCast = true
 
@@ -235,28 +229,55 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 
     }// #onCreate
 
-    private fun protocolLogicSendPartyOne(sActions: List<String>, intent: Intent) {
-        for (i in 0..sActions.size - 1) {
-            intent.action = sActions[i]
-            Log.d(TAG, "Intent => $intent.action :: $sActions[i] :: Action.size: $sActions.size ")
+    private fun protocolLogicSendPartyOne(actionsExtras: List<String>, intent: Intent) {
+        //! Get AE and walk trrought actions and for each eaction set intent extras
+        //! Ie. Set intent.action from AE[0].action AE[0].extra:List
+        for (i in 0..actionsExtras.size - 1) {
+            //! Load intent with action type (String)
+            intent.action = actionsExtras[i]
+            Log.d(TAG, "Intent => $intent.action :: $actionsExtras[i] :: Action.size: $actionsExtras.size ")
 
             //! get current action
-            val ia = intent.action
-            Log.d(TAG, "$ia")
-            if (intent.action == sActions[0]) {
+            Log.d(TAG, "${intent.action}")
+            if (intent.action == actionsExtras[0]) {
                 intent.putExtra("KEY1", "ID4325")
-            } else if (intent.action == sActions[1]) {
+            } else if (intent.action == actionsExtras[1]) {
                 intent.putExtra("KEY2_1", "Amount")
                 intent.putExtra("KEY2_2", "Balance")
                 intent.putExtra("KEY2_3", "Idnum")
                 intent.putExtra("KEY2_4", "IBAN")
-            } else if (intent.action == sActions[2]) {
+            } else if (intent.action == actionsExtras[2]) {
                 intent.putExtra("KEY3", "BYE!")
             }
             //! @Chk> Could wrap this in Timer. Schedule to test time limits
             //sendBroadcast(intent) // send intent to PartyOneProvider, Timing
             sendOrderedBroadcast(intent, null)
+        }
+    }
 
+    private fun protocolLogicSendPartyOneAE(actionsExtras: List<ActionExtra>, intent: Intent) {
+        //! Get AE and walk trrought actions and for each eaction set intent extras
+        //! Ie. Set intent.action from AE[0].action AE[0].extra:List
+        for (i in 0..actionsExtras.size - 1) {
+            //! Load intent with action type (String)
+            intent.action = actionsExtras[i].action
+            Log.d(TAG, "Intent => $intent.action :: $actionsExtras[i] :: Action.size: $actionsExtras.size ")
+
+            //! get current action
+            Log.d(TAG, "${intent.action}")
+            if (intent.action == actionsExtras[0].action) {
+                intent.putExtra("KEY1", "ID4325")
+            } else if (intent.action == actionsExtras[1].action) {
+                intent.putExtra("KEY2_1", "Amount")
+                intent.putExtra("KEY2_2", "Balance")
+                intent.putExtra("KEY2_3", "Idnum")
+                intent.putExtra("KEY2_4", "IBAN")
+            } else if (intent.action == actionsExtras[2].action) {
+                intent.putExtra("KEY3", "BYE!")
+            }
+            //! @Chk> Could wrap this in Timer. Schedule to test time limits
+            //sendBroadcast(intent) // send intent to PartyOneProvider, Timing
+            sendOrderedBroadcast(intent, null)
         }
     }
 
@@ -307,11 +328,11 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
     override fun onPause() {
         super.onPause()
         //! If App set on pause during broadcast - App going to background
-        //if (mReadyToBroadCast) {
+        if (mReadyToBroadCast) {
         unregisterReceiver(mPartyOneReceiver)
         unregisterReceiver(mBankOfBankReceiver)
-        //  mReadyToBroadCast = false
-        // }
+        mReadyToBroadCast = false
+        }
     }
 
     //! Partition in functions
@@ -324,8 +345,8 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
     //! preparing ActionExxtra data for provider before provider is run(or instantiated)
     //! Chk: Move this method to UtilityActions
     fun prepareProvider(
-        providerName: String,
-        intent: Intent,
+        //providerName: String,
+        //intent: Intent,
         actionSet: List<String>
     ): IntentFilter {
         // Register ACTIONS for special PayProvider BroadcastReceiver
@@ -377,5 +398,20 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
                     })
             }
         }, delay, duration)
+    }
+
+    fun initPartyOneReceiver(){
+        //! Get ACTION Set for Provider
+        // Register ACTIONS for special PayProvider BroadcastReceiver
+        // Chk@: move preparation outside button click event!
+        //: Get the ACTION String for provider
+        val actionsExtras = UtilityActions.setupActionsForProviderPartyOne()
+        //!! NOTE: In Sender End (Activity) KEEP actionsExtras List of strings, do not use
+        //!! The List<ActionExtra> object from utility UtilityActions class,
+        //!! !DO use it in Receivers
+        //: Prepare Provider by packing ActionExtra Object with collection on actions and extra data
+
+        mIntentFilterActionsPartyOne =
+            prepareProvider(actionsExtras) //! CHK: Timeoutlength L
     }
 }

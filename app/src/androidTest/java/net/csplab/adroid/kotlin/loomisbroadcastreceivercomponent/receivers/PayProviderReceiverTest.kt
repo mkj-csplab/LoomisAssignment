@@ -1,6 +1,8 @@
 package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers
 
+import androidx.test.core.app.launchActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views.PayTerminalActivity
 import org.junit.Assert.*
 
 import org.junit.Before
@@ -15,6 +17,13 @@ class PayProviderReceiverTest {
     fun setUp() {
         //!
         //val activityPay =
+
+    }
+
+    @Test
+    fun testEvent() {
+        launchActivity<PayTerminalActivity>().use {
+        }
     }
 
     @Test
