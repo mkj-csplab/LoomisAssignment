@@ -74,6 +74,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         setRepeatingTimer(4000L, 1000L)
 
         initPartyOneReceiver()
+        initBankOfBankReceiver()
         // =======================================================
 
         // =======================================================
@@ -162,11 +163,6 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             val providerName = "BankOfBankProvider"
             intent = Intent()
 
-            // Load Actions for number BankOfBank 3. party provider
-            val actionStrings = UtilityActions.Util.setupActionsForProviderBankOfBank()
-
-            mIntentFilterActionsBankOfBank = prepareProvider(actionStrings)
-
             mReadyToBroadCast = true
 
             val actionsExtraBankOfBank = UtilityActions.ActionSets.actionsExtraBankOfBank
@@ -179,81 +175,53 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 
             registerReceiver(mBankOfBankReceiver, mIntentFilterActionsBankOfBank)
 
-            protocolLogicSendBankOfBank(actionStrings, intent)
-
+            protocolLogicSendBankOfBank(actionsExtraBankOfBank, intent)
         }
 
-//        //! Test Send with Intent to Receiver Activity
-//        btStartPayTestReceiverActivity.setOnClickListener {
-//            //! Load the Actions for Party One Provider 3.party.
-//            val sAction = UtilityActions.Util.setupActionsForProviderPartyOne()
-////
-////            // Register ACTIONS for special PayProvider BroadcastReceiver
-////            // Maybe move of of this place which should be fore packing data into
-////            // the intent. Combining Action and Extras
-////            val intentFilter = IntentFilter().apply {
-////                addAction(sAction.first()) // start
-////                for (s in sAction.subList(1, sAction.size - 1)) {
-////                    Log.d(TAG, "p1: Action Strings Read: $s")
-////                    addAction(s)
-////                }
-////                //Arbitrary number of action steps ... Ho do we put them in
-////                addAction(sAction.last()) // End of ACTION EVENT
-////            }
-////
-////            intent.action = sAction[0]
-////            // Walk through Actions and pack them, control by click button, maybe move this somewhere
-////            // Else, maybe to a new button
-////            var actionStepNum = 0
-////            for (i in 0..sAction.size) {
-////                intent.action = sAction[actionStepNum]
-////
-////                if(actionStepNum == 0) {
-////                    intent.putExtra("KEY_NAME", "Kylie Minogue")
-////                }
-////                else if (actionStepNum == 1)
-////                    intent.putExtra("KEY_NAME_ID", "Id")
-////                    intent.putExtra("KEY_NAME_IDNUM", "460967")
-////                // Function to add variable amount of extra
-////                // Set Component to explicitly communicate within App / Package
-//            ///intent.setComponent(ReceiverTestActivity::class)
-////                //sendBroadcast(intent) // Chk@ in BroadcastReceiver
-////            }
-//
-//            intent.setClassName(
-//                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
-//                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views.ReceiverTestActivity"
-//            )
-//            startActivity(intent)
-//        }
+        //! Test Send with Intent to Receiver Activity
+        btStartPayTestReceiverActivity.setOnClickListener {
+            //! Load the Actions for Party One Provider 3.party.
+            val sAction = UtilityActions.Util.setupActionsForProviderPartyOne()
+
+            // Register ACTIONS for special PayProvider BroadcastReceiver
+            // Maybe move of of this place which should be fore packing data into
+            // the intent. Combining Action and Extras
+            val intentFilter = IntentFilter().apply {
+                addAction(sAction.first()) // start
+                for (s in sAction.subList(1, sAction.size - 1)) {
+                    Log.d(TAG, "p1: Action Strings Read: $s")
+                    addAction(s)
+                }
+                //Arbitrary number of action steps ... Ho do we put them in
+                addAction(sAction.last()) // End of ACTION EVENT
+            }
+
+            intent.action = sAction[0]
+            // Walk through Actions and pack them, control by click button, maybe move this somewhere
+            // Else, maybe to a new button
+            var actionStepNum = 0
+            for (i in 0..sAction.size) {
+                intent.action = sAction[actionStepNum]
+
+                if(actionStepNum == 0) {
+                    intent.putExtra("KEY_NAME", "Kylie Minogue")
+                }
+                else if (actionStepNum == 1)
+                    intent.putExtra("KEY_NAME_ID", "Id")
+                    intent.putExtra("KEY_NAME_IDNUM", "460967")
+                // Function to add variable amount of extra
+                // Set Component to explicitly communicate within App / Package
+            }
+
+            intent.setClassName(
+                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
+                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views.ReceiverTestActivity"
+            )
+            startActivity(intent)
+        }
 
     }// #onCreate
 
-    private fun protocolLogicSendPartyOne(actionsExtras: List<String>, intent: Intent) {
-        //! Get AE and walk trrought actions and for each eaction set intent extras
-        //! Ie. Set intent.action from AE[0].action AE[0].extra:List
-        for (i in 0..actionsExtras.size - 1) {
-            //! Load intent with action type (String)
-            intent.action = actionsExtras[i]
-            Log.d(TAG, "Intent => $intent.action :: $actionsExtras[i] :: Action.size: $actionsExtras.size ")
-
-            //! get current action
-            Log.d(TAG, "${intent.action}")
-            if (intent.action == actionsExtras[0]) {
-                intent.putExtra("KEY1", "ID4325")
-            } else if (intent.action == actionsExtras[1]) {
-                intent.putExtra("KEY2_1", "Amount")
-                intent.putExtra("KEY2_2", "Balance")
-                intent.putExtra("KEY2_3", "Idnum")
-                intent.putExtra("KEY2_4", "IBAN")
-            } else if (intent.action == actionsExtras[2]) {
-                intent.putExtra("KEY3", "BYE!")
-            }
-            //! @Chk> Could wrap this in Timer. Schedule to test time limits
-            //sendBroadcast(intent) // send intent to PartyOneProvider, Timing
-            sendOrderedBroadcast(intent, null)
-        }
-    }
 
     private fun protocolLogicSendPartyOneAE(actionsExtras: List<ActionExtra>, intent: Intent) {
         //! Get AE and walk trrought actions and for each eaction set intent extras
@@ -281,17 +249,17 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         }
     }
 
-    private fun protocolLogicSendBankOfBank(actionStrings: List<String>, intent: Intent) {
+    private fun protocolLogicSendBankOfBank(actionsExtras: List<ActionExtra>, intent: Intent) {
         //!  Run trough all possible ACTIONS and make ready for broadcast
-        for (i in 0..actionStrings.size - 1) {
+        for (i in 0..actionsExtras.size - 1) {
             Log.d(TAG, "sAction")
-            intent.action = actionStrings[i]
+            intent.action = actionsExtras[i].action
 
             // The Intent is for one broadcast, so we have to add the appropriate Extras for each Action:
             // Then -> Ready next intent with action and extras to broadcast
-            if (intent.action == actionStrings[0]) {
+            if (intent.action == actionsExtras[0].action) {
                 intent.putExtra("KEY1", "ID4325")
-            } else if (intent.action == actionStrings[1]) {
+            } else if (intent.action == actionsExtras[1].action) {
                 intent.putExtra(
                     "KEY2_2",
                     tvShowTime.text.toString()
@@ -299,9 +267,9 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
                 intent.putExtra("KEY2_2", "Balance")
                 intent.putExtra("KEY2_3", "Idnum")
                 intent.putExtra("KEY2_3", "IBAN")
-            } else if (intent.action == actionStrings[2]) {
+            } else if (intent.action == actionsExtras[2].action) {
                 intent.putExtra("KEY3", "5000")
-            } else if (intent.action == actionStrings[3]) {
+            } else if (intent.action == actionsExtras[3].action) {
                 intent.putExtra("KEY4", "BYE!")
             }
             //! Broadcast is Async
@@ -400,7 +368,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         }, delay, duration)
     }
 
-    fun initPartyOneReceiver(){
+    private fun initPartyOneReceiver(){
         //! Get ACTION Set for Provider
         // Register ACTIONS for special PayProvider BroadcastReceiver
         // Chk@: move preparation outside button click event!
@@ -412,6 +380,14 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         //: Prepare Provider by packing ActionExtra Object with collection on actions and extra data
 
         mIntentFilterActionsPartyOne =
-            prepareProvider(actionsExtras) //! CHK: Timeoutlength L
+            prepareProvider(actionsExtras)
     }
+
+    private fun initBankOfBankReceiver() {
+        // Load Actions for number BankOfBank 3. party provider
+        val actionStrings = UtilityActions.Util.setupActionsForProviderBankOfBank()
+
+        mIntentFilterActionsBankOfBank = prepareProvider(actionStrings)
+    }
+
 }

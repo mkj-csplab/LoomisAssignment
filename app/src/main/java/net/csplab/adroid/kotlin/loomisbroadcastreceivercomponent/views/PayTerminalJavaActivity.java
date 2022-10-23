@@ -82,7 +82,8 @@ public class PayTerminalJavaActivity extends AppCompatActivity {
                     String inttAction = intent.getAction();
                     Log.d(TAG, "PayTerminalJavaActivity:onCreate: Intent is NOT null: Content Description $inttContentDescr :intent action $inttAction");
                 }
-                //! Load Each intent with action and "Extras" data
+                //! Ready ACtion and data extreas to send broadcast:
+                // Load Each intent with action and "Extras" data
                 for (int i = 0; i < actionStrings.size(); ++i) {
                     intent.setAction(actionStrings.get(i)); // Dont set action each time onReceive is signalled
                     Log.d(TAG, "PayTerminalJavaActivity:onCreate: Intent => $intent.action :: $sAction.get(i) :: Action.size: $sAction.size() ");

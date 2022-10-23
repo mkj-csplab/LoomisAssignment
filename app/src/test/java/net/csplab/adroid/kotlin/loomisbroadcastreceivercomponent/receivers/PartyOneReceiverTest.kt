@@ -46,9 +46,11 @@ class PartyOneReceiverTest {
     //! ===========
 
     //! Receiver Test
-    fun checkUnpackElements(){}
+    //! T5
+    fun checkUnpackElements(){
+    }
 
+    //! T6
     fun extraReceivedInformationFromIntent(){
-
     }
 }
