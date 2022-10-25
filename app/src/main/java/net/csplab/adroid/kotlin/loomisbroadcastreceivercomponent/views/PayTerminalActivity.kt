@@ -111,6 +111,8 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 //        }
 
         //! PartyOneProvider BroadcastReceiver
+        //! Descr: Starts a payment transaction, that could be an NFC event or or conmfirmation OK
+        //! by the user after use of their credit card.
         btStartPartyOneProvider.setOnClickListener {
             val providerName = "PartyOneProvider"
             intent = Intent()  //! Ready intent for Action & Extras Packing
@@ -173,47 +175,46 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             protocolLogicSendBankOfBank(actionsExtraBankOfBank, intent)
         }
 
-        //! Test Send with Intent to Receiver Activity
-        btStartPayTestReceiverActivity.setOnClickListener {
-            //! Load the Actions for Party One Provider 3.party.
-            val sAction = UtilityActions.Util.setupActionsForProviderPartyOne()
-
-            // Register ACTIONS for special PayProvider BroadcastReceiver
-            // Maybe move of of this place which should be fore packing data into
-            // the intent. Combining Action and Extras
-            val intentFilter = IntentFilter().apply {
-                addAction(sAction.first()) // start
-                for (s in sAction.subList(1, sAction.size - 1)) {
-                    Log.d(TAG, "p1: Action Strings Read: $s")
-                    addAction(s)
-                }
-                //Arbitrary number of action steps ... Ho do we put them in
-                addAction(sAction.last()) // End of ACTION EVENT
-            }
-
-            intent.action = sAction[0]
-            // Walk through Actions and pack them, control by click button, maybe move this somewhere
-            // Else, maybe to a new button
-            var actionStepNum = 0
-            for (i in 0..sAction.size) {
-                intent.action = sAction[actionStepNum]
-
-                if(actionStepNum == 0) {
-                    intent.putExtra("KEY_NAME", "Kylie Minogue")
-                }
-                else if (actionStepNum == 1)
-                    intent.putExtra("KEY_NAME_ID", "Id")
-                    intent.putExtra("KEY_NAME_IDNUM", "460967")
-                // Function to add variable amount of extra
-                // Set Component to explicitly communicate within App / Package
-            }
-
-            intent.setClassName(
-                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
-                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views.ReceiverTestActivity"
-            )
-            startActivity(intent)
-        }
+//        //! Test Send with Intent to Receiver Activity
+//        btStartPayTestReceiverActivity.setOnClickListener {
+//            //! Load the Actions for Party One Provider 3.party.
+//            val sAction = UtilityActions.Util.setupActionsForProviderPartyOne()
+//
+//            // Register ACTIONS for special PayProvider BroadcastReceiver
+//            // Maybe move of of this place which should be fore packing data into
+//            // the intent. Combining Action and Extras
+//            val intentFilter = IntentFilter().apply {
+//                addAction(sAction.first()) // start
+//                for (s in sAction.subList(1, sAction.size - 1)) {
+//                    Log.d(TAG, "p1: Action Strings Read: $s")
+//                    addAction(s)
+//                }
+//                //Arbitrary number of action steps ... Ho do we put them in
+//                addAction(sAction.last()) // End of ACTION EVENT
+//            }
+//
+//            intent.action = sAction[0]
+//            // Walk through Actions and pack them, control by click button, maybe move this somewhere
+//            // Else, maybe to a new button
+//            var actionStepNum = 0
+//            for (i in 0..sAction.size) {
+//                intent.action = sAction[actionStepNum]
+//
+//                if(actionStepNum == 0) {
+//                    intent.putExtra("KEY_NAME", "Kylie Minogue")
+//                } else if (actionStepNum == 1)
+//                    intent.putExtra("KEY_NAME_ID", "Id")
+//                    intent.putExtra("KEY_NAME_IDNUM", "460967")
+//                // Function to add variable amount of extra
+//                // Set Component to explicitly communicate within App / Package
+//            }
+//
+//            intent.setClassName(
+//                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent",
+//                "net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views.ReceiverTestActivity"
+//            )
+//            startActivity(intent)
+//        }
 
     }// #onCreate
 

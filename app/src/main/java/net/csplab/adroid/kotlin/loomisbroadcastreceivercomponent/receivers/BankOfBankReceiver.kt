@@ -11,7 +11,7 @@ import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionEx
 
 class BankOfBankReceiver(
     override var providerName: String?,
-    override var mActionExtras: List<ActionExtra>,
+    override var mActionsExtras: List<ActionExtra>,
     override val mTimeoutLength: Long = 20000L,
 ) : PayProviderReceiver() {
     private val TAG = BankOfBankReceiver::class.java.simpleName
@@ -21,11 +21,11 @@ class BankOfBankReceiver(
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)  //! Creates Timer, what about timeoutlength
         Log.d(TAG, "BankOfBank:onReceive")
-        createTimeoutTimer(mTimeoutLength)//, ctx) // chk: Move into first action before starting timer
+        startTimeout(mTimeoutLength)//, ctx) // chk: Move into first action before starting timer
 
         val actionReceived = intent?.action
         val isItATimeout = intent.extras?.get("TIMEOUT_ALARM")  //! CHK:CHECK That we registered "TIMEOUT_ALARM"
-        //timeoutAlarmCheck0(isItATimeout)
+
         val intentExtras = intent.extras
         val extraKeySet = intentExtras?.keySet()
         val keySetSize = extraKeySet?.size
@@ -39,7 +39,7 @@ class BankOfBankReceiver(
             valuesMap.put(k, intentExtras?.get(k).toString())
         }
         Log.d(TAG, "BankOfBankProvider:onReceive:Val: ${valuesMap}")
-        Log.d(TAG, "BankOfBankProvider:onReceive:Actions: $mActionExtras")
+        Log.d(TAG, "BankOfBankProvider:onReceive:Actions: $mActionsExtras")
         Log.d(TAG, "BankOfBankProvider:onReceive:intentExtras: ${intentExtras}")
 
         // Chk@: Divide action sets so we can go UA.ActionProvider$Name.ACTION_ANACTION
@@ -75,19 +75,19 @@ class BankOfBankReceiver(
         var actionCount: Int = 0
         //! TOOO: NEXT -> Fix these to be the correct action strings!!! <== P2
         Log.d(TAG, "OnReceive:actionReceived: $actionReceived")
-        if (actionReceived == mActionExtras[0].action) {
+        if (actionReceived == mActionsExtras[0].action) {
             Log.d(TAG, "OnReceive:START")
             doSomethingAction1(valuesMap)
-        } else if (actionReceived == mActionExtras[1].action) {
+        } else if (actionReceived == mActionsExtras[1].action) {
             Log.d(TAG, "OnReceive:STEP1")
             doSomethingAction2(valuesMap)
-        } else if (actionReceived == mActionExtras[2].action) {
+        } else if (actionReceived == mActionsExtras[2].action) {
             Log.d(TAG, "OnReceive:END")
             doSomethingAction3(valuesMap)
         }
         //! IF not received all actions and intent extras at this time, make a count
         //mActionTimeout.cancel()
-        if (actionCount == mActionExtras.size)
+        if (actionCount == mActionsExtras.size)
         {
             mActionTimeout.cancel() ;
             actionCount = 0 // Not necc

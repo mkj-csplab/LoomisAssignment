@@ -17,7 +17,7 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     private val TAG = PayProviderReceiver::class.java.simpleName
 
     abstract val providerName:String? // 3. Party ProviderName
-    abstract var mActionExtras: List<ActionExtra>
+    abstract var mActionsExtras: List<ActionExtra>
     abstract val mTimeoutLength: Long
     //abstract var actionsCompleted: List<Boolean> // Chk: getNumberOfCompleted @?
 
@@ -39,8 +39,7 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     // Set & Build Notifications
 
     // Chk@: Abstract or base implementation @?
-    override fun onReceive(ctx: Context, intent: Intent) {
-    }
+    override fun onReceive(ctx: Context, intent: Intent) {}// set timeout her
 
     //! HeartBeat for All PayProviders
     private fun runHeartBeat() {
@@ -61,11 +60,11 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
 
     //! Descr: Setting timeout for receiver: Abstract@? method
     //! Create timer into handling action
-    protected fun createTimeoutTimer(timeoutLength: Long){
+    protected fun startTimeout(timeoutLength: Long){
         mActionTimeout.schedule(object: TimerTask() {
             override fun run() {
                 Log.d(TAG, "PayProviderReceiver:TimeoutNotify: after $timeoutLength") // @Chk: @No timer in Utility
-                abortBroadcast()
+                abortBroadcast() //! After timeout we abort this broadcast
             //! Not on main thread, broadcaster run normally on main thread (UI Thread): Do Interface
                 //Toast.makeText(ctx, "Timer: ${Date().hours}:${Date().minutes}:${Date().seconds}", Toast.LENGTH_LONG).show()
 //                ctx.runOnUiThread(
