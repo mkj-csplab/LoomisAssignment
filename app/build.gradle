@@ -54,7 +54,14 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     // Optional -- Robolectric environment
     testImplementation "androidx.test:core:$androidXTestVersion"
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
+
+    // Optional -- Mockito framework
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    // Optional -- mockito-kotlin
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
+    // Optional -- Mockk framework
+    testImplementation "io.mockk:mockk:$mockkVersion"
     testImplementation 'junit:junit:4.12'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -64,11 +71,12 @@ dependencies {
     androidTestImplementation "androidx.test:core:$androidXTestVersion"
     androidTestImplementation "androidx.test:runner:$androidXTestVersion"
     androidTestImplementation "androidx.test:rules:$androidXTestVersion"
-
     // Optional -- Mockito framework
-    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    androidTestImplementation "org.mockito:mockito-core:$mockitoVersion"
     // Optional -- mockito-kotlin
-    testImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
-    // Optional -- Mockk framework
-    testImplementation "io.mockk:mockk:$mockkVersion"
+    androidTestImplementation "org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestImplementation 'androidx.arch.core:core-testing:2.0.0'
+    testImplementation 'androidx.arch.core:core-testing:2.0.0'
+
+
 }

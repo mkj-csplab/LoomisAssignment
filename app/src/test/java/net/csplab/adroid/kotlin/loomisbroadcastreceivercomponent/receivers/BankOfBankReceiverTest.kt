@@ -7,6 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
+//! DESCR: ** BANKOFBANK TEST - NOT USED - TEST WTUBS FOR RECEIVER IN PARTYONERECEIVERTEST **
 @RunWith(JUnit4::class)
 class BankOfBankReceiverTest {
 
@@ -25,41 +26,26 @@ class BankOfBankReceiverTest {
     @Test
     fun setActionsForReceiver() {
     }
-
     @Test
-    fun updateTextInUIRegister() {
-    }
-
+    fun updateTextInUIRegister() {}
     @Test
-    fun timeoutAlarmCheck0() {
-    }
-
+    fun timeoutAlarmCheck0() {}
     @Test
-    fun getProviderName() {
-    }
-
+    fun getProviderName() {}
     @Test
-    fun setProviderName() {
-    }
-
+    fun setProviderName() {}
     @Test
-    fun getMActionExtras() {
-    }
-
+    fun getMActionExtras() {}
     @Test
-    fun setMActionExtras() {
-    }
-
+    fun setMActionExtras() {}
     @Test
-    fun getMTimeoutLength() {
-
-    }
+    fun getMTimeoutLength() {}
 
     //=================================
     //! Receiver Test
-    fun checkUnpackElements(){}
+    fun checkUnpackElements(){
+    }
 
     fun extraReceivedInformationFromIntent(){
-
     }
 }

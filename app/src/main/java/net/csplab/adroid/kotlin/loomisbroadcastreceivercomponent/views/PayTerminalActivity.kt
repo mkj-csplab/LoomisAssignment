@@ -75,14 +75,9 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 
         initPartyOneReceiver()
         initBankOfBankReceiver()
-        // =======================================================
 
-        // =======================================================
-        // CHK: Move this comment to top place in class
-        // Comment: System : We do not have a particular order of actions, ordered broadcast is for
-        // listeners not for actions
         // Chk@: We could do with a timer and a sendBroadcast, also put action in list so we can
-        // reference an array.
+        //! reference an array.
 
 //        btStartPayTestReceiverActivity.setOnClickListener {
 //

@@ -15,6 +15,16 @@ class PartyOneReceiverTest {
 
     }
 
+
+    //! Receiver Test
+    @Test //! T5
+    fun checkUnpackElements(){
+    }
+
+    @Test //! T6
+    fun extraReceivedInformationFromIntent(){
+    }
+
     @Test
     fun onReceive() {
     }
@@ -41,16 +51,5 @@ class PartyOneReceiverTest {
 
     @Test
     fun getMTimeoutLength() {
-    }
-
-    //! ===========
-
-    //! Receiver Test
-    //! T5
-    fun checkUnpackElements(){
-    }
-
-    //! T6
-    fun extraReceivedInformationFromIntent(){
     }
 }
