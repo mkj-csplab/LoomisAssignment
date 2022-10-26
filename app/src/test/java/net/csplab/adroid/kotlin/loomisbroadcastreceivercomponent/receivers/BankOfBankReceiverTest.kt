@@ -12,8 +12,7 @@ import org.junit.runners.JUnit4
 class BankOfBankReceiverTest {
 
     @Before
-    fun setUp() {
-    }
+    fun setUp() {}
 
     @Test
     fun onReceive() {

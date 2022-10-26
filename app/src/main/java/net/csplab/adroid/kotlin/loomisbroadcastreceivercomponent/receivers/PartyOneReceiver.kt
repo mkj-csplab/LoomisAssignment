@@ -1,9 +1,19 @@
 package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers
 
+import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
 import android.util.Log
+import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.TaskStackBuilder
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
+import java.util.*
 
 class PartyOneReceiver(
     override val providerName: String?,
@@ -11,24 +21,35 @@ class PartyOneReceiver(
     override val mTimeoutLength: Long = 15000L,
     //override //mActionTimeout.cancel()var actionsCompleted: List<Boolean>
 ) : PayProviderReceiver() {
-
-//}
-
 private var TAG = PartyOneReceiver::class.java.simpleName
     private var mActionCounter = mActionsExtras.size // Counting action to be completed/received
     private var mActionCount = 0 // Counting action to be completed/received
 
+    private var mAliveToast: Timer = Timer()
+    private lateinit var mContext: Context
+
+    companion object{
+        var NOTIFICATION_ID = "notification-id"
+        var NOTIFICATION = "notification"
+    }
+
     //! Receive is called once per action (action that is broadcasted)
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
+        this.mContext = ctx
+        Toast.makeText(ctx, "PartyOneProvider:onReceive", Toast.LENGTH_LONG).show()
         Log.d(TAG, "PartyOneProvider:onReceive")
-
         //Toast.makeText(ctx, "PartyOneProvider:onReceive", Toast.LENGTH_LONG).show()
+
+        //runShowAlive(ctx)
 
         //! Descr: The timeout is initialized at the start of BroadCast:onReceive
         //! because payment start is initialized from the user (activity), that could depend on
         //! payment device, etc.
         startTimeout(mTimeoutLength)
+
+        //! Setup Notification
+        //notificationAtReceiver(ctx, intent)
 
         val actionReceived = intent.action
         var intentExtras = intent.extras
@@ -102,7 +123,7 @@ private var TAG = PartyOneReceiver::class.java.simpleName
              if (mActionCount == mActionsExtras.size && valuesMap.get("KEY4_PAY_END") == "BYE!" ){
                 Log.d(TAG, "PartyOneProvider:onReceive:BYE")
                  mActionTimeout.cancel()
-                 mActionCount = 0 // Not necc
+                 mActionCount = 0 // Not neccessary
              }
         }
         //! IF ALL ACTIONS and intents extras received and before timeout : NumActions = ActionsExtras.size
@@ -112,5 +133,45 @@ private var TAG = PartyOneReceiver::class.java.simpleName
     //! CHK> Should this be here remove
     override fun setActionsForReceiver(actionList: List<String>) {
         //! Add ACTIONS for that receive
+    }
+
+//    fun notificationAtReceiver(ctx: Context, intent: Intent){
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            val channel = NotificationChannel(NOTIFICATION_ID, NOTIFICATION, NotificationManager
+//                .IMPORTANCE_HIGH).apply {
+//                lightColor = Color.GREEN
+//                enableLights(true)
+//                description = "Hey its a channel"
+//            }
+//            val manager = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//            manager.createNotificationChannel(channel)
+//        }
+//
+//        val pendingIntent = TaskStackBuilder.create(ctx).run {
+//            addNextIntentWithParentStack(intent)
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
+//            } else {
+//                getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+//            }
+//        }
+//        //val notification = Notification(intent.getParcelableExtra(NOTIFICATION))
+//        val notification = Notification(
+//            intent.getParcelableExtra(NOTIFICATION))
+//        with(NotificationManagerCompat.from(ctx)) {
+//            // notificationId is a unique int for each notification that you must define
+//            notify(17, notification)
+//        }
+//    }
+
+    private fun runShowAlive(ctx: Context) {
+        mAliveToast = Timer()
+
+        Toast.makeText(ctx, "runShowAlive!", Toast.LENGTH_LONG).show()
+        mAliveToast.scheduleAtFixedRate(object: TimerTask() {
+            override fun run() {
+                Toast.makeText(ctx, "BornToBeAlive!", Toast.LENGTH_LONG).show()
+                Log.d(TAG, "PayProvider:HeartBeat ")
+            } },5000, 5000)
     }
 }

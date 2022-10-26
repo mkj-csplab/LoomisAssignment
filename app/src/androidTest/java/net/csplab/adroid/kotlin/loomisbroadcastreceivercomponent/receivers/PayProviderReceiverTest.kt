@@ -42,7 +42,7 @@ class PayProviderReceiverTest {
     //private lateinit var UtilityActions.ActionSets
 
     @get:Rule
-    public val activityRule = ActivityScenarioRule(PayTerminalActivity::class.java)
+    val activityRule = ActivityScenarioRule(PayTerminalActivity::class.java)
 
     @Test
     fun prepare_provider_with_actions_and_extras_data(){
@@ -148,7 +148,6 @@ class PayProviderReceiverTest {
 
     @Test
     fun send_Action_And_Extra_Receive_And_Unpack(){}
-
 
     @Test
     fun getProviderName() {}

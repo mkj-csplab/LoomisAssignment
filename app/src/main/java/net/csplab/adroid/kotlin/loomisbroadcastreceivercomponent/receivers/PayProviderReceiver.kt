@@ -45,6 +45,7 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     private fun runHeartBeat() {
         mBrHeartBeat = Timer()
         mBrHeartBeat.scheduleAtFixedRate(object: TimerTask() {
+
             override fun run() {
                 Log.d(TAG, "PayProvider:HeartBeat ")
             } },5000, 5000)

@@ -1,5 +1,7 @@
 package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.views
 
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
@@ -7,9 +9,11 @@ import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityPayTerminalBinding
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.*
+import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.PartyOneReceiver.Companion.NOTIFICATION_ID
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.ID_PROVIDER_PARTYONE
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions.ActionSets.actionsExtraPartyOne
@@ -119,7 +123,9 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 
             //! DO: recreate list from list to mutableList + add action + create new list initialized with mutableList
             Log.d(TAG, "actionsExtraPartyOne:before:actionName ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].action}")
+
             var actionsExtraPartyOne = UtilityActions.ActionSets.actionsExtraPartyOne
+
             Log.d(TAG, "actionsExtraPartyOne:before:size ${actionsExtraPartyOne.size}")
             prepareAddCustomAction(actionsExtraPartyOne, "TRANSACTION_VALIDATE", ID_PROVIDER_PARTYONE)
             Log.d(TAG, "actionsExtraPartyOne:after:size ${actionsExtraPartyOne.size}")
@@ -145,7 +151,6 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             //! For each intent to send with broadcast -> Load each intent with action and "Extras" data
             //chk@! val actionFromAction
 
-            //protocolLogicSendPartyOne(actionsExtras, intent)//
             var actionListX = mutableListOf<String>()
             for (elem in actionsExtraPartyOne){
                 actionListX.add(elem.action)
@@ -217,7 +222,6 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 //        }
 
     }// #onCreate
-
 
     private fun protocolLogicSendPartyOneAE(actionsExtras: List<ActionExtra>, intent: Intent) {
         //! Get AE and walk trrought actions and for each eaction set intent extras
@@ -386,4 +390,26 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         mIntentFilterActionsBankOfBank = prepareProvider(actionStrings)
     }
 
+    fun setNotification(){
+        val notificationIntent = Intent( this, PartyOneReceiver::class.java)
+        notificationIntent.putExtra(PartyOneReceiver.NOTIFICATION_ID , 1 ) ;
+        notificationIntent.putExtra(PartyOneReceiver.NOTIFICATION , notificationSetup())
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    fun notificationSetup():Notification {
+        val notificationSetup = NotificationCompat.Builder(this, NOTIFICATION_ID)
+            .setContentTitle("Notification")
+            .setContentText("Nice weather today? right")
+            .setSmallIcon(androidx.loader.R.drawable.notification_bg)
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText("Much longer text that cannot fit one line..."))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            //.setChannelId(CH)
+            //.setContentIntent(pendingIntent)
+            //.setContentIntent()
+            .build()
+        return notificationSetup
+    }
 }
