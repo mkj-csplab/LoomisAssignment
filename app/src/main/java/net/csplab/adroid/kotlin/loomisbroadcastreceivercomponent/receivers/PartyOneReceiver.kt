@@ -42,7 +42,7 @@ private var TAG = PartyOneReceiver::class.java.simpleName
         //! because payment start is initialized from the user (activity), that could depend on
         //! payment device, etc.
 
-        //startTimeout(mTimeoutLength)
+        //!!! startTimeout(mTimeoutLength)
 
         //! Setup Notification
         //notificationAtReceiver(ctx, intent)
@@ -139,8 +139,10 @@ private var TAG = PartyOneReceiver::class.java.simpleName
         } else if (actionReceived == mActionsExtras[1].action) {
             doSomethingAction2(valuesMap)
         } else if (actionReceived == mActionsExtras[2].action) {
+            // @CHK: DOnt do somnething here
+        }else if (actionReceived == mActionsExtras[3].action) {
             doSomethingAction3(valuesMap)
-        } else if (actionReceived == mActionsExtras[3].action) {
+        } else if (actionReceived == mActionsExtras[4].action) {
             //var key1val = intent.getStringExtra("KEY4")
             //if (mActionCount == mActionsExtras.size && valuesMap.get("KEY4_PAY_END") == "BYE!" ){
             if (valuesMap.get("KEY4_PAY_END") == "BYE!" ){
