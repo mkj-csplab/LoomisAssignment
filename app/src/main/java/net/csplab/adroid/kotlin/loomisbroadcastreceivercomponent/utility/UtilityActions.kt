@@ -13,6 +13,7 @@ const val ID_PROVIDER_BANKOFBANK = "BANKOFBANK_ID"
 open class UtilityActions {
     final val TAG = UtilityActions::class.java.simpleName
 
+    //! MOCK actions and intent extras.
     object ActionSets {
         val actionStrings1 = setupActionsForProviderPartyOne()
         val actionsExtraPartyOne: MutableList<ActionExtra> = mutableListOf<ActionExtra>(

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ActivityScenario.ActivityAction
 import androidx.test.core.app.launchActivity
@@ -22,7 +23,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito
 import org.mockito.kotlin.isNotNull
+import org.mockito.kotlin.mock
 
 //import org.mockito.junit.MockitoJUnit.rule
 
@@ -33,8 +36,10 @@ import org.mockito.kotlin.isNotNull
 @RunWith(AndroidJUnit4::class)
 class PayProviderReceiverTest {
 
+    //https://medium.com/mindorks/unit-testing-the-unusual-android-components-part-1-a5cfa35cf06d
     lateinit var mPartyOneReceiver: PartyOneReceiver
     lateinit var mContext: Context
+
 
     // Executes each task synchronously using Architecture Components.
     @Rule @JvmField
@@ -44,12 +49,19 @@ class PayProviderReceiverTest {
     @get:Rule
     val activityRule = ActivityScenarioRule(PayTerminalActivity::class.java)
 
+    @Before
+    fun setUp()  {
+        // Setup for instrumentation test
+        mContext = InstrumentationRegistry.getInstrumentation().targetContext
+        //mContext = Mockito.mock(Context::class.java)
+    }
+
     @Test
     fun prepare_provider_with_actions_and_extras_data(){
     }
 
     @Test (timeout=10000L)
-    fun test_receiving_intent_actions_with_timeout() {
+    fun test_receiving_intent_actions() {
         val appContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
         Assert.assertEquals("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent", appContext.getPackageName())
         println("useAppContext : Test Ran")
@@ -58,20 +70,27 @@ class PayProviderReceiverTest {
         val intentFilter = IntentFilter()
         val actionTest = "TEST_ACTION"
         intentFilter.addAction("TEST_ACTION")
-        appContext.registerReceiver(mPartyOneReceiver, intentFilter)
+        appContext.registerReceiver(payReceiver, intentFilter)
         val intent = Intent()
         intent.action = actionTest
-        mPartyOneReceiver.onReceive(mContext, intent)
-        assertEquals(1, mPartyOneReceiver.resultData);
+        payReceiver.onReceive(mContext, intent)
+
+        //assertEquals(1, .resultData)
     }
 
-    @Before
-    fun setUp() {
-        // Setup for instrumentation test
-        launchActivity<PayTerminalJavaActivity>()
+    //https://medium.com/mindorks/unit-testing-the-unusual-android-components-part-1-a5cfa35cf06d
+    fun test_receiving_intent_actions_with_timeout() {
+        mPartyOneReceiver = PartyOneReceiver("PartyOneTest", UtilityActions.ActionSets.actionsExtraPartyOne, 15000L)
+        val intent = Intent()
+        intent.action = "TEST_ACTION"
 
-        mContext = InstrumentationRegistry.getInstrumentation().targetContext
-        Assert.assertEquals("net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent", mContext.getPackageName())
+        val itFilter = IntentFilter("TEST_ACTION")
+        mContext.registerReceiver(mPartyOneReceiver, itFilter)
+        mContext.sendBroadcast(intent)
+
+        mPartyOneReceiver.onReceive(mContext, intent)
+        // AerugmentCaptor _?
+
     }
 
     @Test
@@ -87,36 +106,40 @@ class PayProviderReceiverTest {
             scenario.onActivity(
                 ActivityAction<PayTerminalActivity> { activity: PayTerminalActivity ->
                     //assertThat("123", isA(String::class.java))
-                    assertThat(activity.tvShowTime.text.toString(), isNotNull())
+                    //assertThat(activity.tvShowTime.text.toString(), isNotNull())
+                    activity.mBtStartPartyOneProvider.performClick()
                 })
         }
     }
 
-    @Test
-    fun activity_PayTerminal_Click_on_activate_PartyOneReceiver_PerformClick() {
-        activityRule.scenario.onActivity {
-            //protocolReceivingData()
-
-        } //bt_start_party_one_provider
-        activityRule.scenario.onActivity {
-            //} // Optionally, access the activi
-            //val scenario = activityRule.getScenario()
-            //scenario.moveToState(Lifecycle.State.CREATED)
-            //scenario.
-        }
-    }
+//    @Test
+//    fun activity_PayTerminal_Click_on_activate_PartyOneReceiver_PerformClick() {
+//        activityRule.scenario.onActivity {
+//            //protocolReceivingData()
+//
+//        } //bt_start_party_one_provider
+//        activityRule.scenario.onActivity {
+//            //} // Optionally, access the activi
+//            //val scenario = activityRule.getScenario()
+//            //scenario.moveToState(Lifecycle.State.CREATED)
+//            //scenario.
+//        }
+//    }
 
     @Test //! T7
-    //Start JAva Activity -> click onm broadcaster test
+    //Start Java Activity -> click onm broadcaster test
     fun checkJavaActivitySetup() {
         //launchActivity<PayTerminalJavaActivity>()
         launchActivity<PayTerminalJavaActivity>().use { scenario ->
             //scenario.moveToState(State.CREATED)
             scenario.result
-//            scenario.onActivity { activity ->
-//                //activity.intent.setClass()
+            scenario.moveToState(Lifecycle.State.STARTED)
+            scenario.onActivity { activity ->
+                activity.intent.action = "GALLO"
+                activity.baseContext.sendBroadcast(activity.intent)
 //                startActivity(Intent(activity, ))
-//            }
+                //activity.
+            }
         }
     }
 

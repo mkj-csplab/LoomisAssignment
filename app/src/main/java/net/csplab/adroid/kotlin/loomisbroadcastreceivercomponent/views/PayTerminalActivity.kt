@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -41,6 +42,8 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
     private lateinit var mActionSet: List<String>
 
     lateinit var tvShowTime: TextView
+    lateinit var mBtJavaActivity: Button
+    lateinit var mBtStartPartyOneProvider: Button
 
     lateinit var mRepeatTimer: Timer
     lateinit var mTimeout: Timer
@@ -59,17 +62,18 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         }
 
         // Get The Views from the layouts tvHeader = bind.tvHeaderPay
-        tvShowTime = bind.tvShowTime
-        val btJavaActivity = bind.btJavaActivity
+        tvShowTime = bind.tvShowTime  // Thyis can be reached by testing laucnActivity
+
+        mBtJavaActivity = bind.btJavaActivity // THis cannot be rached
 
         val editTextNumber = bind.editTextNumber
         //val tvChoosePayProvider = bind.tvChoosePayProvider
-        val btStartPartyOneProvider = bind.btStartPartyOneProvider
+        mBtStartPartyOneProvider = bind.btStartPartyOneProvider
         val btStartBankOfBankProvider = bind.btStartBankOfBankProvider
         val btStartPayTestReceiverActivity = bind.btStartPayTestReceiverActivity
 
         //! Goto Java Activity
-        btJavaActivity.setOnClickListener {
+        mBtJavaActivity.setOnClickListener {
             var i = Intent(this, PayTerminalJavaActivity::class.java)
             startActivity(i)
         }
@@ -116,11 +120,10 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         //! PartyOneProvider BroadcastReceiver
         //! Descr: Starts a payment transaction, that could be an NFC event or or conmfirmation OK
         //! by the user after use of their credit card.
-        btStartPartyOneProvider.setOnClickListener {
+        mBtStartPartyOneProvider.setOnClickListener {
             val providerName = "PartyOneProvider"
             intent = Intent()  //! Ready intent for Action & Extras Packing
             var actionsExtraPartyOne = UtilityActions.ActionSets.actionsExtraPartyOne
-
 
             if (mFirstRun) {
             //! DO: recreate list from list to mutableList + add action + create new list initialized with mutableList
@@ -138,7 +141,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 
             Log.d(TAG, "actionsExtraPartyOne:before:extrasize ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].extras?.size}")
             prepareAddIntentExtraToAction(actionsExtraPartyOne[actionsExtraPartyOne.size-2], 0, "DATA_Y", "YVAL")
-            mFirstRun = false //! temporary test fix
+                mFirstRun = false //! temporary test fix
             }
 
             mReadyToBroadCast = true

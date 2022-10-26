@@ -1,5 +1,6 @@
 //package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent
 
+//! Mock Log
 @file:JvmName("Log")
 package android.util
 

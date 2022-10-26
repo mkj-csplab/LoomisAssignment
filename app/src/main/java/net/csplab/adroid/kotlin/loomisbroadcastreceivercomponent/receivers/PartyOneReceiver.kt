@@ -42,7 +42,7 @@ private var TAG = PartyOneReceiver::class.java.simpleName
         //! because payment start is initialized from the user (activity), that could depend on
         //! payment device, etc.
 
-        //!!! startTimeout(mTimeoutLength)
+        //startTimeout(mTimeoutLength)
 
         //! Setup Notification
         //notificationAtReceiver(ctx, intent)
@@ -50,14 +50,14 @@ private var TAG = PartyOneReceiver::class.java.simpleName
 
         //! Starting Action and Intent Retrieval
         val handler: Handler = Handler()
-        //val pendingResult: PendingResult = goAsync()
+        val pendingResult: PendingResult = goAsync()
 
-        //val threadProtocol = Thread(object: Runnable {
-         //   override fun run() {
-//                val resultCodePI: Int = pendingResult.resultCode
-//                val resultData: String? = pendingResult.resultData
-//                val resultExtras: Bundle = pendingResult.getResultExtras(true)
-//                val stringExtra = resultExtras.getString("stringExtra")
+        val threadProtocol = Thread(object: Runnable {
+            override fun run() {
+                val resultCodePI: Int = pendingResult.resultCode
+                val resultData: String? = pendingResult.resultData
+                val resultExtras: Bundle = pendingResult.getResultExtras(true)
+                val stringExtra = resultExtras.getString("stringExtra")
 
 //                handler.post(Runnable {
 //                    Toast.makeText(ctx, "pendingResult:handler" + stringExtra, Toast.LENGTH_LONG).show()
@@ -92,14 +92,14 @@ private var TAG = PartyOneReceiver::class.java.simpleName
                     protocolReceivingData(actionReceived, intent, valuesMap)
                 }
 
-                //pendingResult.setResult(resultCode, resultData, resultExtras)
+                pendingResult.setResult(resultCode, resultData, resultExtras)
                 Log.d(TAG, "pendingResult:Finished:ReadyToAbort!")
                 //pendingResult.abortBroadcast
-                //pendingResult.finish()
+                pendingResult.finish()
                 //pendingResult.abortBroadcast
-            //}
-        //})
-        //threadProtocol.start()
+            }
+        })
+        threadProtocol.start()
 
 //        //! IF ALL ACTIONS and intents extras receieved and before timeout : NumActions = ActionsExtras.size
 //        //! Cancel time out, reset ACTION COUNT
@@ -107,6 +107,7 @@ private var TAG = PartyOneReceiver::class.java.simpleName
 
     } // END onReceive
 
+    //! descr: Protocol specific functions for specialised 3. party provider : All doSomething**( methods
     private fun doSomethingAction1(values: MutableMap<String, String>) {
         //! TODO( "Do some with the gathered information according to the specific ACTION")
         // TODFOmActionCounter
@@ -195,7 +196,6 @@ private var TAG = PartyOneReceiver::class.java.simpleName
 
     private fun runShowAlive(ctx: Context) {
         mAliveToast = Timer()
-
         Toast.makeText(ctx, "runShowAlive!", Toast.LENGTH_LONG).show()
         mAliveToast.scheduleAtFixedRate(object: TimerTask() {
             override fun run() {
