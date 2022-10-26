@@ -10,14 +10,12 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.registerReceiver
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityPayTerminalBinding
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.*
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.PartyOneReceiver.Companion.NOTIFICATION_ID
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.ID_PROVIDER_PARTYONE
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions
-import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions.ActionSets.actionsExtraPartyOne
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions.Util.prepareAddCustomAction
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.utility.UtilityActions.Util.prepareAddIntentExtraToAction
 import java.text.SimpleDateFormat
@@ -30,7 +28,7 @@ import java.util.*
 
 class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListener {
     private var TAG = PayTerminalActivity::class.java.simpleName
-
+    var mFirstRun : Boolean = true
     private var mReadyToBroadCast: Boolean = false
     private lateinit var bind: ActivityPayTerminalBinding
 
@@ -123,6 +121,8 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             intent = Intent()  //! Ready intent for Action & Extras Packing
             var actionsExtraPartyOne = UtilityActions.ActionSets.actionsExtraPartyOne
 
+
+            if (mFirstRun) {
             //! DO: recreate list from list to mutableList + add action + create new list initialized with mutableList
             Log.d(TAG, "actionsExtraPartyOne:before:actionName ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].action}")
             Log.d(TAG, "actionsExtraPartyOne:before:size ${actionsExtraPartyOne.size}")
@@ -138,6 +138,8 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
 
             Log.d(TAG, "actionsExtraPartyOne:before:extrasize ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].extras?.size}")
             prepareAddIntentExtraToAction(actionsExtraPartyOne[actionsExtraPartyOne.size-2], 0, "DATA_Y", "YVAL")
+            mFirstRun = false //! temporary test fix
+            }
 
             mReadyToBroadCast = true
             mPartyOneReceiver = PartyOneReceiver(
@@ -233,9 +235,9 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         //! Ie. Set intent.action from AE[0].action AE[0].extra:List
         for (i in 0..actionsExtras.size - 1) {
             //! Load intent with action type (String)
+            val intent = Intent()
             intent.action = actionsExtras[i].action
             Log.d(TAG, "Intent => Action.size: ${actionsExtras.size} :: $intent.action :: $actionsExtras[i] ::  ")
-
             //! get current action
             Log.d(TAG, "${intent.action}")
             if (intent.action == actionsExtras[0].action) {
@@ -258,6 +260,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             }
             //! @Chk> Could wrap this in Timer. Schedule to test time limits
             //sendBroadcast(intent) // send intent to PartyOneProvider, Timing
+            Log.d(TAG, "SendBroadcast intent length: ${intent.extras?.size()}"  )
             sendOrderedBroadcast(intent, null)
         }
     }

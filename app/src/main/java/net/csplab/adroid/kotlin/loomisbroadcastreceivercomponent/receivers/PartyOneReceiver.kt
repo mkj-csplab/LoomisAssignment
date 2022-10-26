@@ -65,6 +65,7 @@ private var TAG = PartyOneReceiver::class.java.simpleName
 
                 val actionReceived = intent.action
                 var intentExtras = intent.extras
+                val intentExtraSize = intent.extras?.size()
                 var mNumberActionsRegistered = mActionsExtras.size
                 //! For the action that entered us into onReceive, get ALL Keys for the intent extras data
                 var extraKeySet = intentExtras?.keySet()
@@ -72,11 +73,14 @@ private var TAG = PartyOneReceiver::class.java.simpleName
                 //val values = mutableListOf<String>()  // values.add(intentExtras?.get(k).toString())
                 val valuesMap = mutableMapOf<String, String>()
 
+                Log.d(TAG, "onReceive:intentextrasize: $intentExtraSize")
                 //! Extract values from intents extras, into a map of values
+                valuesMap.clear()
                 for (k in extraKeySet!!) {
                     Log.d(TAG, "PartyOneProvider:onRecieve:Keys: $k")
                     valuesMap.put(k, intentExtras?.get(k).toString())
                 }
+
 
                 Log.d(TAG, "PartyOneProvider:onRecieve: keyset ${extraKeySet}")
                 Log.d(TAG, "PartyOneProvider:onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${mActionsExtras}")
