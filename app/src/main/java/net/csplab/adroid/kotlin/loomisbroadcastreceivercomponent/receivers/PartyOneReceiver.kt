@@ -42,11 +42,10 @@ private var TAG = PartyOneReceiver::class.java.simpleName
         //! because payment start is initialized from the user (activity), that could depend on
         //! payment device, etc.
 
-        //startTimeout(mTimeoutLength)
+        startTimeout(mTimeoutLength)
 
         //! Setup Notification
         //notificationAtReceiver(ctx, intent)
-
 
         //! Starting Action and Intent Retrieval
         val handler: Handler = Handler()
@@ -96,11 +95,13 @@ private var TAG = PartyOneReceiver::class.java.simpleName
                 Log.d(TAG, "pendingResult:Finished:ReadyToAbort!")
                 //pendingResult.abortBroadcast
                 pendingResult.finish()
+
                 //pendingResult.abortBroadcast
             }
         })
-        threadProtocol.start()
-
+        threadProtocol.start()//
+        //mActionTimeout.dis
+        //mActionTimeout.cancel()
 //        //! IF ALL ACTIONS and intents extras receieved and before timeout : NumActions = ActionsExtras.size
 //        //! Cancel time out, reset ACTION COUNT
 //        //! mActionTimeout.cancel() ; actionCount = 0
@@ -148,9 +149,10 @@ private var TAG = PartyOneReceiver::class.java.simpleName
         }else if (actionReceived == mActionsExtras[3].action) {
             doSomethingAction3(valuesMap)
         } else if (actionReceived == mActionsExtras[4].action) {
+            Log.d(TAG, "ActionReceived 4: ${mActionsExtras[4].action}")
             //var key1val = intent.getStringExtra("KEY4")
             //if (mActionCount == mActionsExtras.size && valuesMap.get("KEY4_PAY_END") == "BYE!" ){
-            if (valuesMap.get("KEY4_PAY_END") == "BYE!" ){
+            if (valuesMap.get("KEY5") == "BYE!" ){
             Log.d(TAG, "PartyOneProvider:onReceive:timeout.cancel:BYE")
             mActionTimeout.cancel()
             mActionCount = 0 // Not neccessary

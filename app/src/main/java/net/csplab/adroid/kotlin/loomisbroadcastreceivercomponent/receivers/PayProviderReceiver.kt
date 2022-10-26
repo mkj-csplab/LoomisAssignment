@@ -45,7 +45,6 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
     private fun runHeartBeat() {
         mBrHeartBeat = Timer()
         mBrHeartBeat.scheduleAtFixedRate(object: TimerTask() {
-
             override fun run() {
                 Log.d(TAG, "PayProvider:HeartBeat ")
             } },5000, 5000)
@@ -65,7 +64,7 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
         mActionTimeout.schedule(object: TimerTask() {
             override fun run() {
                 Log.d(TAG, "PayProviderReceiver:TimeoutNotify: after $timeoutLength") // @Chk: @No timer in Utility
-                abortBroadcast() //! After timeout we abort this broadcast
+                    abortBroadcast() //! After timeout we abort this broadcast
             //! Not on main thread, broadcaster run normally on main thread (UI Thread): Do Interface
         }}, timeoutLength)
 
