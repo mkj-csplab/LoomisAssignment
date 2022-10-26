@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat.registerReceiver
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.databinding.ActivityPayTerminalBinding
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers.*
@@ -120,20 +121,23 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         btStartPartyOneProvider.setOnClickListener {
             val providerName = "PartyOneProvider"
             intent = Intent()  //! Ready intent for Action & Extras Packing
+            var actionsExtraPartyOne = UtilityActions.ActionSets.actionsExtraPartyOne
 
             //! DO: recreate list from list to mutableList + add action + create new list initialized with mutableList
             Log.d(TAG, "actionsExtraPartyOne:before:actionName ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].action}")
-
-            var actionsExtraPartyOne = UtilityActions.ActionSets.actionsExtraPartyOne
-
             Log.d(TAG, "actionsExtraPartyOne:before:size ${actionsExtraPartyOne.size}")
+
+            //! Adding 1 more action to the provider
             prepareAddCustomAction(actionsExtraPartyOne, "TRANSACTION_VALIDATE", ID_PROVIDER_PARTYONE)
+
+            Log.d(TAG, "actionsExtraPartyOne:after:actionName ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].action}")
             Log.d(TAG, "actionsExtraPartyOne:after:size ${actionsExtraPartyOne.size}")
-            Log.d(TAG, "actionsExtraPartyOne:before:actionName ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].action}")
+
             Log.d(TAG, "actionsExtraPartyOne:before:extrasize ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].extras?.size}")
             prepareAddIntentExtraToAction(actionsExtraPartyOne[actionsExtraPartyOne.size-2], 0, "DATA_X", "XVAL")
-            prepareAddIntentExtraToAction(actionsExtraPartyOne[actionsExtraPartyOne.size-2], 0, "DATA_Y", "YVAL")
+
             Log.d(TAG, "actionsExtraPartyOne:before:extrasize ${actionsExtraPartyOne[actionsExtraPartyOne.size-2].extras?.size}")
+            prepareAddIntentExtraToAction(actionsExtraPartyOne[actionsExtraPartyOne.size-2], 0, "DATA_Y", "YVAL")
 
             mReadyToBroadCast = true
             mPartyOneReceiver = PartyOneReceiver(
@@ -155,6 +159,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             for (elem in actionsExtraPartyOne){
                 actionListX.add(elem.action)
             }
+            Log.d(TAG, "actionListX: Size: ${actionListX.size} $actionListX")
             protocolLogicSendPartyOneAE(actionsExtraPartyOne, intent)
             //protocolLogicSendPartyOne(actionListX, intent)
         }
@@ -229,19 +234,27 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         for (i in 0..actionsExtras.size - 1) {
             //! Load intent with action type (String)
             intent.action = actionsExtras[i].action
-            Log.d(TAG, "Intent => $intent.action :: $actionsExtras[i] :: Action.size: $actionsExtras.size ")
+            Log.d(TAG, "Intent => Action.size: ${actionsExtras.size} :: $intent.action :: $actionsExtras[i] ::  ")
 
             //! get current action
             Log.d(TAG, "${intent.action}")
             if (intent.action == actionsExtras[0].action) {
                 intent.putExtra("KEY1", "ID4325")
             } else if (intent.action == actionsExtras[1].action) {
+                //for (extra in actionsExtras[1].extras!!) {}
                 intent.putExtra("KEY2_1", "Amount")
                 intent.putExtra("KEY2_2", "Balance")
                 intent.putExtra("KEY2_3", "Idnum")
                 intent.putExtra("KEY2_4", "IBAN")
-            } else if (intent.action == actionsExtras[2].action) {
-                intent.putExtra("KEY3", "BYE!")
+                //Pair("KEY2_PAY_DESCR", "Michael"), Pair("KEY2_PAY_DESCR", "Jensen")),
+            } else if (intent.action == actionsExtras[2].action){
+                intent.putExtra("KEY3_BALANCE_SUFFICIENT", "OK")
+            } else if (intent.action == actionsExtras[3].action) {
+                //TRANSACTION_VALIDATE
+                intent.putExtra("DATA_X", "XVAL")
+                intent.putExtra("DATA_Y", "YVAL")
+            }else if (intent.action == actionsExtras[4].action){
+                intent.putExtra("KEY5", "BYE!")
             }
             //! @Chk> Could wrap this in Timer. Schedule to test time limits
             //sendBroadcast(intent) // send intent to PartyOneProvider, Timing
@@ -270,7 +283,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             } else if (intent.action == actionsExtras[2].action) {
                 intent.putExtra("KEY3", "5000")
             } else if (intent.action == actionsExtras[3].action) {
-                intent.putExtra("KEY4", "BYE!")
+                intent.putExtra("KEY4_PAY_END", "BYE!")
             }
             //! Broadcast is Async
             sendOrderedBroadcast(intent, null)

@@ -67,11 +67,6 @@ abstract class PayProviderReceiver : BroadcastReceiver() {
                 Log.d(TAG, "PayProviderReceiver:TimeoutNotify: after $timeoutLength") // @Chk: @No timer in Utility
                 abortBroadcast() //! After timeout we abort this broadcast
             //! Not on main thread, broadcaster run normally on main thread (UI Thread): Do Interface
-                //Toast.makeText(ctx, "Timer: ${Date().hours}:${Date().minutes}:${Date().seconds}", Toast.LENGTH_LONG).show()
-//                ctx.runOnUiThread(
-//                Runnable {
-//                      tvShowTime.text = "Timer: ${Date().hours}:${Date().minutes}:${Date().seconds}"
-//                 })
         }}, timeoutLength)
 
         Log.d(TAG, "PayProvider:Timeout Timer Created timeSet: $timeoutLength")

@@ -3,15 +3,10 @@ package net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.receivers
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
+import android.os.Bundle
+import android.os.Handler;
 import android.util.Log
 import android.widget.Toast
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.app.TaskStackBuilder
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import net.csplab.adroid.kotlin.loomisbroadcastreceivercomponent.models.ActionExtra
 import java.util.*
 
@@ -37,8 +32,8 @@ private var TAG = PartyOneReceiver::class.java.simpleName
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
         this.mContext = ctx
-        Toast.makeText(ctx, "PartyOneProvider:onReceive", Toast.LENGTH_LONG).show()
-        Log.d(TAG, "PartyOneProvider:onReceive")
+        //Toast.makeText(ctx, "PartyOneProvider:onReceive", Toast.LENGTH_LONG).show()
+        Log.d(TAG, "PartyOneProvider:onReceive:intent.action> ${intent.action}")
         //Toast.makeText(ctx, "PartyOneProvider:onReceive", Toast.LENGTH_LONG).show()
 
         //runShowAlive(ctx)
@@ -46,36 +41,62 @@ private var TAG = PartyOneReceiver::class.java.simpleName
         //! Descr: The timeout is initialized at the start of BroadCast:onReceive
         //! because payment start is initialized from the user (activity), that could depend on
         //! payment device, etc.
-        startTimeout(mTimeoutLength)
+
+        //startTimeout(mTimeoutLength)
 
         //! Setup Notification
         //notificationAtReceiver(ctx, intent)
 
-        val actionReceived = intent.action
-        var intentExtras = intent.extras
-        var mNumberActionsRegistered = mActionsExtras.size
-        //! For the action that entered us into onReceive, get ALL Keys for the intent extras data
-        var extraKeySet = intentExtras?.keySet()
-        //! Using the keys from intent extra, extract all
-        //val values = mutableListOf<String>()  // values.add(intentExtras?.get(k).toString())
-        val valuesMap = mutableMapOf<String, String>()
 
-        //! Extract values from intents extras, into a map of values
-        for (k in extraKeySet!!) {
-            Log.d(TAG, "PartyOneProvider:onRecieve:Keys: $k")
-            valuesMap.put(k, intentExtras?.get(k).toString())
-        }
+        //! Starting Action and Intent Retrieval
+        val handler: Handler = Handler()
+        //val pendingResult: PendingResult = goAsync()
 
-        Log.d(TAG, "PartyOneProvider:onRecieve: keyset ${extraKeySet}")
-        Log.d(TAG, "PartyOneProvider:onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${mActionsExtras}")
-        Log.d(TAG, "PartyOneProvider:onReceive:Val: ${valuesMap}")
-        Log.d(TAG, "PartyOneProvider:onReceive:Actions: $mActionsExtras")
-        Log.d(TAG, "PartyOneProvider:onReceive:intentExtras: ${intentExtras}")
+        //val threadProtocol = Thread(object: Runnable {
+         //   override fun run() {
+//                val resultCodePI: Int = pendingResult.resultCode
+//                val resultData: String? = pendingResult.resultData
+//                val resultExtras: Bundle = pendingResult.getResultExtras(true)
+//                val stringExtra = resultExtras.getString("stringExtra")
 
-        //! Set Function for dealing with business/protocol logic that must be specialised
-        if (actionReceived != null) {
-            protocolReceivingData(actionReceived, intent, valuesMap)
-        }
+//                handler.post(Runnable {
+//                    Toast.makeText(ctx, "pendingResult:handler" + stringExtra, Toast.LENGTH_LONG).show()
+//                })
+
+                val actionReceived = intent.action
+                var intentExtras = intent.extras
+                var mNumberActionsRegistered = mActionsExtras.size
+                //! For the action that entered us into onReceive, get ALL Keys for the intent extras data
+                var extraKeySet = intentExtras?.keySet()
+                //! Using the keys from intent extra, extract all
+                //val values = mutableListOf<String>()  // values.add(intentExtras?.get(k).toString())
+                val valuesMap = mutableMapOf<String, String>()
+
+                //! Extract values from intents extras, into a map of values
+                for (k in extraKeySet!!) {
+                    Log.d(TAG, "PartyOneProvider:onRecieve:Keys: $k")
+                    valuesMap.put(k, intentExtras?.get(k).toString())
+                }
+
+                Log.d(TAG, "PartyOneProvider:onRecieve: keyset ${extraKeySet}")
+                Log.d(TAG, "PartyOneProvider:onReceive:iAction: $actionReceived  NumActions $mNumberActionsRegistered ; ${mActionsExtras}")
+                Log.d(TAG, "PartyOneProvider:onReceive:Val: ${valuesMap}")
+                Log.d(TAG, "PartyOneProvider:onReceive:intentExtras: ${intentExtras}")
+
+                //! Set Function for dealing with business/protocol logic that must be specialised
+                if (actionReceived != null) {
+                    protocolReceivingData(actionReceived, intent, valuesMap)
+                }
+
+                //pendingResult.setResult(resultCode, resultData, resultExtras)
+                Log.d(TAG, "pendingResult:Finished:ReadyToAbort!")
+                //pendingResult.abortBroadcast
+                //pendingResult.finish()
+                //pendingResult.abortBroadcast
+            //}
+        //})
+        //threadProtocol.start()
+
 //        //! IF ALL ACTIONS and intents extras receieved and before timeout : NumActions = ActionsExtras.size
 //        //! Cancel time out, reset ACTION COUNT
 //        //! mActionTimeout.cancel() ; actionCount = 0
@@ -84,7 +105,7 @@ private var TAG = PartyOneReceiver::class.java.simpleName
 
     private fun doSomethingAction1(values: MutableMap<String, String>) {
         //! TODO( "Do some with the gathered information according to the specific ACTION")
-        mActionCounter
+        // TODFOmActionCounter
     }
 
     private fun doSomethingAction2(values: MutableMap<String, String>) {
@@ -100,13 +121,14 @@ private var TAG = PartyOneReceiver::class.java.simpleName
     }
 
     //! Descr: Specific protocol logic for processing under each Actions
+    // TODO Check all of this function
     override fun protocolReceivingData(actionReceived: String, intent: Intent, valuesMap: MutableMap<String, String>) {
         //! CHK: This these entry lines move them
         mActionCount++
-
+        Log.d(TAG, "protocol:Receive:actionReceived: $actionReceived")
         //! Foreach action we receive do something with the data extracted extra,
         // !Compare the recorded Actions sets to the incoming data
-        if (actionReceived == mActionsExtras[0].action){
+        if (actionReceived == mActionsExtras[0].action) {
             //! CHK ALL THESE intents data keys etc move ouside the IF what tp do
             //! 1. DO SPECIFIC STUFF FOR ACTION
             //! 2. THEN GET ALL INTENTS Extras per key
@@ -114,20 +136,21 @@ private var TAG = PartyOneReceiver::class.java.simpleName
             doSomethingAction1(valuesMap)
             // !!! var key1val = intent.getStringExtra(keyFromPair)  // KEY1
             // ! Log.d(TAG, "PartyOneProvider:onReceive:Action0: ${mActionExtras[0].action} : KeyVal: $key1val")
-        } else if (actionReceived == mActionsExtras[1].action){
+        } else if (actionReceived == mActionsExtras[1].action) {
             doSomethingAction2(valuesMap)
         } else if (actionReceived == mActionsExtras[2].action) {
             doSomethingAction3(valuesMap)
         } else if (actionReceived == mActionsExtras[3].action) {
             //var key1val = intent.getStringExtra("KEY4")
-             if (mActionCount == mActionsExtras.size && valuesMap.get("KEY4_PAY_END") == "BYE!" ){
-                Log.d(TAG, "PartyOneProvider:onReceive:BYE")
-                 mActionTimeout.cancel()
-                 mActionCount = 0 // Not neccessary
-             }
-        }
+            //if (mActionCount == mActionsExtras.size && valuesMap.get("KEY4_PAY_END") == "BYE!" ){
+            if (valuesMap.get("KEY4_PAY_END") == "BYE!" ){
+            Log.d(TAG, "PartyOneProvider:onReceive:timeout.cancel:BYE")
+            mActionTimeout.cancel()
+            mActionCount = 0 // Not neccessary
+            }
         //! IF ALL ACTIONS and intents extras received and before timeout : NumActions = ActionsExtras.size
         //! Cancel time out, reset ACTION COUNT
+        }
     }
 
     //! CHK> Should this be here remove
