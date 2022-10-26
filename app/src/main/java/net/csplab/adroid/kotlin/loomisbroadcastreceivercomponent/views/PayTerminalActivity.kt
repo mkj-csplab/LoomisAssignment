@@ -288,7 +288,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             registerReceiver(mPartyOneReceiver, mIntentFilterActionsPartyOne)
             //}
             //if (mBankOfBankReceiver != null){
-            registerReceiver(mBankOfBankReceiver, mIntentFilterActionsBankOfBank)
+            //registerReceiver(mBankOfBankReceiver, mIntentFilterActionsBankOfBank)
             //}
         }
     }
@@ -298,7 +298,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         //! If App set on pause during broadcast - App going to background
         if (mReadyToBroadCast) {
         unregisterReceiver(mPartyOneReceiver)
-        unregisterReceiver(mBankOfBankReceiver)
+        //unregisterReceiver(mBankOfBankReceiver)
         mReadyToBroadCast = false
         }
     }
