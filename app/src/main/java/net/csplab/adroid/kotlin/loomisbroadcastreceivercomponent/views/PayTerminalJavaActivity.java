@@ -97,7 +97,7 @@ public class PayTerminalJavaActivity extends AppCompatActivity {
                         intent.putExtra("KEY2_3", "Idnum");
                         intent.putExtra("KEY2_4", "IBAN");
                     } else if (ia == actionStrings.get(2)) {
-                        intent.putExtra("KEY3", "BYE!");
+                        intent.putExtra("KEY5", "BYE!");
                     }
                     //! @Chk> Could wrap this in Timer. Schedule to test time limits
                     sendOrderedBroadcast(intent, null); // send intent to PartyOneProvider, Timing

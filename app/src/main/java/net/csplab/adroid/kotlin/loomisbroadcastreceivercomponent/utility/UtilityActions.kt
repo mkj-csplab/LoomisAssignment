@@ -48,7 +48,7 @@ open class UtilityActions {
             ActionExtra(
                 actionStrings2[0],
                 //"ACTION_PAY_START",
-                mutableListOf<Pair<String, String>>(Pair("KEY1_PAY_START", "ID456789"))
+                mutableListOf<Pair<String, String>>(Pair("KEY_START", "ID456789"))
             ),
             ActionExtra(
                 actionStrings2[1], //"ACTION_PAY1",
@@ -56,7 +56,7 @@ open class UtilityActions {
             ),
             ActionExtra(
                 actionStrings2[2], //"ACTION_PAY_END",
-                mutableListOf<Pair<String, String>>(Pair("KEY3_PAY_END", "BYE!"))
+                mutableListOf<Pair<String, String>>(Pair("KEY_END", "BYE!"))
             ),
             )
 

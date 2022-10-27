@@ -289,7 +289,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
             } else if (intent.action == actionsExtras[2].action) {
                 intent.putExtra("KEY3", "5000")
             } else if (intent.action == actionsExtras[3].action) {
-                intent.putExtra("KEY4_PAY_END", "BYE!")
+                intent.putExtra("KEY_END", "BYE!")
             }
             //! Broadcast is Async
             sendOrderedBroadcast(intent, null)
@@ -317,7 +317,7 @@ class PayTerminalActivity : AppCompatActivity(), TimeoutContainer.TimeoutListene
         //! If App set on pause during broadcast - App going to background
         if (mReadyToBroadCast) {
         unregisterReceiver(mPartyOneReceiver)
-        //unregisterReceiver(mBankOfBankReceiver)
+        unregisterReceiver(mBankOfBankReceiver)
         mReadyToBroadCast = false
         }
     }

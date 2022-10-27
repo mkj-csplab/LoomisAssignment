@@ -82,16 +82,25 @@ class BankOfBankReceiver(
             Log.d(TAG, "OnReceive:STEP1")
             doSomethingAction2(valuesMap)
         } else if (actionReceived == mActionsExtras[2].action) {
-            Log.d(TAG, "OnReceive:END")
+
+            //! @Chk Needs to fix correct actions and number of actionbs + extras
+            Log.d(TAG, "Bank:OnReceive:2 ${mActionsExtras[2].action}")
             doSomethingAction3(valuesMap)
+            mActionTimeout.cancel()
+
+        }else if (actionReceived == mActionsExtras[3].action) {
+
+            Log.d(TAG, "Bank:OnReceive:END ${mActionsExtras[3].action}")
+            doSomethingAction3(valuesMap)
+
         }
         //! IF not received all actions and intent extras at this time, make a count
         //mActionTimeout.cancel()
-        if (actionCount == mActionsExtras.size)
-        {
-            mActionTimeout.cancel() ;
-            actionCount = 0 // Not necc
-        }
+//        if (actionCount == mActionsExtras.size)
+//        {
+//            mActionTimeout.cancel() ;
+//            actionCount = 0 // Not necc
+//        }
 
     }
 
